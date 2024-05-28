@@ -5,7 +5,6 @@ import { AuthContext } from "../components/AuthProvider"
 const Profile = () => {
     const { token, setToken } = useContext(AuthContext)
     const [searchParams, setSearchParams] = useSearchParams()
-    const params = useParams()
     useEffect(() => {
         console.log(searchParams.get('access_token'))
     }, [searchParams])
