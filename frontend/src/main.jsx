@@ -4,6 +4,7 @@ import * as ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Login from './components/Login.jsx'
+import AuthProvider from './components/AuthProvider.jsx'
 
 const router = createBrowserRouter([
   {
@@ -22,11 +23,14 @@ const router = createBrowserRouter([
   }
 ])
 
+
 const rootElement = document.getElementById('root')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <ChakraProvider>
-      <RouterProvider router={router}/>
-    </ChakraProvider>
+    <AuthProvider>
+      <ChakraProvider>
+        <RouterProvider router={router}/>
+      </ChakraProvider>
+    </AuthProvider>
   </React.StrictMode>,
 )
