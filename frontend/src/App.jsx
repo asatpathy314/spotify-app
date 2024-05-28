@@ -1,13 +1,8 @@
-import React from 'react';
-import { Button } from '@chakra-ui/react';
-
-function App() {
+const App = () => {
+  // 2. Wrap ChakraProvider at the root of your app
   return (
-    <div>
-      <h1>Hello, Chakra UI with Vite!</h1>
-      <Button colorScheme="blue">Button</Button>
-    </div>
-  );
+      <h1>hello</h1>
+  )
 }
 
-export default App;
+export default App

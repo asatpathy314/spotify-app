@@ -1,25 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { ChakraBaseProvider, extendBaseTheme } from '@chakra-ui/react';
-import { theme as chakraTheme } from '@chakra-ui/theme';
-import App from './App';
-import './index.css';
+import * as React from 'react'
+import { ChakraProvider } from '@chakra-ui/react'
+import * as ReactDOM from 'react-dom/client'
+import App from './App.jsx'
 
-// Extracting the Button component theme
-const { Button } = chakraTheme.components;
-
-// Creating a custom theme with only the Button component's default theme
-const theme = extendBaseTheme({
-  components: {
-    Button,
-  },
-});
-
-ReactDOM.render(
+const rootElement = document.getElementById('root')
+ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <ChakraBaseProvider theme={theme}>
+    <ChakraProvider>
       <App />
-    </ChakraBaseProvider>
+    </ChakraProvider>
   </React.StrictMode>,
-  document.getElementById('root')
-);
+)
