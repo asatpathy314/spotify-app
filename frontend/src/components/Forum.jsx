@@ -22,7 +22,7 @@ const Forum = () => {
     try {
       await axios.post("http://localhost:8000/forum", { name });
       setName(""); // Reset the form
-      alert("Post submitted successfully!");
+      alert("Forum created successfully!");
     } catch (error) {
       console.error("Error submitting post:", error);
       alert("Failed to submit post.");
