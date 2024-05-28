@@ -2,7 +2,7 @@ const express = require("express");
 const db = require('./firebase');
 const router = express.Router();
 
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
     // insert song logic here
 })
 
