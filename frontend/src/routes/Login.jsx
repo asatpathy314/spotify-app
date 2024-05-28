@@ -12,22 +12,13 @@ import {
 import { FaSpotify } from "react-icons/fa";
 
 const Login = () => {
-  const handleLogin = async () => {
-    try {
-      const response = await axios.get("http://localhost:8000/auth/login");
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  }
   return (
-    <Container minHeight="100vh" display="grid">
+    <Container minHeight="100vh" minWidth="100vw" display="grid">
       <Card
         align="center"
         placeSelf="center"
         backgroundColor="#0F0E17"
-        width="100%"
-        minwidth="200px"
+        width="400px"
         height="20%"
         minHeight="150px"
       >
@@ -35,9 +26,11 @@ const Login = () => {
           <Heading size="lg">Login with Spotify</Heading>
         </CardHeader>
         <CardBody>
-          <Button colorScheme="green" leftIcon={<FaSpotify />} onClick={handleLogin}>
+          <a href="http://localhost:8000/auth/login">
+          <Button colorScheme="green" leftIcon={<FaSpotify />} >
             Login
           </Button>
+          </a>
         </CardBody>
       </Card>
     </Container>

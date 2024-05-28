@@ -3,7 +3,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import * as ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Login from './components/Login.jsx'
+import Login from './routes/Login.jsx'
 import AuthProvider from './components/AuthProvider.jsx'
 
 const router = createBrowserRouter([
@@ -22,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: '/messages',
         element: <h1>Messages</h1>
+      },
+      {
+        path: '/profile',
+        element: <h1>profile</h1>
       }
     ]
   }
@@ -36,5 +40,5 @@ ReactDOM.createRoot(rootElement).render(
         <RouterProvider router={router}/>
       </ChakraProvider>
     </AuthProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 )

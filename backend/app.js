@@ -12,9 +12,12 @@ app.use(cookieParser())
 //Import Routes
 //const artists = require("./api/getArtists");
 const auth = require("./api/auth")
+const song = require("./api/song")
 
 //initialize Routes
 app.use('/auth', auth)
+app.use('/song', song)
+
 
 // Start the server
 const port = process.env.PORT || 8000;
