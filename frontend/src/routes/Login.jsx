@@ -1,5 +1,5 @@
+
 import {
-  Container,
   Card,
   CardHeader,
   CardBody,
@@ -14,7 +14,8 @@ const Login = () => {
         align="center"
         placeSelf="center"
         backgroundColor="#0F0E17"
-        width="400px"
+        width="100%"
+        maxWidth="300px"
         height="20%"
         minHeight="150px"
       >

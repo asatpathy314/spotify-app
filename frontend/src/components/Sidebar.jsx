@@ -5,7 +5,6 @@ import {
   CloseButton,
   Flex,
   Icon,
-  useColorModeValue,
   Link,
   Drawer,
   DrawerContent,
@@ -27,7 +26,8 @@ const LinkItems= [
   { name: 'Forum', icon: MdForum, link: '/#' },
   { name: 'Explore', icon: FaMagnifyingGlass, link: '/#' },
   { name: 'Profile', icon: BsFilePerson, link: '/profile' },
-  { name: 'Inbox', icon: GoPaperAirplane, link: '/profile' }
+  { name: 'Inbox', icon: GoPaperAirplane, link: '/profile' },
+  { name: 'Logout', icon: GoPaperAirplane, link: '/logout' }
 ];
 
 export default function SimpleSidebar({ children }) {
