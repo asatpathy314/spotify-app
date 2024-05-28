@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import axios from "axios";
 import {
   Container,
   Card,
@@ -11,6 +12,14 @@ import {
 import { FaSpotify } from "react-icons/fa";
 
 const Login = () => {
+  const handleLogin = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/auth/login");
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <Container minHeight="100vh" display="grid">
       <Card
@@ -26,7 +35,7 @@ const Login = () => {
           <Heading size="lg">Login with Spotify</Heading>
         </CardHeader>
         <CardBody>
-          <Button colorScheme="green" leftIcon={<FaSpotify />}>
+          <Button colorScheme="green" leftIcon={<FaSpotify />} onClick={handleLogin}>
             Login
           </Button>
         </CardBody>
