@@ -33,6 +33,10 @@ const router = createBrowserRouter([
         element: <Forum />
       },
     ]
+  },
+  {
+    path: '/forbidden',
+    element: <h1>403 Forbidden</h1>
   }
 ])
 
