@@ -1,12 +1,3 @@
-/**
- * This is an example of a basic node.js script that performs
- * the Authorization Code oAuth2 flow to authenticate against
- * the Spotify Accounts.
- *
- * For more information, read
- * https://developer.spotify.com/documentation/web-api/tutorials/code-flow
- */
-
 var express = require('express');
 var request = require('request');
 var crypto = require('crypto');
@@ -92,13 +83,13 @@ app.get('/callback', function(req, res) {
         });
 
         // we can also pass the token to the browser to make requests from there
-        res.redirect('http://localhost:5173/profile#' +
+        res.redirect('http://localhost:5173/profile?' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token
           }));
       } else {
-        res.redirect('http://localhost:5173/profile#' +
+        res.redirect('http://localhost:5173/profile?' +
           querystring.stringify({
             error: 'invalid_token'
           }));
