@@ -4,11 +4,19 @@ const app = express();
 app.use(express.json());
 
 //Initialize CORS
-var cors = require('cors')
+const cors = require('cors')
 app.use(cors())
 
-// Import Routes
-const artists = require("./api/getArtists");
+//Initialize Cookie Parse
+const cookieParser = require('cookie-parser')
+app.use(cookieParser())
+
+//Import Routes
+//const artists = require("./api/getArtists");
+const auth = require("./api/auth")
+
+//initialize Routes
+app.use('/auth', auth)
 
 // Start the server
 const port = process.env.PORT || 8000;
