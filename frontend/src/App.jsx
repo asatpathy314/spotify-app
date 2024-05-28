@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom"
 import React from 'react';
 import { ChakraProvider, Box } from '@chakra-ui/react';
-import { Navbar } from './Navbar.jsx';
+import { Navbar } from './components/Navbar.jsx';
 import './App.css';
 
 export const App = () => {
