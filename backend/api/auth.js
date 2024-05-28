@@ -10,12 +10,11 @@
 var express = require('express');
 var request = require('request');
 var crypto = require('crypto');
-var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
 var client_id = process.env.CLIENT_ID; // your clientId
-var client_secret = 'YourSecretIDGoesHere'; // Your secret
+var client_secret = process.env.SECRET_ID; // Your secret
 var redirect_uri = 'http://localhost:8000/callback'; // Your redirect uri
 
 
@@ -25,13 +24,8 @@ const generateRandomString = (length) => {
   .toString('hex')
   .slice(0, length);
 }
-
 var stateKey = 'spotify_auth_state';
-
 var app = express.Router();
-
-app.use(cors())
-   .use(cookieParser());
 
 app.get('/login', function(req, res) {
 

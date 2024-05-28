@@ -1,11 +1,9 @@
 // Initialize Express app
 const express = require("express");
 const app = express();
-app.use(express.json());
-
-//Initialize CORS
 const cors = require('cors')
-app.use(cors())
+app.use(cors());
+app.use(express.json());
 
 //Initialize Cookie Parse
 const cookieParser = require('cookie-parser')
