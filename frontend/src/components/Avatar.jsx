@@ -35,9 +35,23 @@ export const AppAvatar = ( {type} ) => {
             </Box>
         ))
     )
+    } else if (type === 'inbox') {
+        return (
+            <div id='inbox-avatar'>
+                <Stack direction='row'>
+                    <Avatar src='https://bit.ly/broken-link' />
+                    <Avatar src='https://bit.ly/broken-link' />
+                    <Avatar src='https://bit.ly/broken-link' />
+                    <Avatar src='https://bit.ly/broken-link' />
+                    <Avatar src='https://bit.ly/broken-link' />
+                </Stack>
+            </div>
+        )
     } else if (type === 'discover') {
         return (
-            <div>Insert code here</div>
+            <div id='discover-avatar'>
+                {/* ? */}
+            </div>
         )
-    } // Continue for every avatar component 
+    }  
 }
