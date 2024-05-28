@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import axios from "axios";
 import {
   Container,
   Card,
@@ -12,13 +13,12 @@ import { FaSpotify } from "react-icons/fa";
 
 const Login = () => {
   return (
-    <Container minHeight="100vh" display="grid">
+    <Container minHeight="100vh" minWidth="100vw" display="grid">
       <Card
         align="center"
         placeSelf="center"
         backgroundColor="#0F0E17"
-        width="100%"
-        minwidth="200px"
+        width="400px"
         height="20%"
         minHeight="150px"
       >
@@ -26,9 +26,11 @@ const Login = () => {
           <Heading size="lg">Login with Spotify</Heading>
         </CardHeader>
         <CardBody>
-          <Button colorScheme="green" leftIcon={<FaSpotify />}>
+          <a href="http://localhost:8000/auth/login">
+          <Button colorScheme="green" leftIcon={<FaSpotify />} >
             Login
           </Button>
+          </a>
         </CardBody>
       </Card>
     </Container>

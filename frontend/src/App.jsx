@@ -1,12 +1,18 @@
 import { Outlet } from "react-router-dom"
-import './App.css'
- 
-const App = () => {
-  return (
-      <main>
-        <Outlet />
-      </main>
-  )
-}
+import React from 'react';
+import { ChakraProvider, Box } from '@chakra-ui/react';
+import { Navbar } from './components/Navbar.jsx';
+import './App.css';
 
-export default App
+export const App = () => {
+  return (
+    <ChakraProvider>
+      <Navbar />
+      <Box ml="200px" p="4">
+        <main>
+          <Outlet />
+        </main>
+      </Box>
+    </ChakraProvider>
+  );
+};
