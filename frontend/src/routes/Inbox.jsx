@@ -1,6 +1,6 @@
 import React from "react";
 
-const Main = () => {
+const Inbox = () => {
     
     return (
         <>
@@ -9,4 +9,4 @@ const Main = () => {
     )
 };
 
-export default Main;
+export default Inbox;
