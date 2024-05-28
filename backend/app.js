@@ -8,6 +8,7 @@ var cors = require('cors')
 app.use(cors())
 
 // Import Routes
+const artists = require("./getArtists");
 
 // Start the server
 const port = process.env.PORT || 8000;
