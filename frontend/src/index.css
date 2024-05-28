@@ -1,3 +1,4 @@
 #root, body, main, html {
-    all: unset
+    all: unset;
+    background-color: #191827;
 }
