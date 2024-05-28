@@ -31,10 +31,10 @@ const Datagrid = ({ data, type }) => {
         </Thead>
         <Tbody>
           {data.map((item, index) => (
-            <Tr key={index} borderBottom="1px" borderColor="gray.700">
+            <Tr key={index} borderBottom="1px" borderColor="black">
               <Td>
                 <Box
-                  bg="gray.800"
+                  bg="black"
                   p={2}
                   borderRadius="md"
                   textAlign="center"
@@ -44,7 +44,7 @@ const Datagrid = ({ data, type }) => {
               </Td>
               <Td>
                 <Box
-                  bg="gray.800"
+                  bg="black"
                   p={2}
                   borderRadius="md"
                   textAlign="center"
@@ -55,7 +55,7 @@ const Datagrid = ({ data, type }) => {
               {type === "songs" && (
                 <Td>
                   <Box
-                    bg="gray.800"
+                    bg="black"
                     p={2}
                     borderRadius="md"
                     textAlign="center"
@@ -67,7 +67,7 @@ const Datagrid = ({ data, type }) => {
               {type === "songs" && (
                 <Td>
                   <Box
-                    bg="gray.800"
+                    bg="black"
                     p={2}
                     borderRadius="md"
                     textAlign="center"
