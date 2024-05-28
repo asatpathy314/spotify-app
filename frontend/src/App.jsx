@@ -9,7 +9,6 @@ export const App = () => {
   return (
     <ChakraProvider>
         <main>
-          <DataGrid></DataGrid>
           <SimpleSidebar>
             <Container display="grid" minHeight="95vh" padding="0">
               <Outlet />
