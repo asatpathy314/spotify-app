@@ -14,9 +14,13 @@ app.use(cookieParser())
 //Import Routes
 //const artists = require("./api/getArtists");
 const auth = require("./api/auth")
+const forum = require("./forum");
+
 
 //initialize Routes
 app.use('/auth', auth)
+app.use('/forum', forum);
+
 
 // Start the server
 const port = process.env.PORT || 8000;
