@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, VStack } from '@chakra-ui/react';
-import './Navbar.css';
+import '../stylesheets/Navbar.css';
 
 export const Navbar = () => {
   return (
