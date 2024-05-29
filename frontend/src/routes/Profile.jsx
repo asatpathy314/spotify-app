@@ -24,16 +24,17 @@ const Profile = () => {
   useEffect(() => {
     if (id == userID) {
       setIsEditable(true);
-      console.log(isEditable);
-    }
-    if (token === null || userID === null) {
+    } 
+    console.log(token);
+    console.log(userID);
+    if (!token || !userID) {
       if (searchParams.get("access_token") && searchParams.get("user_id")) {
         setToken(searchParams.get("access_token"));
+        console.log(token);
         setUserID(searchParams.get("user_id"));
+        console.log(userID);
       } else {
-        setForbidden(true);
-        window.location.replace("/forbidden");
-        return;
+        console.log('hello')
       }
     }
     if (id) {
