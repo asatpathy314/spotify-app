@@ -49,7 +49,6 @@ const TopArtists = () => {
                     }
                 } else {
                     console.error("Error fetching top artists:", error);
-                    setTopArtists([{ error: 'An Error Occurred. Please try again later.' }]);
                 }
             }
         };
