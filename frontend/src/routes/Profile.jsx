@@ -34,7 +34,7 @@ const Profile = () => {
         setUserID(searchParams.get("user_id"));
         console.log(userID);
       } else {
-        console.log('hello')
+        console.log('Error retrieving token and user ID')
       }
     }
     if (id) {
