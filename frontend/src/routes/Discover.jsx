@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import axios from "axios";
 
 import Box from '@mui/material/Box';
 import User from '../components/User';
@@ -45,17 +45,20 @@ function Discover() {
       ];
 
     useEffect(() => {
-        setProfiles(dummyData);
-        // const getProfiles = async () => {
-        //     try {
-        //         // get all posts
-        //         const response = await axios.get('http://localhost:5001/posts');
-        //         setProfiles(response.data);
-        //     } catch (error) {
-        //         console.error('Error fetching profiles:', error);
-        //     }
-        // }
-        // getProfiles();
+        const getProfiles = async () => {
+            try {
+                const response = await axios.get('http://localhost:8000/user/all');
+                console.log('API Response:', response.data);
+                if (Array.isArray(response.data)) {
+                    setProfiles(response.data);
+                }
+            } catch (error) {
+                console.error('Error fetching profiles:', error);
+                setProfiles([]);
+            }
+        };
+
+        getProfiles();
     }, []);
 
     return (
@@ -70,7 +73,7 @@ function Discover() {
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2}}>
                 {profiles.map((profile, index) => (
                     <div key={index} >
-                        <User userName={profile.userName} profilePictureUrl={profile.profilePictureUrl} />
+                        <User userName={profile.name} profilePictureUrl={profile.profile} />
                     </div>
                 ))}
                 </Box>
