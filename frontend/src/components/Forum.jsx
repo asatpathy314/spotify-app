@@ -136,14 +136,19 @@ const handleLikeComment = async (forumId, postId, commentId) => {
     try {
       await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/like`);
       // Update the likes count for the selected post directly
-      setSelectedPost(prevPost => ({
-        ...prevPost,
-        likes: prevPost.likes + 1
-      }));
+       setSelectedPost(prevPost => ({
+         ...prevPost,
+         likes: prevPost.likes + 1
+       }));
+      // Update the likes count in the posts array
+      setPosts(prevPosts => prevPosts.map(post =>
+        post.id === postId ? { ...post, likes: post.likes + 1 } : post
+      ));
     } catch (error) {
       console.error('Error liking post:', error);
     }
 };
+
 
   const handleCreateForum = async (e) => {
     e.preventDefault();
@@ -233,7 +238,7 @@ const handleLikeComment = async (forumId, postId, commentId) => {
             {selectedPost.title}
           </Text>
           <Text color="white">{selectedPost.description}</Text>
-          <HStack justifyContent="space-between">
+          <HStack justifyContent="right">
             <Text color="gray.500" fontSize="sm">
               {selectedPost.likes} likes
             </Text>
@@ -268,7 +273,7 @@ const handleLikeComment = async (forumId, postId, commentId) => {
                 Posted by {comment.userId} on {formatDate(comment.date)}
                 </Text>
                 <Text color="white">{comment.text}</Text>
-                <HStack justifyContent="space-between">
+                <HStack justifyContent="right">
                   <Text color="gray.500" fontSize="sm">
                     {comment.likes} likes
                   </Text>

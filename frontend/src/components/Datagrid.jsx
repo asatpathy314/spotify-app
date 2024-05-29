@@ -1,5 +1,6 @@
+// src/components/Datagrid.jsx
 import React from "react";
-import { TimeIcon } from '@chakra-ui/icons';
+import { TimeIcon } from '@chakra-ui/icons'
 import {
   Box,
   Table,
@@ -16,7 +17,7 @@ const DataGrid = ({ data, type }) => {
       borderWidth="1px"
       borderRadius="lg"
       overflow="hidden"
-      bg='#191827'
+      bg='#0f0e17'
       color="white"
       p={4}
     >
@@ -24,10 +25,10 @@ const DataGrid = ({ data, type }) => {
         <Thead>
           <Tr>
             <Th color="white">#</Th>
-            {type === "songs" && <Th color="white">Song Title</Th>}
+            <Th color="white">Song Title</Th>
             <Th color="white">Artist Name</Th>
-            {type === "songs" && <Th color="white">Album</Th>}
-            {type === "songs" && <Th color="white"><TimeIcon /></Th>}
+            <Th color="white">Album</Th>
+            <Th color="white"><TimeIcon /></Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -35,7 +36,6 @@ const DataGrid = ({ data, type }) => {
             <Tr key={index} borderBottom="1px" borderColor="black">
               <Td>
                 <Box
-                  bg="black"
                   p={2}
                   borderRadius="md"
                   textAlign="center"
@@ -43,21 +43,17 @@ const DataGrid = ({ data, type }) => {
                   {index + 1}
                 </Box>
               </Td>
-              {type === "songs" && (
-                <Td>
-                  <Box
-                    bg="black"
-                    p={2}
-                    borderRadius="md"
-                    textAlign="center"
-                  >
-                    {item.song}
-                  </Box>
-                </Td>
-              )}
               <Td>
                 <Box
-                  bg="black"
+                  p={2}
+                  borderRadius="md"
+                  textAlign="center"
+                >
+                  {item.song}
+                </Box>
+              </Td>
+              <Td>
+                <Box
                   p={2}
                   borderRadius="md"
                   textAlign="center"
@@ -65,30 +61,24 @@ const DataGrid = ({ data, type }) => {
                   {item.artist}
                 </Box>
               </Td>
-              {type === "songs" && (
-                <Td>
-                  <Box
-                    bg="black"
-                    p={2}
-                    borderRadius="md"
-                    textAlign="center"
-                  >
-                    {item.album}
-                  </Box>
-                </Td>
-              )}
-              {type === "songs" && (
-                <Td>
-                  <Box
-                    bg="black"
-                    p={2}
-                    borderRadius="md"
-                    textAlign="center"
-                  >
-                    {item.length}
-                  </Box>
-                </Td>
-              )}
+              <Td>
+                <Box
+                  p={2}
+                  borderRadius="md"
+                  textAlign="center"
+                >
+                  {item.album}
+                </Box>
+              </Td>
+              <Td>
+                <Box
+                  p={2}
+                  borderRadius="md"
+                  textAlign="center"
+                >
+                  {item.length}
+                </Box>
+              </Td>
             </Tr>
           ))}
         </Tbody>
