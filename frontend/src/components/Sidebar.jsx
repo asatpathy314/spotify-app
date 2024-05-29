@@ -59,7 +59,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
     { name: 'Favorite Artists', icon: GiMicrophone, link: '/#' },
     { name: 'Forum', icon: MdForum, link: '/forum' },
     { name: 'Discover', icon: FaMagnifyingGlass, link: '/discover' },
-    { name: 'Profile', icon: BsFilePerson, link: `/profile/${userID}` },
+    { name: 'Profile', icon: BsFilePerson, link: `/profile/${userID || 'nosessiontoken'}` },
     { name: 'Inbox', icon: GoPaperAirplane, link: '/profile' },
     { name: 'Logout', icon: GoPaperAirplane, link: '/logout' }
   ];
