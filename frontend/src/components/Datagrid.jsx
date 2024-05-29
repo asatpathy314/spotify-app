@@ -1,5 +1,6 @@
 // src/components/Datagrid.jsx
 import React from "react";
+import { TimeIcon } from '@chakra-ui/icons'
 import {
   Box,
   Table,
@@ -27,7 +28,7 @@ const DataGrid = ({ data, type }) => {
             <Th color="white">Song Title</Th>
             <Th color="white">Artist Name</Th>
             <Th color="white">Album</Th>
-            <Th color="white">Length</Th>
+            <Th color="white"><TimeIcon /></Th>
           </Tr>
         </Thead>
         <Tbody>

@@ -27,7 +27,7 @@ const TopSongs = () => {
                     params: {
                         spotify_token: token,
                         num_songs: 10,
-                        timeframe: 'long_term'
+                        timeframe: 'short_term'
                     }
                 });
                 if (response.status === 200) {
