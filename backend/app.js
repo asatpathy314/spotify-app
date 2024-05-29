@@ -16,6 +16,7 @@ const forum = require("./api/forum");
 const song = require("./api/song")
 const artist = require("./api/artist")
 const messages = require("./api/messages");
+const user = require("./api/user")
 
 
 //initialize Routes
@@ -23,7 +24,6 @@ app.use('/auth', auth)
 app.use('/forum', forum);
 app.use('/song', song)
 app.use('/artist', artist)
-app.use('/messages', messages)
 
 
 // Start the server
