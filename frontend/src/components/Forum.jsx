@@ -154,8 +154,8 @@ const Forum = () => {
           <Text fontSize="2xl" fontWeight="bold" color="white">
             {selectedPost.title}
           </Text>
-          <Text color="gray.300">{selectedPost.description}</Text>
-          <Text color="gray.500" fontSize="sm">
+          <Text color="white">{selectedPost.description}</Text>
+          <Text color="white" fontSize="sm">
             Posted by {selectedPost.userId} on {new Date(selectedPost.date).toLocaleDateString()}
           </Text>
         </Box>
@@ -163,6 +163,7 @@ const Forum = () => {
           <FormControl id="new-comment" mb={4}>
             <FormLabel color="white">Add a Comment</FormLabel>
             <Input
+              color="white"
               type="text"
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
@@ -170,7 +171,7 @@ const Forum = () => {
             />
           </FormControl>
           <Button type="submit" colorScheme="teal" mb={4} leftIcon={<FaSpotify />}>
-            Submit Comment
+            Post Comment
           </Button>
         </form>
         <VStack spacing={4} align="start">
@@ -206,11 +207,12 @@ const Forum = () => {
         <form onSubmit={handleSubmitPost}>
           <FormControl id="title" mb={4}>
             <FormLabel color="white">Title</FormLabel>
-            <Input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
+            <Input color="white" type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
           </FormControl>
           <FormControl id="description" mb={4}>
             <FormLabel color="white">Description</FormLabel>
             <Input
+              color="white"
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -218,7 +220,7 @@ const Forum = () => {
             />
           </FormControl>
           <Button type="submit" colorScheme="teal" mb={4} leftIcon={<FaSpotify />}>
-            Submit Post
+            Create Post
           </Button>
         </form>
         <VStack spacing={4} align="start">
@@ -236,14 +238,14 @@ const Forum = () => {
                 <Text fontSize="xl" fontWeight="bold" color="white">
                   {post.title}
                 </Text>
-                <Text color="gray.300">{post.description}</Text>
-                <Text color="gray.500" fontSize="sm">
+                <Text color="white">{post.description}</Text>
+                <Text color="white" fontSize="sm">
                   Posted by {post.userId} on {new Date(post.date).toLocaleDateString()}
                 </Text>
               </Card>
             ))
           ) : (
-            <Text color="gray.300">No posts available</Text>
+            <Text color="white">No posts available</Text>
           )}
         </VStack>
       </Container>
@@ -258,6 +260,7 @@ const Forum = () => {
           <FormLabel color="white">Create New Forum</FormLabel>
           <Input
             type="text"
+            color="white"
             value={newForumName}
             onChange={(e) => setNewForumName(e.target.value)}
             required
@@ -285,7 +288,7 @@ const Forum = () => {
             </Card>
           ))
         ) : (
-          <Text color="gray.300">No forums available</Text>
+          <Text color="white">No forums available</Text>
         )}
       </VStack>
     </Container>
