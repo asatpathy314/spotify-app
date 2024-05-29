@@ -8,7 +8,7 @@ router.post("/forum", async (req, res) => {
     const { name } = req.body;
     const docRef = await db.collection("forum").add({
       name: name,
-      date: new Date().toDateString
+      date: new Date()
     });
     res.status(201).json({ message: `Successfully created forum with id ${docRef.id}` });
   } catch (e) {
@@ -25,7 +25,7 @@ router.post("/forums/:forumId/posts", async (req, res) => {
       title,
       description,
       userId,
-      upvotes: 0,
+      likes: 0,
       date: new Date().toDateString()
     };
     await db.collection("forum").doc(forumId).collection("posts").add(post);
@@ -95,10 +95,45 @@ router.post("/forums/:forumId/posts/:postId/comments", async (req, res) => {
     const comment = {
       text,
       userId,
+      likes: 0,
       date: new Date().toISOString()  // Store date in ISO format
     };
     await db.collection("forum").doc(forumId).collection("posts").doc(postId).collection("comments").add(comment);
     res.status(201).json({ message: 'Successfully created comment' });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+// Endpoint to like a post
+router.post("/forums/:forumId/posts/:postId/like", async (req, res) => {
+  try {
+    const { forumId, postId } = req.params;
+    const postRef = db.collection("forum").doc(forumId).collection("posts").doc(postId);
+    const postDoc = await postRef.get();
+    if (!postDoc.exists) {
+      res.status(404).json({ message: 'Post not found' });
+      return;
+    }
+    await postRef.update({ likes: postDoc.data().likes + 1 });
+    res.status(200).json({ message: 'Post liked successfully' });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+// Endpoint to like a comment
+router.post("/forums/:forumId/posts/:postId/comments/:commentId/like", async (req, res) => {
+  try {
+    const { forumId, postId, commentId } = req.params;
+    const commentRef = db.collection("forum").doc(forumId).collection("posts").doc(postId).collection("comments").doc(commentId);
+    const commentDoc = await commentRef.get();
+    if (!commentDoc.exists) {
+      res.status(404).json({ message: 'Comment not found' });
+      return;
+    }
+    await commentRef.update({ likes: commentDoc.data().likes + 1 });
+    res.status(200).json({ message: 'Comment liked successfully' });
   } catch (e) {
     res.status(400).json({ error: e.message });
   }
