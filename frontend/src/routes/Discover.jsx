@@ -63,7 +63,7 @@ function Discover() {
         <>
         <div stytle={{ padding: '20px'}}>
             <div>
-                <h1>Discover</h1>
+                <p style={{ fontSize: '50px',  color: 'white', fontWeight: 'bold' }}>Discover</p>
             </div>
 
             <div >
