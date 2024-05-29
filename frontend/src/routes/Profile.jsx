@@ -10,6 +10,8 @@ import {
   Stack,
   Text,
   Img,
+  Flex,
+  Link,
 } from "@chakra-ui/react";
 import axios from "axios";
 
@@ -49,7 +51,7 @@ const Profile = () => {
     }
   }, [id, userID, token, searchParams, setToken, setUserID, isEditable]);
 
-  if (!forbidden) {
+  if (!forbidden && id !== 'nosessiontoken') {
     return (
       <Grid
         h="90%"
@@ -117,6 +119,13 @@ const Profile = () => {
         </GridItem>
       </Grid>
     );
+  } else if (id === 'nosessiontoken') {
+    console.log('hehe')
+    return (
+            <Flex height="100%" alignItems="center" justifyContent="center">
+                <Heading color="#FFFFFE">Please <Link color='#ff8906' href="/">login</Link> to view this page.</Heading>
+            </Flex>    
+        );
   }
 };
 
