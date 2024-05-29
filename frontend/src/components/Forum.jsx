@@ -10,9 +10,13 @@ import {
   FormControl,
   FormLabel,
   Input,
+  HStack,
+  IconButton
 } from '@chakra-ui/react';
-import { FaSpotify } from 'react-icons/fa';
+import { FaSpotify, FaThumbsUp } from 'react-icons/fa';
 import axios from 'axios';
+
+
 
 
 const Forum = () => {
@@ -28,6 +32,8 @@ const Forum = () => {
   const [newComment, setNewComment] = useState('');
 
 
+
+
   useEffect(() => {
     const fetchForums = async () => {
       try {
@@ -41,8 +47,12 @@ const Forum = () => {
     };
 
 
+
+
     fetchForums();
   }, []);
+
+
 
 
   const fetchPosts = async (forumId) => {
@@ -58,10 +68,12 @@ const Forum = () => {
   };
 
 
-  const fetchComments = async (postId) => {
+
+
+  const fetchComments = async (forumId, postId) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8000/forum/posts/${postId}/comments`);
+      const response = await axios.get(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/comments`);
       setComments(response.data.comments);
     } catch (error) {
       console.error('Error fetching comments:', error);
@@ -71,6 +83,8 @@ const Forum = () => {
   };
 
 
+
+
   const handleForumClick = (forum) => {
     setSelectedForum(forum);
     setSelectedPost(null);
@@ -78,11 +92,58 @@ const Forum = () => {
   };
 
 
-  const handlePostClick = (post) => {
+
+
+  const handlePostClick = (forum, post) => {
     setSelectedPost(post);
-    fetchComments(post.id);
+    fetchComments(forum.id, post.id);
   };
 
+//   const handleLikePost = async (forumId, postId) => {
+//     try {
+//       await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/like`);
+//     } catch (error) {
+//       console.error('Error liking post:', error);
+//     }
+//     fetchPosts(forumId);
+//   };
+
+
+
+//   const handleLikeComment = async (forumId, postId, commentId) => {
+//     try {
+//       await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/comments/${commentId}/like`);
+//     } catch (error) {
+//       console.error('Error liking comment:', error);
+//     }
+//     fetchComments(forumId, postId);
+//   };
+
+const handleLikeComment = async (forumId, postId, commentId) => {
+    try {
+      await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/comments/${commentId}/like`);
+      // Update the likes count for the selected comment directly
+      setComments(prevComments => prevComments.map(comment =>
+        comment.id === commentId ? { ...comment, likes: comment.likes + 1 } : comment
+      ));
+    } catch (error) {
+      console.error('Error liking comment:', error);
+    }
+  };
+
+
+  const handleLikePost = async (forumId, postId) => {
+    try {
+      await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/like`);
+      // Update the likes count for the selected post directly
+      setSelectedPost(prevPost => ({
+        ...prevPost,
+        likes: prevPost.likes + 1
+      }));
+    } catch (error) {
+      console.error('Error liking post:', error);
+    }
+};
 
   const handleCreateForum = async (e) => {
     e.preventDefault();
@@ -97,6 +158,8 @@ const Forum = () => {
       alert('Failed to create forum.');
     }
   };
+
+
 
 
   const handleSubmitPost = async (e) => {
@@ -118,21 +181,31 @@ const Forum = () => {
   };
 
 
+
+
   const handleSubmitComment = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:8000/forum/posts/${selectedPost.id}/comments`, {
+      await axios.post(`http://localhost:8000/forum/forums/${selectedForum.id}/posts/${selectedPost.id}/comments`, {
         text: newComment,
         userId: 'spotify_user_id',
       });
       setNewComment('');
       alert('Comment created successfully!');
-      fetchComments(selectedPost.id);
+      fetchComments(selectedForum.id, selectedPost.id);
     } catch (error) {
       console.error('Error submitting comment:', error);
       alert('Failed to submit comment.');
     }
   };
+
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+
+
 
 
   if (loading) {
@@ -144,6 +217,8 @@ const Forum = () => {
   }
 
 
+
+
   if (selectedPost) {
     return (
       <Container minHeight="100vh" display="flex" flexDirection="column" gap={4}>
@@ -152,15 +227,26 @@ const Forum = () => {
         </Button>
         <Card mb={1} bg="gray.700" padding={"3"}>
           <Text color="gray.500" fontSize="sm">
-            Posted by {selectedPost.userId} on {new Date(selectedPost.date).toLocaleDateString()}
+            Posted by {selectedPost.userId} on {formatDate(selectedPost.date)}
           </Text>
           <Text fontSize="2xl" fontWeight="bold" color="white" >
             {selectedPost.title}
           </Text>
           <Text color="white">{selectedPost.description}</Text>
+          <HStack justifyContent="space-between">
+            <Text color="gray.500" fontSize="sm">
+              {selectedPost.likes} likes
+            </Text>
+            <IconButton
+              aria-label="Like post"
+              icon={<FaThumbsUp />}
+              onClick={() => handleLikePost(selectedForum.id, selectedPost.id)}
+              colorScheme="teal"
+            />
+          </HStack>
         </Card>
         <form onSubmit={handleSubmitComment}>
-          <FormControl id="new-comment" mb={1}>
+          <FormControl id="new-comment" mb={4}>
             <FormLabel color="white">Add a Comment</FormLabel>
             <Input
               color="white"
@@ -174,14 +260,25 @@ const Forum = () => {
             Post Comment
           </Button>
         </form>
-        <VStack spacing={1} align="stretch">
+        <VStack spacing={4} align="stretch">
           {comments.length > 0 ? (
             comments.map((comment) => (
               <Card key={comment.id} p={4} bg="gray.700" borderRadius="md" width="100%">
                 <Text color="gray.500" fontSize="sm">
-                Posted by {comment.userId} on {new Date(comment.date).toLocaleDateString()}
+                Posted by {comment.userId} on {formatDate(comment.date)}
                 </Text>
                 <Text color="white">{comment.text}</Text>
+                <HStack justifyContent="space-between">
+                  <Text color="gray.500" fontSize="sm">
+                    {comment.likes} likes
+                  </Text>
+                  <IconButton
+                    aria-label="Like comment"
+                    icon={<FaThumbsUp />}
+                    onClick={() => handleLikeComment(selectedForum.id, selectedPost.id, comment.id)}
+                    colorScheme="teal"
+                  />
+                </HStack>
 
               </Card>
             ))
@@ -192,6 +289,8 @@ const Forum = () => {
       </Container>
     );
   }
+
+
 
 
   if (selectedForum) {
@@ -232,17 +331,17 @@ const Forum = () => {
             posts.map((post) => (
               <Card
                 key={post.id}
-                p={2}
+                p={4}
                 bg="gray.700"
                 borderRadius="md"
                 width="100%"
-                onClick={() => handlePostClick(post)}
+                onClick={() => handlePostClick(selectedForum, post)}
                 cursor="pointer"
               >
                 <Text color="gray.500" fontSize="sm">
-                  Posted by {post.userId} on {new Date(post.date).toLocaleDateString()}
+                  Posted by {post.userId} on {formatDate(post.date)}
                 </Text>
-                <Text fontSize="2xl" fontWeight="bold" color="white">
+                <Text fontSize="2xl" fontWeight="bold" color="white" mb={4}>
                   {post.title}
                 </Text>
                 <Text fontSize="sm" color="white">{post.description}</Text>
@@ -256,6 +355,8 @@ const Forum = () => {
       </Container>
     );
   }
+
+
 
 
   return (
@@ -301,10 +402,15 @@ const Forum = () => {
     </Box>
     </Container>
 
+
   );
 };
 
 
 export default Forum;
+
+
+
+
 
 

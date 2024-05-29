@@ -16,14 +16,14 @@ const user = require("./api/user");
 const forum = require("./api/forum");
 const song = require("./api/song");
 const artist = require("./api/artist");
-const liked = require("./api/liked-songs");
+//const liked = require("./api/liked-songs");
 
 //initialize Routes
 app.use('/auth', auth)
 app.use('/forum', forum);
 app.use('/song', song);
 app.use('/artist', artist);
-app.use('/liked', liked);
+//app.use('/liked', song);
 app.use('/user', user);
 
 // Start the server
