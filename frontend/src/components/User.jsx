@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function Profile({ userName, profilePictureUrl }) {
+function User({ userName, profilePictureUrl }) {
     const [isHovered, setIsHovered] = useState(false);
     const [backgroundColor, setBackgroundColor] = useState(getRandomColor());
 
@@ -53,7 +53,7 @@ function Profile({ userName, profilePictureUrl }) {
     );
 }
 
-export default Profile;
+export default User;
 
 function getRandomColor() {
     const colors = ['#F1A819', '#E53170'];

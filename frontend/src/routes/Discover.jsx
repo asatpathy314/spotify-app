@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-import Profile from './Profile';
+
 import Box from '@mui/material/Box';
+import User from '../components/User';
 //import { Link } from "react-router-dom";
-import './styles.css';
+import '../stylesheets/discover.css';
 
 function Discover() {
     const [profiles, setProfiles] = useState([]);
@@ -69,7 +70,7 @@ function Discover() {
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2}}>
                 {profiles.map((profile, index) => (
                     <div key={index} style={{ flex: '0 0 10%', maxWidth: '20%' }}>
-                        <Profile userName={profile.userName} profilePictureUrl={profile.profilePictureUrl} />
+                        <User userName={profile.userName} profilePictureUrl={profile.profilePictureUrl} />
                     </div>
                 ))}
                 </Box>
