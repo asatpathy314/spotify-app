@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
 
-import Box from '@mui/material/Box';
+import {Box, Link} from '@chakra-ui/react';
 import User from '../components/User';
 //import { Link } from "react-router-dom";
 import '../stylesheets/discover.css';
@@ -62,19 +62,20 @@ function Discover() {
     }, []);
 
     return (
-        
         <>
-        <div stytle={{ padding: '20px'}}>
+        <div style={{ padding: '20px'}}>
             <div>
                 <p style={{ fontSize: '50px',  color: 'white', fontWeight: 'bold' }}>Discover</p>
             </div>
 
             <div >
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2}}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 10}}>
                 {profiles.map((profile, index) => (
-                    <div key={index} >
-                        <User userName={profile.name} profilePictureUrl={profile.profile} />
-                    </div>
+                    <Link key={index} href={`/profile/${profile.id}`}>
+                        <div >
+                            <User userName={profile.name} profilePictureUrl={profile.profile} />
+                        </div>
+                    </Link>
                 ))}
                 </Box>
             </div>
