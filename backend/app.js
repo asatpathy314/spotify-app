@@ -12,17 +12,19 @@ app.use(cookieParser())
 //Import Routes
 //const artists = require("./api/getArtists");
 const auth = require("./api/auth")
+const user = require("./api/user");
 const forum = require("./api/forum");
-const song = require("./api/song")
-const artist = require("./api/artist")
-
+const song = require("./api/song");
+const artist = require("./api/artist");
+const liked = require("./api/liked-songs");
 
 //initialize Routes
 app.use('/auth', auth)
 app.use('/forum', forum);
-app.use('/song', song)
-app.use('/artist', artist)
-
+app.use('/song', song);
+app.use('/artist', artist);
+app.use('/liked', liked);
+app.use('/user', user);
 
 // Start the server
 const port = process.env.PORT || 8000;

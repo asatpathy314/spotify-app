@@ -3,12 +3,13 @@ import { ChakraProvider } from '@chakra-ui/react'
 import * as ReactDOM from 'react-dom/client'
 import { App } from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-//import Login from './components/Login.jsx'
 import Forum from './components/Forum.jsx'
 
 
 import Login from './routes/Login.jsx'
+import LogOut from './routes/Logout.jsx'
 import Profile from './routes/Profile.jsx'
+import {LikedSongs} from './routes/LikedSongs.jsx'
 import AuthProvider from './components/AuthProvider.jsx'
 import Discover from './routes/Discover.jsx'
 import TopSongs from './routes/TopSongs.jsx'
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
         element: <Login />
       },
       {
-        path: '/profile',
+        path: '/profile/:id',
         element: <Profile />
       },
       {
@@ -39,14 +40,19 @@ const router = createBrowserRouter([
         element: <Forum />
       },
       {
+<<<<<<< HEAD
         path: '/topsongs',
         element: <TopSongs />
+=======
+        path: '/liked',
+        element: <LikedSongs />
+>>>>>>> f71a7430d839fca50e13c211c53f46fe6e3d0aac
       },
     ]
   },
   {
-    path: '/forbidden',
-    element: <h1>403 Forbidden</h1>
+    path: '/logout',
+    element: <LogOut />
   }
 ])
 
