@@ -9,16 +9,39 @@ import { Box, Heading } from "@chakra-ui/react";
 const TopArtists = () => {
     const { token, setToken, userID, setUserID, refreshToken } = useContext(AuthContext);
     const [searchParams, setSearchParams] = useSearchParams();
-    const [topArtists, setTopArtists] = useState([]);
+    const [topArtistsLongTerm, setTopArtistsLongTerm] = useState([]);
+    const [topArtistsMediumTerm, setTopArtistsMediumTerm] = useState([]);
+    const [topArtistsShortTerm, setTopArtistsShortTerm] = useState([]);
     const [forbidden, setForbidden] = useState(false);
-    const [timeframe, setTimeframe] = useState('long_term');
+    const [timeframe, setTimeframe] = useState('short_term');
+
+    const returnTopArtists = (timeframe) => {
+        if (timeframe === 'long_term') {
+            return topArtistsLongTerm;
+        } else if (timeframe === 'medium_term') {
+            return topArtistsMediumTerm;
+        } else if (timeframe === 'short_term') {
+            return topArtistsShortTerm;
+        }
+    }
 
     useEffect(() => {
-        const fetchData = async (accessToken) => {
+        if (!token || !userID) {
+            if (searchParams.get('access_token') && searchParams.get('user_id')) {
+                setToken(searchParams.get('access_token'));
+                setUserID(searchParams.get('user_id'));
+            } else {
+                setForbidden(true);
+                window.location.replace("/forbidden");
+            }
+        }
+
+        const allTimeFrames = ['short_term', 'medium_term', 'long_term'];
+        const fetchData = async (timeframe) => {
             try {
                 const response = await axios.get(`http://localhost:8000/artist`, {
                     params: {
-                        spotify_token: accessToken,
+                        spotify_token: token,
                         num_artists: 10,
                         timeframe: timeframe
                     }
@@ -27,9 +50,15 @@ const TopArtists = () => {
                     const formattedArtists = response.data.items.map(item => ({
                         artist: item.name
                     }));
-                    setTopArtists(formattedArtists);
+                    if (timeframe === 'long_term') {
+                        setTopArtistsLongTerm(formattedArtists);
+                    } else if (timeframe === 'medium_term') {
+                        setTopArtistsMediumTerm(formattedArtists);
+                    } else if (timeframe === 'short_term') {
+                        setTopArtistsShortTerm(formattedArtists);
+                    }
                 } else {
-                    setTopArtists([{ error: 'An Error Occurred. Please try again later.' }]);
+                    console.error('Error setting artists.');
                 }
             } catch (error) {
                 if (error.response && error.response.status === 401) {
@@ -53,19 +82,14 @@ const TopArtists = () => {
             }
         };
 
-        if (token === null || userID === null) {
-            if (searchParams.get('access_token') && searchParams.get('user_id')) {
-                setToken(searchParams.get('access_token'));
-                setUserID(searchParams.get('user_id'));
-                fetchData(searchParams.get('access_token'));
-            } else {
-                setForbidden(true);
-                window.location.replace("/forbidden");
-            }
-        } else {
-            fetchData(token);
+        if (token) {
+            (async () => {
+                for (const timeFrame of allTimeFrames) {
+                    await fetchData(timeFrame);
+                }
+            })();
         }
-    }, [token, userID, searchParams, setToken, setUserID, timeframe]);
+    }, [token, userID, searchParams, setToken, setUserID]);
 
     const refreshAccessToken = async () => {
         try {
@@ -81,17 +105,17 @@ const TopArtists = () => {
         }
     };
 
-    if (forbidden) {
+    if (!forbidden) {
+        return (
+            <div>
+                <h1>Top Songs</h1>
+                <TimeButton currentTimeframe={timeframe} setTimeframe={setTimeframe} />
+                <DataGrid data={returnTopArtists(timeframe)} type="artists" />
+            </div>
+        );
+    } else {
         return null;
     }
-
-    return (
-        <Box p={4}>
-            <Heading as="h1" size="xl" mb={4}>Top Artists</Heading>
-            <TimeButton currentTimeframe={timeframe} setTimeframe={setTimeframe} />
-            <DataGrid data={topArtists} type="artists" />
-        </Box>
-    );
 };
 
 export default TopArtists;
