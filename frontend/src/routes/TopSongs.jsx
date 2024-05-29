@@ -45,7 +45,6 @@ const TopSongs = () => {
                 }
             } catch (error) {
                 console.error("Error fetching top songs:", error);
-                setTopSongs([{ error: 'An Error Occurred. Please try again later.' }]);
             }
         };
 
