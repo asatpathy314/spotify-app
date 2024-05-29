@@ -29,6 +29,20 @@ export const LikedSongs = () => {
         }
       ];
 
+      const fetchSongs = async () => {
+        try {
+            const responses = await axios.get("http://localhost:8000/liked");
+            console.log(responses.data);
+            setSongs(responses.data);
+        } catch (error) {
+            console.log("Error getting the songs: ", error);
+        };
+    }
+
+    useEffect(() => {
+        fetchSongs()
+    }, []);
+
       const splitArray = (array, size) => {
         const split = [];
         for (let i = 0; i < array.length; i += size) {
@@ -59,14 +73,7 @@ export const LikedSongs = () => {
         </Container>
       )
 
-    /* const fetchSongs = async () => {
-        try {
-            const responses = await axios.get("http://localhost:8000/auth/liked");
-            console.log(responses.data);
-            setSongs(responses.data);
-        } catch (error) {
-            console.log("Error getting the songs: ", error);
-        }
+    /* 
 
     useEffect(() => {
         if (token===null || userID===null) {
