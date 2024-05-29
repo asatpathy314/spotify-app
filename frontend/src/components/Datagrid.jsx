@@ -17,7 +17,7 @@ const DataGrid = ({ data, type }) => {
       borderWidth="1px"
       borderRadius="lg"
       overflow="hidden"
-      bg='#191827'
+      bg='#0f0e17'
       color="white"
       p={4}
     >
@@ -36,7 +36,6 @@ const DataGrid = ({ data, type }) => {
             <Tr key={index} borderBottom="1px" borderColor="black">
               <Td>
                 <Box
-                  bg="black"
                   p={2}
                   borderRadius="md"
                   textAlign="center"
@@ -46,7 +45,6 @@ const DataGrid = ({ data, type }) => {
               </Td>
               <Td>
                 <Box
-                  bg="black"
                   p={2}
                   borderRadius="md"
                   textAlign="center"
@@ -56,7 +54,6 @@ const DataGrid = ({ data, type }) => {
               </Td>
               <Td>
                 <Box
-                  bg="black"
                   p={2}
                   borderRadius="md"
                   textAlign="center"
@@ -66,7 +63,6 @@ const DataGrid = ({ data, type }) => {
               </Td>
               <Td>
                 <Box
-                  bg="black"
                   p={2}
                   borderRadius="md"
                   textAlign="center"
@@ -76,7 +72,6 @@ const DataGrid = ({ data, type }) => {
               </Td>
               <Td>
                 <Box
-                  bg="black"
                   p={2}
                   borderRadius="md"
                   textAlign="center"
