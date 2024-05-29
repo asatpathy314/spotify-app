@@ -12,7 +12,7 @@ const Inbox = () => {
     useEffect(() => {
         const fetchInbox = async () => {
           try {
-            const response = await axios.get("http://localhost:8000/Messages", {
+            const response = await axios.get("http://localhost:8000/messages", {
             params: { userId: currentUserId }, // Send userId as query parameter
             });
             console.log("Fetched conversations:", response.data.conversations);
