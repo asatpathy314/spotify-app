@@ -16,13 +16,13 @@ export const AppAvatar = ( {type, link, size='2xl' } ) => {
     return (
         (link ? (
             <>
-            <Box mt="10">
-                <Wrap spacing="30px">
-                    <WrapItem>
-                        <Avatar size={size} src='https://bit.ly/broken-link' />
-                    </WrapItem>
-                </Wrap>
-            </Box>
+                <Box mt="10">
+                    <Wrap spacing="30px">
+                        <WrapItem>
+                            <Avatar size={size} src='https://bit.ly/broken-link' />
+                        </WrapItem>
+                    </Wrap>
+                </Box>
             </>
         ) : (
             <Box mt="10">

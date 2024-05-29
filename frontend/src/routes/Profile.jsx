@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { useSearchParams} from "react-router-dom"
+import { useSearchParams, useParams } from "react-router-dom"
 import { AuthContext } from "../components/AuthProvider"
 import { AppAvatar } from "../components/AppAvatar"
 import { Heading, Grid, GridItem, Avatar, Stack, Text, Img } from "@chakra-ui/react"
@@ -8,55 +8,31 @@ import axios from "axios"
 
 const Profile = () => {
     const { token, setToken, userID, setUserID } = useContext(AuthContext)
-    const [searchParams, setSearchParams] = useSearchParams()
-    const [favoriteArtist, setFavoriteArtist] = useState(null)
-    const [favoriteSong, setFavoriteSong] = useState(null)
-    const [forbidden, setForbidden] = useState(null)
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [favoriteArtist, setFavoriteArtist] = useState(null);
+    const [isEditable, setIsEditable] = useState(false);
+    const [favoriteSong, setFavoriteSong] = useState(null);
+    const [forbidden, setForbidden] = useState(null);
+    const { id } = useParams();
 
     useEffect(() => {
+        if (id == userID) {
+            setIsEditable(true);
+            console.log(isEditable);
+        }
         if (token===null || userID===null) {
             if (searchParams.get('access_token') && searchParams.get('user_id')) {
-                console.log('huge')
-                setToken(searchParams.get('access_token'))
-                setUserID(searchParams.get('user_id'))
+                setToken(searchParams.get('access_token'));
+                setUserID(searchParams.get('user_id'));
             }
             else {
-                console.log(token)
-                console.log(userID)
-                setForbidden(true)
-                window.location.replace("/forbidden")
-                return
+                setForbidden(true);
+                window.location.replace("/forbidden");
+                return;
             }
         }
-        const songParams = new URLSearchParams({
-                spotify_token: token,
-                num_songs: 1,
-                timeframe: 'long_term'
-        })
-        const artistParams = new URLSearchParams({
-                spotify_token: token,
-                num_artists: 1,
-                timeframe: 'long_term'
-        })
-        axios.get('http://localhost:8000/song?' + songParams.toString())
-            .then(res => {
-                if (res.status === 200) {
-                    setFavoriteSong(res.data.items[0])
-                }
-                else {
-                    setFavoriteSong({error: 'An Error Occurred. Please try again later.'})
-                }
-            })
-        axios.get('http://localhost:8000/artist?' + songParams.toString())
-        .then(res => {
-            if (res.status === 200) {
-                setFavoriteArtist(res.data.items[0])
-            }
-            else {
-                setFavoriteArtist({error: 'An Error Occurred. Please try again later.'})
-            }
-        })
-    }, [searchParams, setToken, setUserID, token, userID, setFavoriteArtist, setFavoriteSong])
+
+        }, [id, userID, token, searchParams, setToken, setUserID, isEditable])
     console.log(favoriteSong)
     console.log('hmm', favoriteArtist)
     if (!forbidden) {
@@ -65,6 +41,7 @@ const Profile = () => {
                 h='90%'
                 templateRows='repeat(2, 1fr)'
                 templateColumns='repeat(4, 1fr)'
+                color="#FFFFFE"
                 gap={4}
             >
                 <GridItem colSpan={4} bg='#0f0e17' padding={10}>
@@ -80,7 +57,7 @@ const Profile = () => {
                             <Heading size={['md', null, null, 'lg']} color='#FFFFFE'>
                                 daniel341
                             </Heading>
-                            <Text fontSize='xl' color='#FFFFFE'>
+                            <Text fontSize='xl'>
                                 Hiii! My name is Daniel I love chicken and rice. Hiii! My name is
                                 Daniel I love chicken and rice.
                             </Text>
@@ -88,7 +65,7 @@ const Profile = () => {
                     </Stack>
                 </GridItem>
                 <GridItem colSpan={2} bg='#0f0e17' padding={10}>
-                    <Heading size={['sm', 'md', null, 'lg']} color='#FFFFFE' textAlign='center'>
+                    <Heading size={['sm', 'md', null, 'lg']}>
                         My Favorite Song
                     </Heading>
                     {favoriteSong === null && <Text>Loading...</Text>}
@@ -101,14 +78,14 @@ const Profile = () => {
                                 mt='5'
                                 mb='5'
                             />
-                            <Heading size={['sm', 'md', null, 'md']} color='#FFFFFE' textAlign='center'>
+                            <Heading size={['sm', 'md', null, 'md']} textAlign="center">
                                 {favoriteSong.name}
                             </Heading>
                         </>
                     )}
                 </GridItem>
-                <GridItem colSpan={2} bg='#0f0e17' padding={10} textAlign='center'>
-                    <Heading size={['sm', 'md', null, 'lg']} color='#FFFFFE'>
+                <GridItem colSpan={2} bg='#0f0e17' padding={10}>
+                    <Heading size={['sm', 'md', null, 'lg']}>
                         My Favorite Artist
                     </Heading>
                     {favoriteArtist === null && <Text>Loading...</Text>}
@@ -121,7 +98,7 @@ const Profile = () => {
                                 mt='5'
                                 mb='5'
                             />
-                            <Heading size={['sm', 'md', null, 'md']} color='#FFFFFE' textAlign='center'>
+                            <Heading size={['sm', 'md', null, 'md']} textAlign="center">
                                 {favoriteArtist.name}
                             </Heading>
                         </>
