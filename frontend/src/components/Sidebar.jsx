@@ -23,8 +23,8 @@ import { FiMenu } from "react-icons/fi";
 const LinkItems= [
   { name: 'Favorite Songs', icon: CiHeart, link: '/#' },
   { name: 'Favorite Artists', icon: GiMicrophone, link: '/#' },
-  { name: 'Forum', icon: MdForum, link: '/#' },
-  { name: 'Explore', icon: FaMagnifyingGlass, link: '/#' },
+  { name: 'Forum', icon: MdForum, link: '/forum' },
+  { name: 'Discover', icon: FaMagnifyingGlass, link: '/discover' },
   { name: 'Profile', icon: BsFilePerson, link: '/profile' },
   { name: 'Inbox', icon: GoPaperAirplane, link: '/profile' },
   { name: 'Logout', icon: GoPaperAirplane, link: '/logout' }
@@ -93,7 +93,6 @@ const NavItem = ({ icon, children, link, ...rest }) => {
         role="group"
         cursor="pointer"
         color="#FFFFFE"
-        
         _hover={{
           bg: 'cyan.400',
           color: 'white',
