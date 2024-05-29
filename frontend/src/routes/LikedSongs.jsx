@@ -13,16 +13,12 @@ export const LikedSongs = () => {
     
     const fetchSongs = async () => {
         try {
-            console.log("")
-            const responses = await axios.get("http://localhost:8000/liked", {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            console.log(responses.data);
-            setSongs(responses.data);
+            const responses = await axios.get(`http://localhost:8000/song/liked?spotify_token=${token}`);
+            console.log("API: ", responses.data.items);
+            setSongs(responses.data.items);
         } catch (error) {
             console.log("Error getting the songs: ", error);
+            setSongs([]);
             if (error.response && error.response.status === 403) {
                 setForbidden(true);
             };
@@ -31,9 +27,9 @@ export const LikedSongs = () => {
 
     useEffect(() => {
         if (token) {
-            fetchSongs()
+            fetchSongs();
         }
-    }, []);
+    }, [token]);
 
       return (
         <Container minHeight="100vh" display="grid">
@@ -44,11 +40,11 @@ export const LikedSongs = () => {
                 <Stack direction='row' spacing={4} marginBottom={4} alignItems="flex-start">
                     {songs.map((song, index) => (
                         <Card backgroundColor="#0F0E17" width="100%" minWidth="200px" height="20%" minHeight="150px" key={index}>
-                            <Box padding="4" textAlign='left'>
+                            <Box padding="4" display='flex' flexWrap='wrap'>
                                 <Image boxSize='200px' objectFit='cover'
-                                    src={song || 'https://via.placeholder.com/150'} alt={index}
+                                    src={song.track.album.images[0].url || 'https://via.placeholder.com/150'} alt={index}
                                 />
-                                <Text color="#FFFFFE" textAlign="center" marginTop="2">{user.userName}</Text>
+                                <Text color="#FFFFFE" textAlign="center" marginTop="2">{song.track.name}</Text>
                             </Box>
                         </Card>
                     ))}
