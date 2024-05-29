@@ -47,7 +47,4 @@ router.get("/forums", async (req, res) => {
     }
   });
  
- 
-
-
 module.exports = router;
