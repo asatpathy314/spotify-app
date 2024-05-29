@@ -14,6 +14,7 @@ import AuthProvider from './components/AuthProvider.jsx'
 import Discover from './routes/Discover.jsx'
 import TopSongs from './routes/TopSongs.jsx'
 
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: '/topsongs',
         element: <TopSongs />
+      },
+      {
+        path: '/topartists',
+        element: <TopArtists />
       },
       {
         path: '/liked',
