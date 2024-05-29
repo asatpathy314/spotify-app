@@ -63,7 +63,7 @@ const Profile = () => {
         <GridItem colSpan={4} bg="#0f0e17" padding={10}>
           <Stack direction={["column", "row", "row", "row"]} spacing={4}>
             <Avatar
-              src={profileData?.pfp}
+              src={profileData?.profile}
               size={["3xl", "3xl", "3xl", "3xl"]}
               shape="circle"
             />
