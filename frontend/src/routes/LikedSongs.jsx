@@ -34,14 +34,6 @@ export const LikedSongs = () => {
     }, [token]);
     console.log(songs);
 
-    const bundleSongs = (array, size) => {
-        const bundled = [];
-        for (let i = 0; i < array.length; i += size) {
-            bundled.push(array.slice(i, i + size));
-        }
-        return bundled;
-    };
-
     if (!forbidden) {
         return (
             <>
@@ -54,13 +46,13 @@ export const LikedSongs = () => {
                         <GridItem rowSpan={1} colSpan={1} key={index}>
                             <Card maxW='sm' bg="#0f0e17" color="#FFFFFE">
                             <CardBody>
+                                <Stack mt='6' spacing='3'>
+                                <Heading size='md'>{song.track.name}</Heading>
                                 <Img
                                 src={song.track.album.images[0].url}
                                 alt='Album Cover'
                                 borderRadius='lg'
                                 />
-                                <Stack mt='6' spacing='3'>
-                                <Heading size='md'>{song.track.name}</Heading>
                                 </Stack>
                             </CardBody>
                             </Card>
