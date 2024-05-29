@@ -1,4 +1,5 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useContext } from 'react';
+import { AuthContext } from './AuthProvider';
 import {
   IconButton,
   Box,
@@ -20,18 +21,10 @@ import { GoPaperAirplane } from "react-icons/go";
 import { FiMenu } from "react-icons/fi";
 
 
-const LinkItems= [
-  { name: 'Liked Songs', icon: CiHeart, link: '/liked' },
-  { name: 'Favorite Artists', icon: GiMicrophone, link: '/#' },
-  { name: 'Forum', icon: MdForum, link: '/forum' },
-  { name: 'Discover', icon: FaMagnifyingGlass, link: '/discover' },
-  { name: 'Profile', icon: BsFilePerson, link: '/profile' },
-  { name: 'Inbox', icon: GoPaperAirplane, link: '/profile' },
-  { name: 'Logout', icon: GoPaperAirplane, link: '/logout' }
-];
 
 export default function SimpleSidebar({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  
   return (
     <Box minH="100vh">
       <SidebarContent
@@ -60,6 +53,16 @@ export default function SimpleSidebar({ children }) {
 }
 
 const SidebarContent = ({ onClose, ...rest }) => {
+  const { token, setToken, userID, setUserID } = useContext(AuthContext);
+  const LinkItems= [
+    { name: 'Liked Songs', icon: CiHeart, link: '/liked' },
+    { name: 'Favorite Artists', icon: GiMicrophone, link: '/#' },
+    { name: 'Forum', icon: MdForum, link: '/forum' },
+    { name: 'Discover', icon: FaMagnifyingGlass, link: '/discover' },
+    { name: 'Profile', icon: BsFilePerson, link: `/profile/${userID}` },
+    { name: 'Inbox', icon: GoPaperAirplane, link: '/profile' },
+    { name: 'Logout', icon: GoPaperAirplane, link: '/logout' }
+  ];
   return (
     <Box
       bg="#0f0e17"
