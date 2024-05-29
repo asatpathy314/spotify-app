@@ -40,13 +40,12 @@ const router = createBrowserRouter([
         element: <Forum />
       },
       {
-<<<<<<< HEAD
         path: '/topsongs',
         element: <TopSongs />
-=======
+      },
+      {
         path: '/liked',
         element: <LikedSongs />
->>>>>>> f71a7430d839fca50e13c211c53f46fe6e3d0aac
       },
     ]
   },
