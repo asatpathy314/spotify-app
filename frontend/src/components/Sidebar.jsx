@@ -21,7 +21,7 @@ import { FiMenu } from "react-icons/fi";
 
 
 const LinkItems= [
-  { name: 'Favorite Songs', icon: CiHeart, link: '/#' },
+  { name: 'Liked Songs', icon: CiHeart, link: '/liked' },
   { name: 'Favorite Artists', icon: GiMicrophone, link: '/#' },
   { name: 'Forum', icon: MdForum, link: '/#' },
   { name: 'Explore', icon: FaMagnifyingGlass, link: '/#' },
