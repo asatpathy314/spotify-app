@@ -32,7 +32,7 @@ export const LikedSongs = () => {
     }, [token]);
 
       return (
-        <Container minHeight="100vh" display="grid">
+       <Container display="grid" padding='20px'>
             <Heading color="#FFFFFE">Your Liked Songs</Heading>
             {forbidden ? (
                 <Text color="red.500">You do not have permission to view this content.</Text>

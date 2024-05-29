@@ -23,7 +23,7 @@ app.use('/auth', auth)
 app.use('/forum', forum);
 app.use('/song', song);
 app.use('/artist', artist);
-app.use('/liked', song);
+//app.use('/liked', song);
 app.use('/user', user);
 
 // Start the server
