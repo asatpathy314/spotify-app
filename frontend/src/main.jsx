@@ -13,6 +13,7 @@ import {LikedSongs} from './routes/LikedSongs.jsx'
 import AuthProvider from './components/AuthProvider.jsx'
 import Discover from './routes/Discover.jsx'
 import TopSongs from './routes/TopSongs.jsx'
+import TopArtists from './routes/TopArtists.jsx'
 
 
 const router = createBrowserRouter([
