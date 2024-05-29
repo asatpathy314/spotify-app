@@ -2,9 +2,9 @@
 
 import { Box, Wrap, WrapItem } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import '..stylesheets/Messages.css'
+import '..stylesheets/messages.css'
 
-function Messages({userID}) {
+function messages({userID}) {
     const[userID, setUserID] = useState("");
 
     // useEffect(() => {
@@ -13,4 +13,4 @@ function Messages({userID}) {
 
 };
 
-export default Messages
+export default messages;

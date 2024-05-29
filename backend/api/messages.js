@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('./api/firebase');  // Correct path to firebase.js
+const db = require('./firebase');  // Correct path to firebase.js
 
 
 // router.post("/Messages", async (req, res) => {
@@ -37,7 +37,7 @@ const db = require('./api/firebase');  // Correct path to firebase.js
 
 
 // Fetch conversation array of a specific user
-router.get("/Messages", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     // Assuming you get the userId from the request (e.g., req.userId)
     const userId = req.query.userId;
