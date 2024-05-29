@@ -28,13 +28,6 @@ router.get("/", async (req, res) => {
 
 router.get("/all", async(req, res) => {
     try {
-        // Access the query parameter "id"
-        const userId = req.query.id;
-        
-        if (!userId) {
-            return res.status(400).send("Missing query parameter: id");
-        }
-
         // Reference to the user document
         const usersSnapshot = await db.collection("user").get()
         const users = [];
