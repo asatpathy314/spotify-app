@@ -41,6 +41,10 @@ const Profile = () => {
             .then((res) => {
                 setProfileData(res.data);
             })
+            .catch((error) => {
+                console.error("Error retrieving user:", error);
+                setProfileData({error: "Error retrieving User Data. If this is your profile try logging in again."})
+            })
     }
   }, [id, userID, token, searchParams, setToken, setUserID, isEditable]);
   if (!forbidden) {
@@ -55,8 +59,9 @@ const Profile = () => {
         <GridItem colSpan={4} bg="#0f0e17" padding={10}>
           <Stack direction={["column", "row", "row", "row"]} spacing={4}>
             <Avatar
-              src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"
+              src={profileData && profileData.pfp}
               size={["3xl", "3xl", "3xl", "3xl"]}
+              shape="circle"
             />
             <div>
               <Heading size={["xl", null, null, "2xl"]} color="#FFFFFE">

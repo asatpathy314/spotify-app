@@ -88,6 +88,7 @@ app.get('/callback', function(req, res) {
                 //refresh_token: refresh_token,
                 user_id: body.id
               }));
+              console.log(body)
             
             // TODO: check if there is a user in the Firebase collection 'user' with id body.id. If not 
             // create a new user with the id body.id and then query spotify for favorite song and favorite artist and put it in.
@@ -96,6 +97,7 @@ app.get('/callback', function(req, res) {
               if (!doc.exists) {
                 // User does not exist, create a new user
                 userRef.set({
+                  profile: body.images[1].url,
                   email: body.email,
                   name: body.display_name,
                   bio: "",
