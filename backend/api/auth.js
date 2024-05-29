@@ -17,14 +17,14 @@ const generateRandomString = (length) => {
 }
 
 var stateKey = 'spotify_auth_state';
-var app = express.Router();
+const app = express.Router();
 
 app.get('/login', function(req, res) {
 
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
   // your application requests authorization
-  var scope = 'user-read-private user-read-email';
+  var scope = 'user-read-private user-read-email user-top-read';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -78,14 +78,28 @@ app.get('/callback', function(req, res) {
         };
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
-          console.log(body);
+          console.log(response.statusCode)
           // we can also pass the token to the browser to make requests from there
+          if (response.statusCode === 200) {
           res.redirect('http://localhost:5173/profile?' +
             querystring.stringify({
               access_token: access_token,
-              //refresh_token: refresh_token
+              //refresh_token: refresh_token,
               user_id: body.id
             }));
+          } else if (response.statusCode === 403) {
+            res.redirect('http://localhost:5173/profile?' +
+              querystring.stringify({
+                error: "You must be registered with the app creator to use this app."
+              }));
+          
+          } else {
+            res.redirect('http://localhost:5173/profile?' +
+              querystring.stringify({
+                access_token: access_token,
+                error: "An error occurred while accessing the Spotify API."
+              }));
+          }
         });
       } else {
         res.redirect('http://localhost:5173/profile?' +

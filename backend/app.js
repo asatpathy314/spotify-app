@@ -12,14 +12,16 @@ app.use(cookieParser())
 //Import Routes
 //const artists = require("./api/getArtists");
 const auth = require("./api/auth")
-const forum = require("./forum");
+const forum = require("./api/forum");
 const song = require("./api/song")
+const artist = require("./api/artist")
 
 
 //initialize Routes
 app.use('/auth', auth)
 app.use('/forum', forum);
 app.use('/song', song)
+app.use('/artist', artist)
 
 
 // Start the server

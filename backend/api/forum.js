@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('./api/firebase');  // Correct path to firebase.js
+const db = require('./firebase');  // Correct path to firebase.js
 
 
 router.post("/forum", async (req, res) => {
@@ -45,9 +45,6 @@ router.get("/forums", async (req, res) => {
     } catch (e) {
       res.status(400).json({ error: e.message });
     }
-  });
- 
- 
-
+});
 
 module.exports = router;

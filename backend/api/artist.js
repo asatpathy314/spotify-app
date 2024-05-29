@@ -5,17 +5,17 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
     const spotify_token = req.query.spotify_token;
-    const num_songs = req.query.num_songs || 10; // Default to 10 songs
+    const num_artists = req.query.num_artists || 10; // Default to 10 songs
     const timeframe = req.query.timeframe;
     const offset = 0;
     if (!timeframe || !spotify_token || (timeframe !== "short_term" && timeframe !== "medium_term" && timeframe !== "long_term")) {
         return res.status(400).json({ error: "Missing required parameter" });
     }
-    const type = "tracks";
+    const type = "artists";
 
     const options = {
         url: `https://api.spotify.com/v1/me/top/${type}?` + querystring.stringify({
-            limit: num_songs,
+            limit: num_artists,
             time_range: timeframe,
             offset: offset
         }),
@@ -24,7 +24,7 @@ router.get('/', (req, res) => {
 
     request.get(options, (error, response, body) => {
         if (error) {
-            return res.status(500).json({ error: "Failed to fetch top tracks" });
+            return res.status(500).json({ error: "Failed to fetch top artists" });
         }
         const data = JSON.parse(body);
         console.log(data)
