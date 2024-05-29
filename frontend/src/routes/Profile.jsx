@@ -21,6 +21,8 @@ const Profile = () => {
                 setUserID(searchParams.get('user_id'))
             }
             else {
+                console.log(token)
+                console.log(userID)
                 setForbidden(true)
                 window.location.replace("/forbidden")
                 return
@@ -56,7 +58,7 @@ const Profile = () => {
         })
     }, [searchParams, setToken, setUserID, token, userID, setFavoriteArtist, setFavoriteSong])
     console.log(favoriteSong)
-    console.log(favoriteArtist)
+    console.log('hmm', favoriteArtist)
     if (!forbidden) {
         return (
             <Grid
@@ -109,8 +111,8 @@ const Profile = () => {
                     <Heading size={['sm', 'md', null, 'lg']} color='#FFFFFE'>
                         My Favorite Artist
                     </Heading>
-                    {favoriteSong === null && <Text>Loading...</Text>}
-                    {favoriteSong !== null && (
+                    {favoriteArtist === null && <Text>Loading...</Text>}
+                    {favoriteArtist !== null && (
                         <>
                             <Img
                                 src={favoriteArtist.images[1].url}
