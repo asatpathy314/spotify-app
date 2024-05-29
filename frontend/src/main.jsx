@@ -11,6 +11,7 @@ import Login from './routes/Login.jsx'
 import Profile from './routes/Profile.jsx'
 import AuthProvider from './components/AuthProvider.jsx'
 import Discover from './routes/Discover.jsx'
+import TopSongs from './routes/TopSongs.jsx'
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: '/forum',
         element: <Forum />
+      },
+      {
+        path: '/topsongs',
+        element: <TopSongs />
       },
     ]
   },
