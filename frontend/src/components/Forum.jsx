@@ -10,8 +10,10 @@ import {
   FormControl,
   FormLabel,
   Input,
+  HStack,
+  IconButton
 } from '@chakra-ui/react';
-import { FaSpotify } from 'react-icons/fa';
+import { FaSpotify, FaThumbsUp } from 'react-icons/fa';
 import axios from 'axios';
 
 
@@ -97,8 +99,51 @@ const Forum = () => {
     fetchComments(forum.id, post.id);
   };
 
+//   const handleLikePost = async (forumId, postId) => {
+//     try {
+//       await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/like`);
+//     } catch (error) {
+//       console.error('Error liking post:', error);
+//     }
+//     fetchPosts(forumId);
+//   };
 
 
+
+//   const handleLikeComment = async (forumId, postId, commentId) => {
+//     try {
+//       await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/comments/${commentId}/like`);
+//     } catch (error) {
+//       console.error('Error liking comment:', error);
+//     }
+//     fetchComments(forumId, postId);
+//   };
+
+const handleLikeComment = async (forumId, postId, commentId) => {
+    try {
+      await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/comments/${commentId}/like`);
+      // Update the likes count for the selected comment directly
+      setComments(prevComments => prevComments.map(comment =>
+        comment.id === commentId ? { ...comment, likes: comment.likes + 1 } : comment
+      ));
+    } catch (error) {
+      console.error('Error liking comment:', error);
+    }
+  };
+
+
+  const handleLikePost = async (forumId, postId) => {
+    try {
+      await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/like`);
+      // Update the likes count for the selected post directly
+      setSelectedPost(prevPost => ({
+        ...prevPost,
+        likes: prevPost.likes + 1
+      }));
+    } catch (error) {
+      console.error('Error liking post:', error);
+    }
+};
 
   const handleCreateForum = async (e) => {
     e.preventDefault();
@@ -188,9 +233,20 @@ const Forum = () => {
             {selectedPost.title}
           </Text>
           <Text color="white">{selectedPost.description}</Text>
+          <HStack justifyContent="space-between">
+            <Text color="gray.500" fontSize="sm">
+              {selectedPost.likes} likes
+            </Text>
+            <IconButton
+              aria-label="Like post"
+              icon={<FaThumbsUp />}
+              onClick={() => handleLikePost(selectedForum.id, selectedPost.id)}
+              colorScheme="teal"
+            />
+          </HStack>
         </Card>
         <form onSubmit={handleSubmitComment}>
-          <FormControl id="new-comment" mb={1}>
+          <FormControl id="new-comment" mb={4}>
             <FormLabel color="white">Add a Comment</FormLabel>
             <Input
               color="white"
@@ -204,7 +260,7 @@ const Forum = () => {
             Post Comment
           </Button>
         </form>
-        <VStack spacing={1} align="stretch">
+        <VStack spacing={4} align="stretch">
           {comments.length > 0 ? (
             comments.map((comment) => (
               <Card key={comment.id} p={4} bg="gray.700" borderRadius="md" width="100%">
@@ -212,7 +268,17 @@ const Forum = () => {
                 Posted by {comment.userId} on {formatDate(comment.date)}
                 </Text>
                 <Text color="white">{comment.text}</Text>
-
+                <HStack justifyContent="space-between">
+                  <Text color="gray.500" fontSize="sm">
+                    {comment.likes} likes
+                  </Text>
+                  <IconButton
+                    aria-label="Like comment"
+                    icon={<FaThumbsUp />}
+                    onClick={() => handleLikeComment(selectedForum.id, selectedPost.id, comment.id)}
+                    colorScheme="teal"
+                  />
+                </HStack>
 
               </Card>
             ))
@@ -275,7 +341,7 @@ const Forum = () => {
                 <Text color="gray.500" fontSize="sm">
                   Posted by {post.userId} on {formatDate(post.date)}
                 </Text>
-                <Text fontSize="2xl" fontWeight="bold" color="white">
+                <Text fontSize="2xl" fontWeight="bold" color="white" mb={4}>
                   {post.title}
                 </Text>
                 <Text fontSize="sm" color="white">{post.description}</Text>
