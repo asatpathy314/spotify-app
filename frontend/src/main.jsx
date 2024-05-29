@@ -7,6 +7,7 @@ import Forum from './components/Forum.jsx'
 
 
 import Login from './routes/Login.jsx'
+import LogOut from './routes/Logout.jsx'
 import Profile from './routes/Profile.jsx'
 import {LikedSongs} from './routes/LikedSongs.jsx'
 import AuthProvider from './components/AuthProvider.jsx'
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
         element: <LikedSongs />
       },
     ]
+  },
+  {
+    path: '/logout',
+    element: <LogOut />
   }
 ])
 

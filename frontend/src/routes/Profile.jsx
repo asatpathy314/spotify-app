@@ -10,6 +10,8 @@ import {
   Stack,
   Text,
   Img,
+  Flex,
+  Link,
 } from "@chakra-ui/react";
 import axios from "axios";
 
@@ -34,7 +36,7 @@ const Profile = () => {
         setUserID(searchParams.get("user_id"));
         console.log(userID);
       } else {
-        console.log('hello')
+        console.log('Error retrieving token and user ID')
       }
     }
     if (id) {
@@ -48,7 +50,8 @@ const Profile = () => {
             })
     }
   }, [id, userID, token, searchParams, setToken, setUserID, isEditable]);
-  if (!forbidden) {
+
+  if (!forbidden && id !== 'nosessiontoken') {
     return (
       <Grid
         h="90%"
@@ -60,7 +63,7 @@ const Profile = () => {
         <GridItem colSpan={4} bg="#0f0e17" padding={10}>
           <Stack direction={["column", "row", "row", "row"]} spacing={4}>
             <Avatar
-              src={profileData && profileData.pfp}
+              src={profileData?.profile}
               size={["3xl", "3xl", "3xl", "3xl"]}
               shape="circle"
             />
@@ -69,8 +72,7 @@ const Profile = () => {
                 User
               </Heading>
               <Heading size={["md", null, null, "lg"]} color="#FFFFFE">
-                {profileData && profileData.name}
-                {!profileData && "Loading..."}
+                {profileData?.name || "Loading..."}
               </Heading>
               <Text fontSize="xl">
                 Hiii! My name is Daniel I love chicken and rice. Hiii! My name
@@ -82,17 +84,17 @@ const Profile = () => {
         <GridItem colSpan={2} bg="#0f0e17" padding={10}>
           <Heading size={["sm", "md", null, "lg"]}>My Favorite Song</Heading>
           {profileData === null && <Text>Loading...</Text>}
-          {profileData !== null && (
+          {profileData && (
             <>
               <Img
-                src={profileData.favoriteSong.album.images[1].url}
-                alt={profileData.favoriteSong.name}
+                src={profileData?.favoriteSong?.album?.images?.[1]?.url}
+                alt={profileData?.favoriteSong?.name}
                 mx="auto" // Add this line to center the image horizontally
                 mt="5"
                 mb="5"
               />
               <Text fontSize={["lg", "2xl", null, "2xl"]} textAlign="center">
-                {profileData.favoriteSong.name}
+                {profileData?.favoriteSong?.name}
               </Text>
             </>
           )}
@@ -100,23 +102,30 @@ const Profile = () => {
         <GridItem colSpan={2} bg="#0f0e17" padding={10}>
           <Heading size={["sm", "md", null, "lg"]}>My Favorite Artist</Heading>
           {profileData === null && <Text>Loading...</Text>}
-          {profileData !== null && (
+          {profileData && (
             <>
               <Img
-                src={profileData.favoriteArtist.images[1].url}
-                alt={profileData.favoriteArtist.name}
+                src={profileData?.favoriteArtist?.images?.[1]?.url}
+                alt={profileData?.favoriteArtist?.name}
                 mx="auto" // Add this line to center the image horizontally
                 mt="5"
                 mb="5"
               />
               <Text fontSize={["lg", "2xl", null, "2xl"]} textAlign="center">
-                {profileData.favoriteArtist.name}
+                {profileData?.favoriteArtist?.name}
               </Text>
             </>
           )}
         </GridItem>
       </Grid>
     );
+  } else if (id === 'nosessiontoken') {
+    console.log('hehe')
+    return (
+            <Flex height="100%" alignItems="center" justifyContent="center">
+                <Heading color="#FFFFFE">Please <Link color='#ff8906' href="/">login</Link> to view this page.</Heading>
+            </Flex>    
+        );
   }
 };
 
