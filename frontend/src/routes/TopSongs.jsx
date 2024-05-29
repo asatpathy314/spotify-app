@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { AuthContext } from "../components/AuthProvider";
-// import { DataGrid } from "../components/DataGrid";
 import axios from "axios";
-import { Heading, Grid, GridItem, Avatar, Stack, Text, Img } from "@chakra-ui/react";
+import DataGrid from "../components/Datagrid"; // Correct import statement
 
 const TopSongs = () => {
     const { token, setToken, userID, setUserID } = useContext(AuthContext);
@@ -32,7 +31,13 @@ const TopSongs = () => {
                     }
                 });
                 if (response.status === 200) {
-                    setTopSongs(response.data.items);
+                    const formattedSongs = response.data.items.map(item => ({
+                        song: item.name,
+                        artist: item.artists[0].name,
+                        album: item.album.name,
+                        length: new Date(item.duration_ms).toISOString().substr(14, 5) // Format duration
+                    }));
+                    setTopSongs(formattedSongs);
                 } else {
                     setTopSongs([{ error: 'An Error Occurred. Please try again later.' }]);
                 }
@@ -55,11 +60,7 @@ const TopSongs = () => {
     return (
         <div>
             <h1>Top Songs</h1>
-            <ul>
-                {topSongs.map((song, index) => (
-                    <li key={index}>{song.name}</li>
-                ))}
-            </ul>
+            <DataGrid data={topSongs} type="songs" />
         </div>
     );
 };
