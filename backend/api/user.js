@@ -42,4 +42,22 @@ router.get("/all", async(req, res) => {
     }
 })
 
+router.post("/", async(req, res) => {
+    try {
+        const newBio = req.query.bio;
+        const userId = req.query.id;
+        if (!userId) {
+            return res.status(400).send("Missing query parameter: id");
+        }
+        const userDocRef = db.collection("user").doc(userId);
+        await userDocRef.update({
+            bio: newBio
+        });
+        res.status(200).send("User updated successfully");
+    } catch (error) {
+        console.error("Error updating user:", error);
+        res.status(500).send("Internal Server Error");
+    }
+})
+
 module.exports = router;
