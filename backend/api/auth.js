@@ -1,6 +1,7 @@
 var express = require('express');
 var request = require('request');
 var crypto = require('crypto');
+const db = require('./firebase');
 require('dotenv').config();
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
@@ -81,20 +82,68 @@ app.get('/callback', function(req, res) {
           console.log(response.statusCode)
           // we can also pass the token to the browser to make requests from there
           if (response.statusCode === 200) {
-          res.redirect('http://localhost:5173/profile?' +
-            querystring.stringify({
-              access_token: access_token,
-              //refresh_token: refresh_token,
-              user_id: body.id
-            }));
+            res.redirect(`http://localhost:5173/profile/${body.id}?` +
+              querystring.stringify({
+                access_token: access_token,
+                //refresh_token: refresh_token,
+                user_id: body.id
+              }));
+              console.log(body)
+            
+            // TODO: check if there is a user in the Firebase collection 'user' with id body.id. If not 
+            // create a new user with the id body.id and then query spotify for favorite song and favorite artist and put it in.
+            const userRef = db.collection('user').doc(body.id);
+            userRef.get().then(doc => {
+              if (!doc.exists) {
+                // User does not exist, create a new user
+                userRef.set({
+                  profile: body.images[1].url,
+                  email: body.email,
+                  name: body.display_name,
+                  bio: "",
+                  conversations: []
+                }).then(() => {
+                  // Query Spotify for favorite song and favorite artist
+                  const topTracksOptions = {
+                    url: 'https://api.spotify.com/v1/me/top/tracks?' + querystring.stringify({
+                      limit: 1,
+                      time_range: 'long_term',
+                    }),
+                    headers: { 'Authorization': 'Bearer ' + access_token },
+                    json: true
+                  };
+                  request.get(topTracksOptions, function(error, response, body) {
+                    if (!error && response.statusCode === 200) {
+                      const favoriteSong = body.items[0];
+                      userRef.update({ favoriteSong: favoriteSong });
+                    }
+                  });
+
+                  const topArtistsOptions = {
+                    url: 'https://api.spotify.com/v1/me/top/artists?' + querystring.stringify({
+                      limit: 1,
+                      time_range: 'long_term',
+                    }),
+                    headers: { 'Authorization': 'Bearer ' + access_token },
+                    json: true
+                  };
+                  request.get(topArtistsOptions, function(error, response, body) {
+                    if (!error && response.statusCode === 200) {
+                      const favoriteArtist = body.items[0];
+                      userRef.update({ favoriteArtist: favoriteArtist });
+                    }
+                  });
+                });
+              }
+            });  
           } else if (response.statusCode === 403) {
-            res.redirect('http://localhost:5173/profile?' +
+            res.redirect('http://localhost:5173/forbidden?' +
               querystring.stringify({
                 error: "You must be registered with the app creator to use this app."
               }));
           
           } else {
-            res.redirect('http://localhost:5173/profile?' +
+            res.redirect('http://localhost:5173/forbidden?' +
               querystring.stringify({
                 access_token: access_token,
                 error: "An error occurred while accessing the Spotify API."
