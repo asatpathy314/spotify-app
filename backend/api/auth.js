@@ -97,7 +97,7 @@ app.get('/callback', function(req, res) {
             userRef.get().then(doc => {
               if (!doc.exists) {
                 // User does not exist, create a new user
-                const profilePicture = body.images ? body.images[1].url : null;
+                const profilePicture = body.images.length > 0 ? body.images[1].url : null;
                 userRef.set({
                   profile: profilePicture,
                   email: body.email,

@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useSearchParams, useParams } from "react-router-dom";
 import { AuthContext } from "../components/AuthProvider";
-import { AppAvatar } from "../components/AppAvatar";
 import {
   Heading,
   Grid,
@@ -12,73 +11,115 @@ import {
   Img,
   Flex,
   Link,
+  IconButton,
+  Textarea,
+  Container,
 } from "@chakra-ui/react";
+import { EditIcon } from "@chakra-ui/icons";
 import axios from "axios";
 
 const Profile = () => {
   const { token, setToken, userID, setUserID } = useContext(AuthContext);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [bio, setBio] = useState("This is an example bio.");
   const [profileData, setProfileData] = useState(null);
+  const [editMode, setEditMode] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
   const [forbidden, setForbidden] = useState(null);
   const { id } = useParams();
 
   useEffect(() => {
-    if (id == userID) {
-      setIsEditable(true);
-    } 
-    console.log(token);
-    console.log(userID);
     if (!token || !userID) {
-      if (searchParams.get("access_token") && searchParams.get("user_id")) {
-        setToken(searchParams.get("access_token"));
-        console.log(token);
-        setUserID(searchParams.get("user_id"));
-        console.log(userID);
+      const accessToken = searchParams.get("access_token");
+      const userId = searchParams.get("user_id");
+      if (accessToken && userId) {
+        setToken(accessToken);
+        setUserID(userId);
       } else {
-        console.log('Error retrieving token and user ID')
+        console.log("Error retrieving token and user ID");
       }
     }
     if (id) {
-        axios.get("http://localhost:8000/user?id=" + id)
-            .then((res) => {
-                setProfileData(res.data);
-            })
-            .catch((error) => {
-                console.error("Error retrieving user:", error);
-                setProfileData({error: "Error retrieving User Data. If this is your profile try logging in again."})
-            })
+      axios
+        .get("http://localhost:8000/user?id=" + id)
+        .then((res) => {
+          setProfileData(res.data);
+        })
+        .catch((error) => {
+          console.error("Error retrieving user:", error);
+          setProfileData({
+            error:
+              "Error retrieving User Data. If this is your profile try logging in again.",
+          });
+        });
     }
-  }, [id, userID, token, searchParams, setToken, setUserID, isEditable]);
+  }, [id, searchParams, setToken, setUserID, token, userID]);
 
-  if (!forbidden && id !== 'nosessiontoken') {
+  useEffect(() => {
+    if (id === userID) {
+      setIsEditable(true);
+    }
+  }, [id, userID]);
+
+  if (!forbidden && id !== "nosessiontoken") {
     return (
       <Grid
         h="90%"
         templateRows="repeat(2, 1fr)"
         templateColumns="repeat(4, 1fr)"
-        color="#FFFFFE"
         gap={4}
       >
-        <GridItem colSpan={4} bg="#0f0e17" padding={10}>
+        <GridItem colSpan={4} bg="#0f0e17" padding={10} position="relative">
+          {isEditable && (
+            <IconButton
+              icon={<EditIcon />}
+              position="absolute"
+              top="10px"
+              right="10px"
+              bg="#FFFFFE"
+              aria-label="Edit Profile"
+              onClick={() => {
+                setEditMode(true);
+                setIsEditable(false);
+              }}
+            />
+          )}
           <Stack direction={["column", "row", "row", "row"]} spacing={4}>
             <Avatar
               src={profileData?.profile}
               size={["3xl", "3xl", "3xl", "3xl"]}
               shape="circle"
             />
-            <div>
-              <Heading size={["xl", null, null, "2xl"]} color="#FFFFFE">
-                User
-              </Heading>
-              <Heading size={["md", null, null, "lg"]} color="#FFFFFE">
+            <Container width="100%" height="100%">
+            <Stack direction="column" gap={3}>
+              <Heading size={["xl", null, null, "2xl"]}>User</Heading>
+              <Heading size={["md", null, null, "lg"]}>
                 {profileData?.name || "Loading..."}
               </Heading>
-              <Text fontSize="xl">
-                Hiii! My name is Daniel I love chicken and rice. Hiii! My name
-                is Daniel I love chicken and rice.
-              </Text>
-            </div>
+              {editMode ? (
+                    <Textarea
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    placeholder="Hi! My name is Daniel I love the Beatles!"
+                    resize="none"
+                    size="xl"
+                    borderRadius="xl" // Adjust the border radius as needed
+                    padding={3}
+                    bg="#191827" // Change the background color
+                    width="100%" // Make it fit the component
+                    height="100%"
+                    focusBorderColor="white" // Change the focus color
+                    _hover={{ borderColor: '#ff8906' }} // Change the hover color
+                    maxLength={400} // Limit the number of characters
+                />
+              ) : (
+                <Text fontSize="xl">
+                  Hiii! My name is Daniel I love chicken and rice. Hiii! My name
+                  is Daniel I love chicken and rice.
+                </Text>
+              )}
+              </Stack>
+            </Container>
           </Stack>
         </GridItem>
         <GridItem colSpan={2} bg="#0f0e17" padding={10}>
@@ -89,7 +130,7 @@ const Profile = () => {
               <Img
                 src={profileData?.favoriteSong?.album?.images?.[1]?.url}
                 alt={profileData?.favoriteSong?.name}
-                mx="auto" // Add this line to center the image horizontally
+                mx="auto"
                 mt="5"
                 mb="5"
               />
@@ -107,7 +148,7 @@ const Profile = () => {
               <Img
                 src={profileData?.favoriteArtist?.images?.[1]?.url}
                 alt={profileData?.favoriteArtist?.name}
-                mx="auto" // Add this line to center the image horizontally
+                mx="auto"
                 mt="5"
                 mb="5"
               />
@@ -119,13 +160,18 @@ const Profile = () => {
         </GridItem>
       </Grid>
     );
-  } else if (id === 'nosessiontoken') {
-    console.log('hehe')
+  } else if (id === "nosessiontoken") {
     return (
-            <Flex height="100%" alignItems="center" justifyContent="center">
-                <Heading color="#FFFFFE">Please <Link color='#ff8906' href="/">login</Link> to view this page.</Heading>
-            </Flex>    
-        );
+      <Flex height="100%" alignItems="center" justifyContent="center">
+        <Heading>
+          Please{" "}
+          <Link color="#ff8906" href="/">
+            login
+          </Link>{" "}
+          to view this page.
+        </Heading>
+      </Flex>
+    );
   }
 };
 
