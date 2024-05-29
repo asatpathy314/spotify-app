@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import Profile from './Profile';
 import Box from '@mui/material/Box';
+//import { Link } from "react-router-dom";
 import './styles.css';
 
 function Discover() {
@@ -56,11 +57,6 @@ function Discover() {
         // getProfiles();
     }, []);
 
-    const handleClick = () => {
-        // redirects to profiles.
-        console.log("hello");
-    }
-
     return (
         
         <>
@@ -73,7 +69,7 @@ function Discover() {
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2}}>
                 {profiles.map((profile, index) => (
                     <div key={index} style={{ flex: '0 0 10%', maxWidth: '20%' }}>
-                    <Profile onClick={handleClick} userName={profile.userName} profilePictureUrl={profile.profilePictureUrl} />
+                        <Profile userName={profile.userName} profilePictureUrl={profile.profilePictureUrl} />
                     </div>
                 ))}
                 </Box>
