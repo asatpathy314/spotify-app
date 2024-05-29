@@ -24,7 +24,7 @@ const LinkItems= [
   { name: 'Favorite Songs', icon: CiHeart, link: '/#' },
   { name: 'Favorite Artists', icon: GiMicrophone, link: '/#' },
   { name: 'Forum', icon: MdForum, link: '/forum' },
-  { name: 'Explore', icon: FaMagnifyingGlass, link: '/#' },
+  { name: 'Discover', icon: FaMagnifyingGlass, link: '/discover' },
   { name: 'Profile', icon: BsFilePerson, link: '/profile' },
   { name: 'Inbox', icon: GoPaperAirplane, link: '/profile' },
   { name: 'Logout', icon: GoPaperAirplane, link: '/logout' }

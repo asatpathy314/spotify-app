@@ -8,37 +8,37 @@ import { Box, Wrap, WrapItem } from '@chakra-ui/react';
  * @param {string} props.type - The type of avatar to render. 'profile', 'discover', or 'inbox'.
  * @returns {JSX.Element} - The rendered avatar component.
  */
-export const AppAvatar = ( {type} ) => {
-    const [profile, setProfile] = useState(null);
+export const AppAvatar = ( {type, link, size='2xl' } ) => {
     const [discover, setDiscover] = useState(null);
     const [inbox, setInbox] = useState(null);
 
     if (type === 'profile') {
     return (
-        (profile ? (
+        (link ? (
             <>
             <Box mt="10">
-                <Wrap justify="center" spacing="30px">
+                <Wrap spacing="30px">
                     <WrapItem>
-                        <Avatar size='2xl' src='https://bit.ly/broken-link' />
+                        <Avatar size={size} src='https://bit.ly/broken-link' />
                     </WrapItem>
                 </Wrap>
             </Box>
             </>
         ) : (
             <Box mt="10">
-                <Wrap justify="center" spacing="30px">
+                <Wrap spacing="30px">
                     <WrapItem>
-                        <Avatar src='https://bit.ly/broken-link' />
+                        <Avatar size={size} src={link} />
                     </WrapItem>
                 </Wrap>
             </Box>
         ))
     )
-    } else if (type === 'inbox') {
+    // This logic should be handled in the parent component. The only things that should change here are design for one profile picture.
+    } else if (type === 'inbox') { 
         return (
             <div id='inbox-avatar'>
-                <Stack direction='row'>
+                <Stack direction='row'> 
                     <Avatar src='https://bit.ly/broken-link' />
                     <Avatar src='https://bit.ly/broken-link' />
                     <Avatar src='https://bit.ly/broken-link' />

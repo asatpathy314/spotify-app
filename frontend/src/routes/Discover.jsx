@@ -63,13 +63,13 @@ function Discover() {
         <>
         <div stytle={{ padding: '20px'}}>
             <div>
-                <h1>Discover</h1>
+                <p style={{ fontSize: '50px',  color: 'white', fontWeight: 'bold' }}>Discover</p>
             </div>
 
             <div >
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2}}>
                 {profiles.map((profile, index) => (
-                    <div key={index} style={{ flex: '0 0 10%', maxWidth: '20%' }}>
+                    <div key={index} >
                         <User userName={profile.userName} profilePictureUrl={profile.profilePictureUrl} />
                     </div>
                 ))}
