@@ -10,6 +10,7 @@ import Forum from './components/Forum.jsx'
 import Login from './routes/Login.jsx'
 import Profile from './routes/Profile.jsx'
 import AuthProvider from './components/AuthProvider.jsx'
+import Discover from './routes/Discover.jsx'
 
 const router = createBrowserRouter([
   {
