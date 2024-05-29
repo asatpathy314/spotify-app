@@ -146,12 +146,12 @@ const Forum = () => {
 
   if (selectedPost) {
     return (
-      <Container minHeight="100vh" display="grid" gap={0}>
+      <Container minHeight="100vh" display="flex" flexDirection="column" gap={4}>
         <Button onClick={() => setSelectedPost(null)} colorScheme="teal" mb={0}>
           Back to Posts
         </Button>
         <Card mb={1} bg="gray.700" padding={"3"}>
-          <Text color="white" fontSize="sm">
+          <Text color="gray.500" fontSize="sm">
             Posted by {selectedPost.userId} on {new Date(selectedPost.date).toLocaleDateString()}
           </Text>
           <Text fontSize="2xl" fontWeight="bold" color="white" >
@@ -170,18 +170,19 @@ const Forum = () => {
               required
             />
           </FormControl>
-          <Button type="submit" colorScheme="teal" leftIcon={<FaSpotify />}>
+          <Button type="submit" mb={0} colorScheme="teal" leftIcon={<FaSpotify />}>
             Post Comment
           </Button>
         </form>
-        <VStack spacing={1} align="start">
+        <VStack spacing={1} align="stretch">
           {comments.length > 0 ? (
             comments.map((comment) => (
               <Card key={comment.id} p={4} bg="gray.700" borderRadius="md" width="100%">
-                <Text color="white">{comment.text}</Text>
                 <Text color="gray.500" fontSize="sm">
-                  Commented by {comment.userId} on {new Date(comment.date).toLocaleDateString()}
+                Posted by {comment.userId} on {new Date(comment.date).toLocaleDateString()}
                 </Text>
+                <Text color="white">{comment.text}</Text>
+
               </Card>
             ))
           ) : (
@@ -195,35 +196,38 @@ const Forum = () => {
 
   if (selectedForum) {
     return (
-      <Container minHeight="100vh" display="grid" gap={0}>
+      <Container minHeight="100vh" display="flex" flexDirection="column" gap={4}>
         <Button onClick={() => setSelectedForum(null)} colorScheme="teal" mb={2}>
           Back to Forums
         </Button>
         <Box mb={1}>
-          <Text fontSize="2xl" fontWeight="bold" color="white" align={"center"}>
+          <Text fontSize="2xl" fontWeight="bold" color="white">
             {"Posts From Forum: " + selectedForum.name}
           </Text>
         </Box>
-        <form onSubmit={handleSubmitPost}>
-          <FormControl id="title" mb={1}>
-            <FormLabel color="white">Title</FormLabel>
-            <Input color="white" type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
-          </FormControl>
-          <FormControl id="description" mb={4}>
-            <FormLabel color="white">Description</FormLabel>
-            <Input
-              color="white"
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-            />
-          </FormControl>
-          <Button type="submit" colorScheme="teal" mb={0} leftIcon={<FaSpotify />}>
-            Create Post
-          </Button>
-        </form>
-        <VStack spacing={4} align="start">
+        <Box mb={4}>
+            <form onSubmit={handleSubmitPost}>
+            <FormControl id="title" mb={1}>
+                <FormLabel color="white">Title</FormLabel>
+                <Input color="white" type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
+            </FormControl>
+            <FormControl id="description" mb={4}>
+                <FormLabel color="white">Description</FormLabel>
+                <Input
+                color="white"
+                type="text"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                required
+                />
+            </FormControl>
+            <Button type="submit" colorScheme="teal" mb={1} leftIcon={<FaSpotify />}>
+                Create Post
+            </Button>
+            </form>
+        </Box>
+        <Box>
+        <VStack spacing={4} align="stretch">
           {posts.length > 0 ? (
             posts.map((post) => (
               <Card
@@ -235,7 +239,7 @@ const Forum = () => {
                 onClick={() => handlePostClick(post)}
                 cursor="pointer"
               >
-                <Text color="white" fontSize="xs">
+                <Text color="gray.500" fontSize="sm">
                   Posted by {post.userId} on {new Date(post.date).toLocaleDateString()}
                 </Text>
                 <Text fontSize="2xl" fontWeight="bold" color="white">
@@ -248,51 +252,55 @@ const Forum = () => {
             <Text color="white">No posts available</Text>
           )}
         </VStack>
+        </Box>
       </Container>
     );
   }
 
 
   return (
-    <Container minHeight="100vh" display="grid" gap={4}>
-      <form onSubmit={handleCreateForum}>
+    <Container minHeight="100vh" display="flex" flexDirection="column" gap={4}>
+    <form onSubmit={handleCreateForum}>
         <FormControl id="new-forum-name" mb={4}>
-          <FormLabel color="white">Create New Forum</FormLabel>
-          <Input
+        <FormLabel color="white">Create New Forum</FormLabel>
+        <Input
             maxLength={15}
             type="text"
             color="white"
             value={newForumName}
             onChange={(e) => setNewForumName(e.target.value)}
             required
-          />
+        />
         </FormControl>
-        <Button type="submit" colorScheme="teal" mb={4} leftIcon={<FaSpotify />}>
-          Create Forum
+        <Button type="submit" colorScheme="teal" mb={2} leftIcon={<FaSpotify />}>
+        Create Forum
         </Button>
-      </form>
-      <VStack spacing={2} align="start">
+    </form>
+    <Box>
+        <VStack spacing={4} align="stretch">
         {forums.length > 0 ? (
-          forums.map((forum) => (
+            forums.map((forum) => (
             <Card
-              key={forum.id}
-              p={4}
-              bg="gray.700"
-              borderRadius="md"
-              width="100%"
-              onClick={() => handleForumClick(forum)}
-              cursor="pointer"
+                key={forum.id}
+                p={4}
+                bg="gray.700"
+                borderRadius="md"
+                width="100%"
+                onClick={() => handleForumClick(forum)}
+                cursor="pointer"
             >
-              <Text fontSize="xl" fontWeight="bold" color="white">
+                <Text fontSize="xl" fontWeight="bold" color="white">
                 {forum.name}
-              </Text>
+                </Text>
             </Card>
-          ))
+            ))
         ) : (
-          <Text color="white">No forums available</Text>
+            <Text color="white">No forums available</Text>
         )}
-      </VStack>
+        </VStack>
+    </Box>
     </Container>
+
   );
 };
 
