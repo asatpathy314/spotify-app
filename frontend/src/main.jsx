@@ -11,6 +11,7 @@ import Profile from './routes/Profile.jsx'
 import {LikedSongs} from './routes/LikedSongs.jsx'
 import AuthProvider from './components/AuthProvider.jsx'
 import Discover from './routes/Discover.jsx'
+import Inbox from './routes/Inbox.jsx'
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/messages',
-        element: <h1>Messages</h1>
+        element: <Inbox />
       },
       {
         path: '/forum',

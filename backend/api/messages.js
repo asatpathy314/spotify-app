@@ -54,6 +54,7 @@ router.get("/", async (req, res) => {
     const userData = userDoc.data();
     const conversations = userData.conversations || [];
 
+    console.log(conversations);
     res.status(200).json({ conversations });
   } catch (e) {
     res.status(400).json({ error: e.message });

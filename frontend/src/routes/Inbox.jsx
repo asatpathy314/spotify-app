@@ -1,102 +1,126 @@
 //render the last message in each conversation
 //along with the user that you are speaking to and their profile picture
-import React from "react";
-import { useState, useEffect} from "react";
-
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 
 const Inbox = () => {
     const [conversations, setConversations] = useState([]);
     const [loading, setLoading] = useState(true);
-    const currentUserId = "5qBIt75cDvfOV5lVPNM9"; // Replace with actual current user ID with sign in info
+    const currentUserId = "31ow3dazrrvyk7fvsnacgnel4lyu"; // Replace with actual current user ID with sign in info
 
     useEffect(() => {
         const fetchInbox = async () => {
-          try {
-            const response = await axios.get("http://localhost:8000/messages", {
-            params: { userId: currentUserId }, // Send userId as query parameter
-            });
-            console.log("Fetched conversations:", response.data.conversations);
-            setForums(response.data.conversations);
-          } catch (error) {
-            console.error("Error fetching Inbox:", error);
-          } finally {
-            setLoading(false);
-          }
+            try {
+                const response = axios.get("http://localhost:8000/messages", {
+                    params: { userId: currentUserId },
+                })  .then(async (res) => {
+
+                    console.log("Fetched conversation references:", response.data);
+                    const conversationReferences = response.data;
+        
+                    // Fetch conversations using conversation references
+                    const conversationRequests = conversationReferences.map(async () => {
+                        const conversationResponse = await axios.get(`http://localhost:8000/conversation/${reference.id}`);
+                        return conversationResponse.data;
+                    });
+        
+                    // Wait for all conversation requests to complete
+                    const conversationsData = await conversationRequests;
+        
+                    console.log("Fetched conversations:", conversationsData);
+                    setConversations(conversationsData);
+                })
+
+            } catch (error) {
+                console.error("Error fetching Inbox:", error);
+            } finally {
+                setLoading(false);
+            }
         };
-
-            fetchInbox();
+    
+        fetchInbox();
     }, []);
-
+    
     const getLastMessage = (messages) => {
-        if (!messages.length) return null;
+        if (!Array.isArray(messages) || messages.length === 0) 
+        {
+            console.log("get last message is null");
+            return null;
+        }
         return messages.reduce((latest, message) => {
-          return new Date(message.timestamp) > new Date(latest.timestamp) ? message : latest;
+            return new Date(message.timestamp) > new Date(latest.timestamp) ? message : latest;
         });
     };
 
-    const getCommunicatingUser = (conversation) => {
-        return conversation.user1 === currentUserId ? conversation.user2 : conversation.user1;
-    };
-  
-    const fetchUserProfile = async (userId) => {
-        try {
-          const response = await axios.get(`http://localhost:8000/users/${userId}`);
-          return response.data.user;
-        } catch (error) {
-          console.error("Error fetching user profile:", error);
-          return null;
-        }
-    };
-
-    if(loading){
-        return(
-            <div>Loading...</div>
-        );
+    if (loading) {
+        return <div>Loading...</div>;
     }
+
+    console.log("I am trying to render the inbox page");
+    return (
+        <>
+            <p>This is the Inbox page</p>
+            {conversations.map((conversation) => {
+                const communicatingUserId = conversation.user1 === currentUserId ? conversation.user2 : conversation.user1;
+                const lastMessage = getLastMessage(conversation.messages);
+
+                if (!communicatingUserId || !lastMessage) return null;
+
+                return (
+                    <div key={conversation.id} className="conversation">
+                        <div className="user-info">
+                            <UserProfile userId={communicatingUserId} />
+                        </div>
+                        <div className="last-message">
+                            <LastMessage lastMessage={lastMessage} communicatingUserId={communicatingUserId} currentUserId={currentUserId} />
+                        </div>
+                    </div>
+                );
+            })}
+        </>
+    );
+};
+
+const UserProfile = ({ userId }) => {
+    const [userProfile, setUserProfile] = useState(null);
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8000/users/${userId}`);
+                setUserProfile(response.data);
+            } catch (error) {
+                console.error("Error fetching user profile:", error);
+            }
+        };
+
+        fetchUserProfile();
+    }, [userId]);
+
+    if (!userProfile) return null;
 
     return (
         <>
-        <p>This is the Inbox page</p>
-        {conversations.map((conversation) => {
-            const communicatingUserId = getCommunicatingUser(conversation);
-            const lastMessage = getLastMessage(conversation.messages);
-                    
-            const [communicatingUser, setCommunicatingUser] = useState(null);
-                    
-            useEffect(() => {
-                const fetchCommunicatingUser = async () => {
-                const userProfile = await fetchUserProfile(communicatingUserId);
-                    setCommunicatingUser(userProfile);
-                };
-                    
-                fetchCommunicatingUser();
-            }, [communicatingUserId]);
-                    
-            if (!communicatingUser || !lastMessage) return null;
-                    
-            return (
-                <div key={conversation.id} className="conversation">
-                <div className="user-info">
-                    <img
-                        src={communicatingUser.profilePicture}
-                        alt={`${communicatingUser.name}'s profile`}
-                    />
-                        <p>{communicatingUser.name}</p>
-                        </div>
-                    <div className="last-message">
-                    <p>
-                    {lastMessage.senderId === currentUserId ? "You: " : `${communicatingUser.name}: `}
-                    {lastMessage.text}
-                    </p>
-                    </div>
-            </div>
-            );
-        })}
-    </>
+            <img src={userProfile.profilePicture} alt={`${userProfile.name}'s profile`} />
+            <p>{userProfile.name}</p>
+        </>
+    );
+};
+
+const LastMessage = ({ lastMessage, communicatingUserId, currentUserId }) => {
+    const senderId = lastMessage.user; // Assuming 'user' field contains the sender's ID
+
+    return (
+        <p>
+            {senderId === currentUserId ? "You: " : `${communicatingUserId === senderId ? "Them" : "You"}: `}
+            {lastMessage.text}
+        </p>
     );
 };
 
 export default Inbox;
+
+
 
 //for every conversation fetched
 
