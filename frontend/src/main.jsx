@@ -1,8 +1,15 @@
 import * as React from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
 import * as ReactDOM from 'react-dom/client'
-import App from './App.jsx'
+import { App } from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+//import Login from './components/Login.jsx'
+import Forum from './components/Forum.jsx'
+
+
+import Login from './routes/Login.jsx'
+import Profile from './routes/Profile.jsx'
+import AuthProvider from './components/AuthProvider.jsx'
 
 const router = createBrowserRouter([
   {
@@ -10,26 +17,41 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-      path: '/',
-      element: <h1>login</h1>
+        path: '/',
+        element: <Login />
       },
       {
         path: '/profile',
-        element: <h1>profile</h1>
+        element: <Profile />
       },
       {
         path: '/discover',
-        element: <h1>discover</h1>
-      }
+        element: <Discover />
+      },
+      {
+        path: '/messages',
+        element: <h1>Messages</h1>
+      },
+      {
+        path: '/forum',
+        element: <Forum />
+      },
     ]
+  },
+  {
+    path: '/forbidden',
+    element: <h1>403 Forbidden</h1>
   }
 ])
+
 
 const rootElement = document.getElementById('root')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <ChakraProvider>
-      <RouterProvider router={router}/>
-    </ChakraProvider>
-  </React.StrictMode>,
+    <AuthProvider>
+      <ChakraProvider>
+        <RouterProvider router={router}/>
+      </ChakraProvider>
+    </AuthProvider>
+  </React.StrictMode>
 )

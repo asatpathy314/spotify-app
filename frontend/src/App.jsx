@@ -1,11 +1,20 @@
 import { Outlet } from "react-router-dom"
- 
-const App = () => {
-  return (
-      <main>
-        <Outlet />
-      </main>
-  )
-}
+import { ChakraProvider } from '@chakra-ui/react';
+import { Container } from "@chakra-ui/react";
+import './App.css';
+import SimpleSidebar from "./components/Sidebar";
 
-export default App
+
+export const App = () => {
+  return (
+    <ChakraProvider>
+        <main>
+          <SimpleSidebar>
+            <Container display="grid" minHeight="100vh" minWidth="100%" padding="0">
+              <Outlet />
+            </Container>
+          </SimpleSidebar>
+        </main>
+    </ChakraProvider>
+  );
+};
