@@ -19,6 +19,7 @@ const messages = require("./api/messages");
 const user = require("./api/user");
 
 
+
 //initialize Routes
 app.use('/auth', auth);
 app.use('/forum', forum);
