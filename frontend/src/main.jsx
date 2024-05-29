@@ -12,6 +12,7 @@ import Profile from './routes/Profile.jsx'
 import {LikedSongs} from './routes/LikedSongs.jsx'
 import AuthProvider from './components/AuthProvider.jsx'
 import Discover from './routes/Discover.jsx'
+import TopSongs from './routes/TopSongs.jsx'
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: '/forum',
         element: <Forum />
+      },
+      {
+        path: '/topsongs',
+        element: <TopSongs />
       },
       {
         path: '/liked',

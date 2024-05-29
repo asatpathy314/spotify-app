@@ -57,6 +57,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
   const LinkItems= [
     { name: 'Liked Songs', icon: CiHeart, link: '/liked' },
     { name: 'Favorite Artists', icon: GiMicrophone, link: '/#' },
+    { name: 'Favorite Songs', icon: GiMicrophone, link: '/topsongs'},
     { name: 'Forum', icon: MdForum, link: '/forum' },
     { name: 'Discover', icon: FaMagnifyingGlass, link: '/discover' },
     { name: 'Profile', icon: BsFilePerson, link: `/profile/${userID || 'nosessiontoken'}` },
