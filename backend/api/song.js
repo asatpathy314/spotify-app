@@ -50,4 +50,29 @@ router.get('/', (req, res) => {
     });
 });
 
+router.get('/liked', (req, res) => {
+    const spotify_token = req.query.spotify_token;
+    const num_songs = req.query.num_songs || 50; // Default to 50 songs
+
+    if (!spotify_token) {
+        return res.status(400).json({ error: "Missing required parameter" });
+    }
+
+    const options = {
+        url: `https://api.spotify.com/v1/me/tracks?` + querystring.stringify({
+            limit: num_songs,
+        }),
+        headers: { 'Authorization': 'Bearer ' + spotify_token }
+    };
+
+    request.get(options, (error, response, body) => {
+        if (error) {
+            return res.status(500).json({ error: "Failed to fetch top tracks" });
+        }
+        const data = JSON.parse(body);
+        console.log(data);
+        res.status(200).json(data);
+    });
+});
+
 module.exports = router;

@@ -1,135 +1,132 @@
-import { useContext, useEffect, useState } from "react"
-import { useSearchParams} from "react-router-dom"
-import { AuthContext } from "../components/AuthProvider"
-import { AppAvatar } from "../components/AppAvatar"
-import { Heading, Grid, GridItem, Avatar, Stack, Text, Img } from "@chakra-ui/react"
-import { App } from "../App"
-import axios from "axios"
+import { useContext, useEffect, useState } from "react";
+import { useSearchParams, useParams } from "react-router-dom";
+import { AuthContext } from "../components/AuthProvider";
+import { AppAvatar } from "../components/AppAvatar";
+import {
+  Heading,
+  Grid,
+  GridItem,
+  Avatar,
+  Stack,
+  Text,
+  Img,
+  Flex,
+  Link,
+} from "@chakra-ui/react";
+import axios from "axios";
 
 const Profile = () => {
-    const { token, setToken, userID, setUserID } = useContext(AuthContext)
-    const [searchParams, setSearchParams] = useSearchParams()
-    const [favoriteArtist, setFavoriteArtist] = useState(null)
-    const [favoriteSong, setFavoriteSong] = useState(null)
-    const [forbidden, setForbidden] = useState(null)
+  const { token, setToken, userID, setUserID } = useContext(AuthContext);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [profileData, setProfileData] = useState(null);
+  const [isEditable, setIsEditable] = useState(false);
+  const [forbidden, setForbidden] = useState(null);
+  const { id } = useParams();
 
-    useEffect(() => {
-        if (token===null || userID===null) {
-            if (searchParams.get('access_token') && searchParams.get('user_id')) {
-                console.log('huge')
-                setToken(searchParams.get('access_token'))
-                setUserID(searchParams.get('user_id'))
-            }
-            else {
-                console.log(token)
-                console.log(userID)
-                setForbidden(true)
-                window.location.replace("/forbidden")
-                return
-            }
-        }
-        const songParams = new URLSearchParams({
-                spotify_token: token,
-                num_songs: 1,
-                timeframe: 'long_term'
-        })
-        const artistParams = new URLSearchParams({
-                spotify_token: token,
-                num_artists: 1,
-                timeframe: 'long_term'
-        })
-        axios.get('http://localhost:8000/song?' + songParams.toString())
-            .then(res => {
-                if (res.status === 200) {
-                    setFavoriteSong(res.data.items[0])
-                }
-                else {
-                    setFavoriteSong({error: 'An Error Occurred. Please try again later.'})
-                }
-            })
-        axios.get('http://localhost:8000/artist?' + songParams.toString())
-        .then(res => {
-            if (res.status === 200) {
-                setFavoriteArtist(res.data.items[0])
-            }
-            else {
-                setFavoriteArtist({error: 'An Error Occurred. Please try again later.'})
-            }
-        })
-    }, [searchParams, setToken, setUserID, token, userID, setFavoriteArtist, setFavoriteSong])
-    console.log(favoriteSong)
-    console.log('hmm', favoriteArtist)
-    if (!forbidden) {
-        return (
-            <Grid
-                h='90%'
-                templateRows='repeat(2, 1fr)'
-                templateColumns='repeat(4, 1fr)'
-                gap={4}
-            >
-                <GridItem colSpan={4} bg='#0f0e17' padding={10}>
-                    <Stack direction={['column', 'row', 'row', 'row']} spacing={4}>
-                        <Avatar
-                            src='https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250'
-                            size={['3xl', '3xl', '3xl', '3xl']}
-                        />
-                        <div>
-                            <Heading size={['xl', null, null, '2xl']} color='#FFFFFE'>
-                                User
-                            </Heading>
-                            <Heading size={['md', null, null, 'lg']} color='#FFFFFE'>
-                                daniel341
-                            </Heading>
-                            <Text fontSize='xl' color='#FFFFFE'>
-                                Hiii! My name is Daniel I love chicken and rice. Hiii! My name is
-                                Daniel I love chicken and rice.
-                            </Text>
-                        </div>
-                    </Stack>
-                </GridItem>
-                <GridItem colSpan={2} bg='#0f0e17' padding={10}>
-                    <Heading size={['sm', 'md', null, 'lg']} color='#FFFFFE' textAlign='center'>
-                        My Favorite Song
-                    </Heading>
-                    {favoriteSong === null && <Text>Loading...</Text>}
-                    {favoriteSong !== null && (
-                        <>
-                            <Img
-                                src={favoriteSong.album.images[1].url}
-                                alt={favoriteSong.name}
-                                mx='auto' // Add this line to center the image horizontally
-                                mt='5'
-                                mb='5'
-                            />
-                            <Heading size={['sm', 'md', null, 'md']} color='#FFFFFE' textAlign='center'>
-                                {favoriteSong.name}
-                            </Heading>
-                        </>
-                    )}
-                </GridItem>
-                <GridItem colSpan={2} bg='#0f0e17' padding={10} textAlign='center'>
-                    <Heading size={['sm', 'md', null, 'lg']} color='#FFFFFE'>
-                        My Favorite Artist
-                    </Heading>
-                    {favoriteArtist === null && <Text>Loading...</Text>}
-                    {favoriteArtist !== null && (
-                        <>
-                            <Img
-                                src={favoriteArtist.images[1].url}
-                                alt={favoriteArtist.name}
-                                mx='auto' // Add this line to center the image horizontally
-                                mt='5'
-                                mb='5'
-                            />
-                            <Heading size={['sm', 'md', null, 'md']} color='#FFFFFE' textAlign='center'>
-                                {favoriteArtist.name}
-                            </Heading>
-                        </>
-                    )}
-                </GridItem>
-            </Grid>
-        )
+  useEffect(() => {
+    if (id == userID) {
+      setIsEditable(true);
+    } 
+    console.log(token);
+    console.log(userID);
+    if (!token || !userID) {
+      if (searchParams.get("access_token") && searchParams.get("user_id")) {
+        setToken(searchParams.get("access_token"));
+        console.log(token);
+        setUserID(searchParams.get("user_id"));
+        console.log(userID);
+      } else {
+        console.log('Error retrieving token and user ID')
+      }
     }
-}
+    if (id) {
+        axios.get("http://localhost:8000/user?id=" + id)
+            .then((res) => {
+                setProfileData(res.data);
+            })
+            .catch((error) => {
+                console.error("Error retrieving user:", error);
+                setProfileData({error: "Error retrieving User Data. If this is your profile try logging in again."})
+            })
+    }
+  }, [id, userID, token, searchParams, setToken, setUserID, isEditable]);
 
-export default Profile
+  if (!forbidden && id !== 'nosessiontoken') {
+    return (
+      <Grid
+        h="90%"
+        templateRows="repeat(2, 1fr)"
+        templateColumns="repeat(4, 1fr)"
+        color="#FFFFFE"
+        gap={4}
+      >
+        <GridItem colSpan={4} bg="#0f0e17" padding={10}>
+          <Stack direction={["column", "row", "row", "row"]} spacing={4}>
+            <Avatar
+              src={profileData?.pfp}
+              size={["3xl", "3xl", "3xl", "3xl"]}
+              shape="circle"
+            />
+            <div>
+              <Heading size={["xl", null, null, "2xl"]} color="#FFFFFE">
+                User
+              </Heading>
+              <Heading size={["md", null, null, "lg"]} color="#FFFFFE">
+                {profileData?.name || "Loading..."}
+              </Heading>
+              <Text fontSize="xl">
+                Hiii! My name is Daniel I love chicken and rice. Hiii! My name
+                is Daniel I love chicken and rice.
+              </Text>
+            </div>
+          </Stack>
+        </GridItem>
+        <GridItem colSpan={2} bg="#0f0e17" padding={10}>
+          <Heading size={["sm", "md", null, "lg"]}>My Favorite Song</Heading>
+          {profileData === null && <Text>Loading...</Text>}
+          {profileData && (
+            <>
+              <Img
+                src={profileData?.favoriteSong?.album?.images?.[1]?.url}
+                alt={profileData?.favoriteSong?.name}
+                mx="auto" // Add this line to center the image horizontally
+                mt="5"
+                mb="5"
+              />
+              <Text fontSize={["lg", "2xl", null, "2xl"]} textAlign="center">
+                {profileData?.favoriteSong?.name}
+              </Text>
+            </>
+          )}
+        </GridItem>
+        <GridItem colSpan={2} bg="#0f0e17" padding={10}>
+          <Heading size={["sm", "md", null, "lg"]}>My Favorite Artist</Heading>
+          {profileData === null && <Text>Loading...</Text>}
+          {profileData && (
+            <>
+              <Img
+                src={profileData?.favoriteArtist?.images?.[1]?.url}
+                alt={profileData?.favoriteArtist?.name}
+                mx="auto" // Add this line to center the image horizontally
+                mt="5"
+                mb="5"
+              />
+              <Text fontSize={["lg", "2xl", null, "2xl"]} textAlign="center">
+                {profileData?.favoriteArtist?.name}
+              </Text>
+            </>
+          )}
+        </GridItem>
+      </Grid>
+    );
+  } else if (id === 'nosessiontoken') {
+    console.log('hehe')
+    return (
+            <Flex height="100%" alignItems="center" justifyContent="center">
+                <Heading color="#FFFFFE">Please <Link color='#ff8906' href="/">login</Link> to view this page.</Heading>
+            </Flex>    
+        );
+  }
+};
+
+export default Profile;

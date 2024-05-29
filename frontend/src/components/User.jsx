@@ -47,7 +47,7 @@ function User({ userName, profilePictureUrl }) {
             ) : (
                 <div style={noImgStyle}></div>
             )}
-            <b style={{ fontSize: '22px', marginTop: '10px', marginBottom: '5px', color: 'white' }}>{userName}</b>
+            <b style={{ fontSize: '20px', marginTop: '10px', marginBottom: '5px', color: 'white' }}>{userName}</b>
             <p style={{ margin: 0 , color: 'white'}}>Profile</p>
         </div>
     );
