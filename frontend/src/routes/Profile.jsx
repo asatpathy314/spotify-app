@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { useSearchParams} from "react-router-dom"
 import { AuthContext } from "../components/AuthProvider"
-import { Heading } from "@chakra-ui/react"
+import { Heading, Grid, GridItem } from "@chakra-ui/react"
 
 const Profile = () => {
     const { token, setToken, userID, setUserID } = useContext(AuthContext)
@@ -23,7 +23,17 @@ const Profile = () => {
     }, [searchParams, setToken, setUserID, token, userID ])
     if (!forbidden) {
         return (
-            <Heading color="#FFFFFE">Hi {userID}</Heading>
+            <Grid
+                h='90%'
+                templateRows='repeat(2, 1fr)'
+                templateColumns='repeat(4, 1fr)'
+                gap={4}
+            >
+                <GridItem colSpan={4} bg='#191827' />
+                <GridItem colSpan={2} bg='papayawhip' />
+                <GridItem colSpan={2} bg='papayawhip' />
+                <GridItem colSpan={4} bg='tomato' />
+            </Grid>
         )
     }
 }
