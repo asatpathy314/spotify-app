@@ -10,7 +10,7 @@ import {
   Td,
 } from "@chakra-ui/react";
 
-const Datagrid = ({ data, type }) => {
+const DataGrid = ({ data, type }) => {
   return (
     <Box
       borderWidth="1px"
@@ -84,4 +84,4 @@ const Datagrid = ({ data, type }) => {
   );
 };
 
-export default Datagrid;
+export default DataGrid;
