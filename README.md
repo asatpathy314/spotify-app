@@ -7,7 +7,6 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
 - [Installation](#installation)
 - [Usage](#usage)
 - [Features](#features)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Installation
