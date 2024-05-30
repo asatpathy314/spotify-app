@@ -9,7 +9,7 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
 - [Features](#features)
 - [License](#license)
 
-## Installation
+## Installation/Usage
 
 ### Front-End Installation
 
@@ -82,14 +82,14 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
    - Go to the "Service accounts" tab.
    - Click on "Generate new private key" and confirm by clicking "Generate key". This will download a JSON file containing your service account credentials.
 
-#### 2. Create `serviceAccount.js`
+#### 2. Create `serviceAccount.json`
 
 1. **Create a New File**
-   - In your project directory, create a new file named `serviceAccount.js`.
+   - In your project directory, create a new file named `serviceAccount.json`.
 
 2. **Add the Service Account Credentials**
-   - Copy the content of the downloaded JSON file and paste it into `serviceAccount.js`.
-   - Export the credentials as a module. Your `serviceAccount.js` should look like this:
+   - Copy the content of the downloaded JSON file and paste it into `serviceAccount.json`.
+   - Export the credentials as a module. Your `serviceAccount.json` should look like this:
 
    ```javascript
    const serviceAccount = {
@@ -106,11 +106,21 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
 
 ## Usage
 
-Provide examples and instructions on how to use your project. Include any relevant code snippets or screenshots.
+Once everything is setup `cd` to the project folder. In order to start the frontend server.
+
+```bash
+cd frontend
+npm run dev
+```
+
+Then to start the backend server go back to parent directory and then.
+
+```bash
+cd backend
+npm start
+```
 
 ## Features
-
-List the main features of your project. Highlight any unique or noteworthy functionalities.
 
 ### Profile
 1. **User Profile Display:**
@@ -167,7 +177,16 @@ List the main features of your project. Highlight any unique or noteworthy funct
 
 ## How to Extend the Project
 
-Provide code snippets and relevant documentation on how to build more features.
+### Backend
+- Create a file in the backend/api folder using `template.js`.
+- Import a the new route in `app.js` and use the pre-established format to add the route.
+- Implement the API endpoint for this route. Depending on the purpose of the endpoint you may need to verify that the Spotify token which the user has provided is still valid using appropriate error handling on the frontend. In order to make the API as flexible as possible try to send raw data to the frontend unless the data processing is compute intensive.
+
+### Frontend:
+- In `Sidebar.jsx` add the link and an appropriate icon to the `LinkItems` array.
+- Create a new route in the router in `main.jsx` under the children of `App.jsx`. This will allow `react-router-dom` to recognize the page.
+- Add a component file in `Routes.jsx`. This will be the component you define in `Main.jsx`. 
+- Import/create necessary components and subscribe to the AuthContext if you need to make any calls to API endpoints that interface with the Spotify API.
 
 ## API Documentation
 
