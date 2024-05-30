@@ -10,7 +10,6 @@ router.get('/', async (req, res) => {
     if (!userId) {
       return res.status(400).send("Missing query parameter: id");
     }
-
     // Reference to the user document
     const userDoc = await db.collection("user").doc(userId).get();
     if (userDoc.exists) {
@@ -35,5 +34,5 @@ router.get('/', async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
- 
+
 module.exports = router;

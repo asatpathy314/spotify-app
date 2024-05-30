@@ -4,8 +4,6 @@ import * as ReactDOM from 'react-dom/client'
 import { App } from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Forum from './components/Forum.jsx'
-
-
 import Login from './routes/Login.jsx'
 import LogOut from './routes/Logout.jsx'
 import Profile from './routes/Profile.jsx'
