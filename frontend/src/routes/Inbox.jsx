@@ -9,7 +9,6 @@ const Inbox = () => {
     const [conversations, setConversations] = useState([]);
     const [loading, setLoading] = useState(true);
     const currentUserId = "31ow3dazrrvyk7fvsnacgnel4lyu"; // Replace with actual current user ID with sign in info
-    const convoId = "wFrhjiWzQ2dttx3h28vJ"; 
 
     useEffect(() => {
         const fetchInbox = async () => {
@@ -20,29 +19,16 @@ const Inbox = () => {
 
                     console.log("Fetched conversation references:", res.data);
                     const conversationReferences = res.data;
+                    console.log('here', conversationReferences.conversations)
         
                     //Fetch conversations using conversation references
-                    // await (conversationReferences.conversations).map(async (item, index) => {
-                    //     const conversationResponse = await axios.get(`http://localhost:8000/messages/conversation`, {
-                    //         params: { conversationId: convoId},
-                    //     });
-                    //     return conversationResponse.data;
-                    // })
-                    // setConversations(conversationReferences.conversations);
-                    // console.log("conversatations", conversations)
-
-                    // Fetch conversations using conversation references
-                    const fetchedConversations = await Promise.all(
-                        conversationReferences.conversations.map(async (item) => {
-                            const conversationResponse = await axios.get(`http://localhost:8000/messages/conversation`, {
-                                params: { conversationId: convoId }, // Assuming item has conversationId
-                            });
-                            return conversationResponse.data;
-                        })
-                    );
-
-                    setConversations(fetchedConversations);
-                    console.log("conversations", fetchedConversations);
+                    await (conversationReferences.conversations).map(async (item, index) => {
+                        const conversationResponse = await axios.get(`http://localhost:8000/messages/conversation`, {
+                            params: { conversationId: convoId},
+                        });
+                        return conversationResponse.data;
+                    })
+                    setConversations(conversationReferences.conversations);
 
                 })
 
@@ -52,7 +38,6 @@ const Inbox = () => {
                 setLoading(false);
             }
         };
-    
         fetchInbox();
     }, []);
 
