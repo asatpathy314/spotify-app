@@ -26,10 +26,6 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
    ```sh
    npm install
 
-3. **Run Front-End Server**
-   ```sh
-   npm run dev
-
 ### Back-End Installation
 
 1. **Go to Back-End Folder**
@@ -47,11 +43,6 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
     CLIENT_ID=your_spotify_client_id
     CLIENT_SECRET=your_spotify_client_secret
 
-4. **Run Back-End Server**
-   ```sh
-   npm start
-
-Go to http://localhost:5173/ to access the app.
 
 ### How to Create an App in Spotify and Get Client ID and Secret
 
@@ -123,6 +114,7 @@ Then to start the backend server go back to parent directory and then.
 cd backend
 npm start
 ```
+Go to http://localhost:5173/ to access the app.
 
 ## Features
 
