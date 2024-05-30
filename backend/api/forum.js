@@ -124,18 +124,30 @@ router.post("/forums/:forumId/posts/:postId/like", async (req, res) => {
 
 // Endpoint to like a comment
 router.post("/forums/:forumId/posts/:postId/comments/:commentId/like", async (req, res) => {
+  const { forumId, postId, commentId } = req.params;
+  const { userId } = req.body;
+
   try {
-    const { forumId, postId, commentId } = req.params;
     const commentRef = db.collection("forum").doc(forumId).collection("posts").doc(postId).collection("comments").doc(commentId);
     const commentDoc = await commentRef.get();
     if (!commentDoc.exists) {
-      res.status(404).json({ message: 'Comment not found' });
-      return;
+      return res.status(404).json({ message: 'Comment not found' });
     }
-    await commentRef.update({ likes: commentDoc.data().likes + 1 });
-    res.status(200).json({ message: 'Comment liked successfully' });
-  } catch (e) {
-    res.status(400).json({ error: e.message });
+    const commentData = commentDoc.data();
+    const userLikes = commentData.userLikes || [];
+
+    if (userLikes.includes(userId)) {
+      userLikes.splice(userLikes.indexOf(userId), 1)
+      await commentRef.update({ likes: commentData.likes - 1, userLikes});
+      return res.status(200).json({ message: 'Comment unliked successfully' });
+      // return res.status(400).json({ message: 'User has already liked this comment' });
+    }
+
+    userLikes.push(userId);
+    await commentRef.update({ likes: commentData.likes + 1, userLikes });
+    return res.status(200).json({ message: 'Comment liked successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
