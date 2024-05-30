@@ -1,7 +1,8 @@
 //render the last message in each conversation
 //along with the user that you are speaking to and their profile picture
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Grid, GridItem, Box, Text, Avatar, Stack } from "@chakra-ui/react";
+import { AuthContext } from "../components/AuthProvider";
 import axios from 'axios';
 import '../stylesheets/messages.css';
 
