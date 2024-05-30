@@ -38,6 +38,27 @@ const db = require('./firebase');  // Correct path to firebase.js
 // Fetch the specific conversation
 router.get('/', async (req, res) => {
   try {
+    // Access the query parameter "id"
+    const userId = req.query.id;
+    
+    if (!userId) {
+        return res.status(400).send("Missing query parameter: id");
+    }
+
+    // Reference to the user document
+    db.collection("user").doc(userId).get()
+      .then((res) => {
+      if (userDoc.exists) {
+          const data = userDoc.data();}
+       else {
+          res.status(404).send("User not found");
+      }})
+      .catch((error)  => {
+        console.error("Error retrieving user:", error);
+        res.status(500).send("Internal Server Error");
+      });
+
+  try {
     const conversationId = req.query.conversationId; // Access conversationId from URL params
     console.log("I am here", conversationId);
 
