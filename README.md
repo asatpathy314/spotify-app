@@ -24,18 +24,18 @@ List the main features of your project. Highlight any unique or noteworthy funct
 
 #### Forum Creation and Listing:
 
--Users can create new forums with a name.
--Display a list of available forums for users to choose from.
+- Users can create new forums with a name.
+- Display a list of available forums for users to choose from.
 
 #### Post Creation and Listing:
 
--Users can create new posts within a selected forum with a title and description.
--Display a list of posts for a selected forum.
+- Users can create new posts within a selected forum with a title and description.
+- Display a list of posts for a selected forum.
 
 #### Commenting System:
 
--Users can add comments to a selected post.
--Display comments associated with a post.
+- Users can add comments to a selected post.
+- Display comments associated with a post.
 
 #### Like Functionality:
 
