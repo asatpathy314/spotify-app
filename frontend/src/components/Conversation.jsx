@@ -31,9 +31,7 @@ return (
                             {userData.name}
                         </Heading>
                         <Text>
-                            {latestMessage && latestMessage.user._path.segments[1].trim() !== userID ? "You: " : ""}{latestMessage.text
-
-                            } 
+                            {latestMessage && latestMessage.user._path.segments[1].trim() !== userID ? "You: " : ""}{latestMessage.text} 
                         </Text>
                     </Stack>
                 </CardBody>

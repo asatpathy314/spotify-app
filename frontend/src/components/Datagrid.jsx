@@ -18,7 +18,6 @@ const DataGrid = ({ data, type }) => {
       overflow="hidden"
       bg='#0f0e17'
       color="#FFFFFE"
-      p={4}
     >
       <Table variant="simple">
         <Thead>
@@ -27,7 +26,7 @@ const DataGrid = ({ data, type }) => {
             {type === "songs" && <Th color="#FFFFFE">Song Title</Th>}
             <Th color="#FFFFFE">Artist Name</Th>
             {type === "songs" && <Th color="#FFFFFE">Album</Th>}
-            {type === "songs" && <Th color="#FFFFFE"><TimeIcon /></Th>}
+            {type === "songs" && <Th color="#FFFFFE" textAlign={'center'}><TimeIcon /></Th>}
           </Tr>
         </Thead>
         <Tbody>
@@ -36,9 +35,8 @@ const DataGrid = ({ data, type }) => {
               <Td>
                 <Box
                   bg="#0f0e17"
-                  p={2}
                   borderRadius="md"
-                  textAlign="center"
+                  textAlign="left"
                 >
                   {index + 1}
                 </Box>
@@ -47,9 +45,8 @@ const DataGrid = ({ data, type }) => {
                 <Td>
                   <Box
                     bg="#0f0e17"
-                    p={2}
                     borderRadius="md"
-                    textAlign="center"
+                    textAlign="left"
                   >
                     {item.song}
                   </Box>
@@ -58,9 +55,8 @@ const DataGrid = ({ data, type }) => {
               <Td>
                 <Box
                   bg="#0f0e17"
-                  p={2}
                   borderRadius="md"
-                  textAlign="center"
+                  textAlign="left"
                 >
                   {item.artist}
                 </Box>
@@ -69,9 +65,8 @@ const DataGrid = ({ data, type }) => {
                 <Td>
                   <Box
                     bg="#0f0e17"
-                    p={2}
                     borderRadius="md"
-                    textAlign="center"
+                    textAlign="left"
                   >
                     {item.album}
                   </Box>
@@ -81,7 +76,6 @@ const DataGrid = ({ data, type }) => {
                 <Td>
                   <Box
                     bg="#0f0e17"
-                    p={2}
                     borderRadius="md"
                     textAlign="center"
                   >

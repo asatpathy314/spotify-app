@@ -3,7 +3,7 @@ import { ButtonGroup, Button } from "@chakra-ui/react";
 
 const TimeButton = ({ currentTimeframe, setTimeframe }) => {
   return (
-    <ButtonGroup isAttached variant="outline" spacing="0">
+    <ButtonGroup isAttached variant="outline" ml='auto'>
       <Button
         colorScheme={currentTimeframe === 'short_term' ? 'orange' : 'gray'}
         backgroundColor={currentTimeframe === 'short_term' ? 'orange' : 'transparent'}
@@ -11,7 +11,7 @@ const TimeButton = ({ currentTimeframe, setTimeframe }) => {
         onClick={() => setTimeframe('short_term')}
         _hover={{ bg: currentTimeframe === 'short_term' ? 'orange' : 'gray' }}
       >
-        Short Term
+        Last Month
       </Button>
       <Button
         colorScheme={currentTimeframe === 'medium_term' ? 'orange' : 'gray'}
@@ -20,7 +20,7 @@ const TimeButton = ({ currentTimeframe, setTimeframe }) => {
         onClick={() => setTimeframe('medium_term')}
         _hover={{ bg: currentTimeframe === 'medium_term' ? 'orange' : 'gray' }}
       >
-        Medium Term
+        Last 6 Months
       </Button>
       <Button
         colorScheme={currentTimeframe === 'long_term' ? 'orange' : 'gray'}
@@ -29,7 +29,7 @@ const TimeButton = ({ currentTimeframe, setTimeframe }) => {
         onClick={() => setTimeframe('long_term')}
         _hover={{ bg: currentTimeframe === 'long_term' ? 'orange' : 'gray' }}
       >
-        Long Term
+        All Time
       </Button>
     </ButtonGroup>
   );

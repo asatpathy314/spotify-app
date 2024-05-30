@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { AuthContext } from "../components/AuthProvider";
+import { AuthContext } from "../components/AuthProvider"; 
+import { Stack, Heading } from "@chakra-ui/react";
 import axios from "axios";
 import DataGrid from "../components/Datagrid";
 import TimeButton from "../components/TimeButton";
@@ -78,11 +79,13 @@ const TopSongs = () => {
 
     if (!forbidden) {
         return (
-            <div>
-                <h1>Top Songs</h1>
-                <TimeButton currentTimeframe={timeframe} setTimeframe={setTimeframe} />
+            <Stack direction="column" gap={5}>
+                    <Stack direction = "row" display='flex'>
+                        <Heading>Top Songs</Heading>
+                        <TimeButton currentTimeframe={timeframe} setTimeframe={setTimeframe} />
+                    </Stack>
                 <DataGrid data={returnTopSongs(timeframe)} type="songs" />
-            </div>
+            </Stack>
         );
     } else {
         return null;
