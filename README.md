@@ -386,3 +386,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - [Carson Colyer](mailto:carsoncolyer@gmail.com)
 - [Harun Ahmed](mailto:hahmed3173@gmail.com)
 - [Kening Zhao](mailto:keningz@umich.edu)
+- [Fridah Ntika] (mailto:fn101@wellesley.edu)
