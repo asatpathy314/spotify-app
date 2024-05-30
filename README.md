@@ -129,6 +129,20 @@ List the main features of your project. Highlight any unique or noteworthy funct
    - Checks for Spotify access token and user ID from URL parameters or redirects to login if not found.
    - If the user is not authorized, displays a message prompting the user to login.
 
+### Discover Page
+
+1. **Discover Page:**
+   - Displays a list of user profiles for discovery.
+   - Fetches all user profiles from the backend.
+
+2. **Profile Links:**
+   - Each user profile is a clickable link that navigates to the respective user's profile page.
+   - Uses `Link` component from Chakra UI for navigation.
+
+3. **Responsive Design:**
+   - Profiles are displayed in a responsive grid layout.
+   - Uses Chakra UI's `Box` component with flex properties for a flexible and responsive design.
+
 ### Forum
 1. **Forum Creation and Listing:**
    - Users can create new forums with a name.
