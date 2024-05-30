@@ -1,6 +1,7 @@
 //render the last message in each conversation
 //along with the user that you are speaking to and their profile picture
 import { useState, useEffect } from "react";
+import { Grid, GridItem, Box, Text, Avatar, Stack } from "@chakra-ui/react";
 import axios from 'axios';
 import '../stylesheets/messages.css';
 
@@ -62,25 +63,15 @@ const Inbox = () => {
 
     return (
         <>
-            <div className="whiteText">This is the Inbox page</div>
-            <div className="conversations">
-                {conversations.map((convo, index) => (
-                    <div key={index} className="conversation">
-                        <div className="conversationDetails">
-                            {convo.messages.map((message, messageIndex) => (
-                                <div key={messageIndex} className="message">
-                                    <div className="messageSender">
-                                        {message.senderId === currentUserId ? "You" : "Them"}:
-                                    </div>
-                                    <div className="messageText">
-                                        {message.text}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ))}
-            </div>
+            <Grid
+            h='100%'
+            templateRows='repeat(3, 1fr)'
+            templateColumns='repeat(4, 1fr)'
+            gap={4}
+            >
+                <GridItem colSpan={4} rowSpan={1} bg='papayawhip' />
+                <GridItem colSpan={4} rowSpan={2} bg='tomato' />
+            </Grid>
         </>
     );
 };
