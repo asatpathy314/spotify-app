@@ -11,11 +11,15 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
 
 ## Installation/Usage
 
-### Front-End Installation
-
-1. **Clone the Repository**
+### Clone the Repository
    ```sh
    git clone https://github.com/asatpathy314/spotify-app.git
+   ```
+
+### Front-End Installation
+
+1. **Go to Front-End Folder**
+   ```sh
    cd spotify-app/frontend
 
 2. **Install Dependencies**
