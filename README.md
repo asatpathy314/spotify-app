@@ -14,6 +14,7 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
 ### Clone the Repository
    ```sh
    git clone https://github.com/asatpathy314/spotify-app.git
+   ```
 
 ### Front-End Installation
 
