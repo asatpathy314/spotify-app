@@ -33,6 +33,10 @@ const Forum = () => {
   const [newComment, setNewComment] = useState('');
   const [commentLikedStatus, setCommentLikedStatus] = useState(false);
   const [postLikedStatus, setPostLikedStatus] = useState(false);
+  const [filteredForums, setFilteredForums] = useState("")
+  const [searchQuery, setSearchQuery] = useState("");
+
+  
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -48,6 +52,8 @@ const Forum = () => {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         setForums(response.data.forums);
+        setFilteredForums(response.data.forums); // Initialize filteredForums
+
       } catch (error) {
         console.error('Error fetching forums:', error);
       } finally {
@@ -57,6 +63,13 @@ const Forum = () => {
 
     fetchForums();
   }, [token, userID, navigate]);
+
+  useEffect(() => {
+    const results = forums.filter(forum =>
+      forum.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredForums(results);
+  }, [searchQuery, forums]);
 
   const fetchPosts = async (forumId) => {
     setLoading(true);
@@ -156,9 +169,9 @@ const Forum = () => {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     toast.promise(createForumPromise, {
-      success: { title: 'Forum created', description: 'The forum has been created successfully' },
-      error: { title: 'Failed to create forum', description: 'An error occurred' },
-      loading: { title: 'Creating forum', description: 'Please wait' },
+      success: { title: 'Forum created', description: 'The forum has been created successfully', position: 'bottom-right', isClosable: true },
+      error: { title: 'Failed to create forum', description: 'An error occurred', position: 'bottom-right', isClosable: true },
+      loading: { title: 'Creating forum', description: 'Please wait', position: 'bottom-right', isClosable: true },
     });
     try {
       await createForumPromise;
@@ -182,9 +195,9 @@ const Forum = () => {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     toast.promise(createPostPromise, {
-      success: { title: 'Post created', description: 'The post has been created successfully' },
-      error: { title: 'Failed to upload post', description: 'An error occurred' },
-      loading: { title: 'Uploading post', description: 'Please wait' },
+      success: { title: 'Post created', description: 'The post has been created successfully', position: 'bottom-right', isClosable: true },
+      error: { title: 'Failed to upload post', description: 'An error occurred', position: 'bottom-right', isClosable: true },
+      loading: { title: 'Uploading post', description: 'Please wait', position: 'bottom-right', isClosable: true },
     });
     try {
       await createPostPromise;
@@ -205,9 +218,9 @@ const Forum = () => {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     toast.promise(createCommentPromise, {
-      success: { title: 'Comment posted', description: 'The comment has been posted successfully' },
-      error: { title: 'Failed to post comment', description: 'An error occurred' },
-      loading: { title: 'Posting comment', description: 'Please wait...' },
+      success: { title: 'Comment posted', description: 'The comment has been posted successfully', position: 'bottom-right', isClosable: true },
+      error: { title: 'Failed to post comment', description: 'An error occurred', position: 'bottom-right', isClosable: true },
+      loading: { title: 'Posting comment', description: 'Please wait...', position: 'bottom-right', isClosable: true },
     });
     try {
       await createCommentPromise;
@@ -239,7 +252,7 @@ const Forum = () => {
           _hover={{ bg: "#ff8906" }}
           onClick={() => setSelectedPost(null)}
         >
-          Back to Posts
+          Back to Posts From "{selectedForum.name}"
         </Button>
         <Card mb={1} bg="gray.700" padding={"3"} p={6}>
           <Text color="gray.500" fontSize="sm">
@@ -282,7 +295,15 @@ const Forum = () => {
         <VStack spacing={4} align="stretch">
           {comments.length > 0 ? (
             comments.map((comment) => (
-              <Card key={comment.id} p={6} bg="gray.700" borderRadius="md" width="100%">
+              <Card 
+              key={comment.id} 
+              p={6} 
+              bg="gray.700" 
+              borderRadius="md" 
+              width="100%"
+              _hover={{ boxShadow: 'dark-lg' }}
+
+              >
                 <Text color="gray.500" fontSize="sm">
                   Posted by {comment.userId} on {formatDate(comment.date)}
                 </Text>
@@ -320,18 +341,19 @@ const Forum = () => {
         </Button>
         <Box mb={1}>
           <Text fontSize="2xl" fontWeight="bold" color="white">
-            {"Posts From Forum: " + selectedForum.name}
+            Posts From "{selectedForum.name}"
           </Text>
         </Box>
         <Box mb={4}>
           <form onSubmit={handleSubmitPost}>
             <FormControl id="title" mb={1} focusB>
               <FormLabel color="white">Title</FormLabel>
-              <Input color="white" type="text" value={title} focusBorderColor="#ff8906" onChange={(e) => setTitle(e.target.value)} required />
+              <Input maxLength={100} color="white" type="text" value={title} focusBorderColor="#ff8906" onChange={(e) => setTitle(e.target.value)} required />
             </FormControl>
             <FormControl id="description" mb={4}>
               <FormLabel color="white">Description</FormLabel>
               <Input
+                maxLength={200}
                 color="white"
                 type="text"
                 value={description}
@@ -358,7 +380,8 @@ const Forum = () => {
                   width="100%"
                   onClick={() => handlePostClick(post)}
                   cursor="pointer"
-                >
+                  _hover={{ boxShadow: 'dark-lg' }}
+                  >
                   <Text color="gray.500" fontSize="sm">
                     Posted by {post.userId} on {formatDate(post.date)}
                   </Text>
@@ -409,10 +432,20 @@ const Forum = () => {
           Create Forum
         </Button>
       </form>
+        <FormControl id="search-forum-name" mb={4}>
+    <FormLabel color="white">Find Forum By Name</FormLabel>
+    <Input
+      type="text"
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      color="white"
+      focusBorderColor="#ff8906"
+    />
+  </FormControl>
       <Box>
         <VStack spacing={4} align="stretch">
           {forums.length > 0 ? (
-            forums.map((forum) => (
+            filteredForums.map((forum) => (
               <Card
                 key={forum.id}
                 p={6}
@@ -421,6 +454,7 @@ const Forum = () => {
                 width="100%"
                 onClick={() => handleForumClick(forum)}
                 cursor="pointer"
+                _hover={{ boxShadow: 'dark-lg' }}
               >
                 <Text fontSize="xl" color="white">
                   {forum.name}
