@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('./firebase');  // Correct path to firebase.js
+const { FieldValue, Timestamp } = require('firebase-admin/firestore');
 
 // Fetch the specific conversation
 router.get('/', async (req, res) => {
@@ -55,4 +56,38 @@ router.get('/conversation', async(req, res) => {
   }
 })
 
+
+router.post('/conversation', async (req, res) => {
+  try {
+    const conversationId = req.query.id;
+    const userID = req.query.userID;
+    const newMessage = req.body.messages;
+    newMessage[0].timestamp = Timestamp.now();
+    newMessage[0].user = db.collection("user").doc(userID);
+
+    if (!conversationId) {
+      return res.status(400).send("Missing query parameter: id");
+    }
+
+    const conversationDocRef = db.collection("conversation").doc(conversationId);
+    const conversationDoc = await conversationDocRef.get();
+
+    if (!conversationDoc.exists) {
+      return res.status(404).send("Conversation not found");
+    }
+    console.log(newMessage[0])
+    // Update the conversation document with new messages
+    await conversationDocRef.update({
+      messages: FieldValue.arrayUnion(newMessage[0])
+    });
+
+    return res.status(200).send("Messages added successfully");
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Internal Server Error");
+  }
+});
+
 module.exports = router;
+
+

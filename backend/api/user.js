@@ -42,6 +42,21 @@ router.get("/all", async(req, res) => {
     }
 })
 
+router.get("/getDocRef", async(req, res) => {
+    try {
+        const userId = req.query.id;
+        if (!userId) {
+            return res.status(400).send("Missing query parameter: id");
+        }
+        const userDocRef = await db.collection("user").doc(userId);
+        console.log('User ref sent successfully.')
+        res.status(200).json(userDocRef);
+    } catch (error) {
+        console.error("Error retrieving userRef:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 router.post("/", async(req, res) => {
     try {
         const newBio = req.query.bio;
