@@ -21,12 +21,12 @@ import axios from "axios";
 
 const Profile = () => {
   const { token, setToken, userID, setUserID } = useContext(AuthContext);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [bio, setBio] = useState("Fill in your bio here!");
-  const [profileData, setProfileData] = useState(null);
-  const [editMode, setEditMode] = useState(false);
-  const [isEditable, setIsEditable] = useState(false);
-  const [forbidden, setForbidden] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams(); 
+  const [bio, setBio] = useState("");
+  const [profileData, setProfileData] = useState(null); // Retrieved user Data.
+  const [editMode, setEditMode] = useState(false); // Determines whether to display the edit box or not.
+  const [isEditable, setIsEditable] = useState(false); // Determines if the user has permission to edit the bio/Whether to display edit icon.
+  const [forbidden, setForbidden] = useState(null); // Determines if the user has permission to view the page
   const { id } = useParams();
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const Profile = () => {
         setToken(accessToken);
         setUserID(userId);
       } else {
-        console.log("Error retrieving token and user ID");
+        console.error("Error retrieving token and user ID");
       }
     }
     if (id) {
@@ -76,7 +76,7 @@ const Profile = () => {
     }
   };
 
-  if (!forbidden && id !== "nosessiontoken") {
+  if (id !== "nosessiontoken") {
     return (
       <Grid
         h="90%"

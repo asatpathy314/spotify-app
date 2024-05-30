@@ -1,5 +1,4 @@
-import React from 'react';
-import { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSearchParams } from "react-router-dom";
 import { AuthContext } from "../components/AuthProvider";
@@ -10,7 +9,7 @@ export const LikedSongs = () => {
     const { token, setToken, userID, setUserID } = useContext(AuthContext);
     const [searchParams, setSearchParams] = useSearchParams();
     const [forbidden, setForbidden] = useState(null);
-
+    // Fetch the liked songs from the local API
     useEffect(() => {
         const fetchSongs = async () => {
             try {
@@ -28,33 +27,35 @@ export const LikedSongs = () => {
         if (token) {
             fetchSongs();
         } else {
-            setForbidden(true);
+            setForbidden(true); // Make sure that only logged in users can access this page
             window.location.href('/profile/nosessiontoken');
         }
     }, [token]);
     console.log(songs);
 
-    if (!forbidden) {
+    if (!forbidden && songs && songs.length > 0) {
         return (
             <>
+                <Heading mb={5} >Liked Songs</Heading>
                 <Grid
                     h="90%"
                     templateRows="repeat(2, 1fr)"
                     templateColumns="repeat(4, 1fr)"
                     gap={4}>
                     {songs.map((song, index) => (
-                        <GridItem rowSpan={1} colSpan={1} key={index}>
-                            <Card maxW='sm' bg="#0f0e17" color="#FFFFFE">
-                            <CardBody>
-                                <Stack mt='6' spacing='3'>
-                                <Heading size='md'>{song.track.name}</Heading>
-                                <Img
-                                src={song.track.album.images[0].url}
-                                alt='Album Cover'
-                                borderRadius='lg'
-                                />
-                                </Stack>
-                            </CardBody>
+                        <GridItem rowSpan={1} colSpan={1} key={index} display="flex">
+                            <Card maxW='sm' bg="#0f0e17" color="#FFFFFE" display="flex" flexDirection="column" height="100%">
+                                <CardBody flex="1" display="flex" flexDirection="column">
+                                    <Stack mt='6' spacing='3' flex="1">
+                                        <Img
+                                            src={song.track.album.images[0].url}
+                                            alt='Album Cover'
+                                            borderRadius='lg'
+                                            flex="1"
+                                        />
+                                        <Heading size='md' textAlign="center">{song.track.name}</Heading>
+                                    </Stack>
+                                </CardBody>
                             </Card>
                         </GridItem>
                     ))}

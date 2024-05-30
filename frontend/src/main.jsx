@@ -15,7 +15,7 @@ import Discover from './routes/Discover.jsx'
 import TopSongs from './routes/TopSongs.jsx'
 import TopArtists from './routes/TopArtists.jsx'
 
-
+// Routes
 const router = createBrowserRouter([
   {
     path: '/',
@@ -61,7 +61,7 @@ const router = createBrowserRouter([
   }
 ])
 
-
+// Render the app
 const rootElement = document.getElementById('root')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
