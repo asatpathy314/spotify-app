@@ -11,27 +11,27 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
 
 ## Installation
 
-### Front-End Installation
-
-1. **Clone the Repository**
+### Clone the Repository
    ```sh
    git clone https://github.com/asatpathy314/spotify-app.git
-   cd spotify-forum/frontend
+   ```
+
+### Front-End Installation
+
+1. **Go to Front-End Folder**
+   ```sh
+   cd spotify-app/frontend
 
 2. **Install Dependencies**
    ```sh
    npm install
 
-3. **Run Front-End Server**
-   ```sh
-   npm run dev
-
 ### Back-End Installation
 
-1. **Clone the Repository**
+1. **Go to Back-End Folder**
    ```sh
-   git clone https://github.com/asatpathy314/spotify-app.git
-   cd spotify-forum/backend
+   cd spotify-app/backend
+   ```
 
 2. **Install Dependencies**
    ```sh
@@ -42,12 +42,6 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
    ```sh
     CLIENT_ID=your_spotify_client_id
     CLIENT_SECRET=your_spotify_client_secret
-
-4. **Run Back-End Server**
-   ```sh
-   npm start
-
-### Go on http://localhost:5173/ to access the APP
 
 ### How to Create an App in Spotify and Get Client ID and Secret
 
@@ -82,14 +76,14 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
    - Go to the "Service accounts" tab.
    - Click on "Generate new private key" and confirm by clicking "Generate key". This will download a JSON file containing your service account credentials.
 
-#### 2. Create `serviceAccount.js`
+#### 2. Create `serviceAccount.json`
 
 1. **Create a New File**
-   - In your project directory, create a new file named `serviceAccount.js`.
+   - In your project directory, create a new file named `serviceAccount.json`.
 
 2. **Add the Service Account Credentials**
-   - Copy the content of the downloaded JSON file and paste it into `serviceAccount.js`.
-   - Export the credentials as a module. Your `serviceAccount.js` should look like this:
+   - Copy the content of the downloaded JSON file and paste it into `serviceAccount.json`.
+   - Export the credentials as a module. Your `serviceAccount.json` should look like this:
 
    ```javascript
    const serviceAccount = {
@@ -106,11 +100,22 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
 
 ## Usage
 
-Provide examples and instructions on how to use your project. Include any relevant code snippets or screenshots.
+Once everything is setup `cd` to the project folder. In order to start the frontend server.
+
+```bash
+cd frontend
+npm run dev
+```
+
+Then to start the backend server go back to parent directory and then.
+
+```bash
+cd backend
+npm start
+```
+Go to http://localhost:5173/ to access the app.
 
 ## Features
-
-List the main features of your project. Highlight any unique or noteworthy functionalities.
 
 ### Profile
 1. **User Profile Display:**
@@ -128,6 +133,44 @@ List the main features of your project. Highlight any unique or noteworthy funct
 4. **Authentication Check:**
    - Checks for Spotify access token and user ID from URL parameters or redirects to login if not found.
    - If the user is not authorized, displays a message prompting the user to login.
+
+### Favorite Artists
+1. **Top Artists Display:**
+   - Fetches and displays the user's top artists from Spotify for three different timeframes: short-term, medium-term, and long-term.
+   - Allows users to toggle between these timeframes to view their top artists for different periods.
+2. **Dynamic Data Fetching:**
+   - Uses `axios` to make API requests to the backend to fetch top artists data based on the selected timeframe.
+   - Fetches data for all timeframes upon component mount if a valid token is available.
+3. **Timeframe Selection:**
+   - Utilizes a `TimeButton` component to allow users to select the timeframe (short-term, medium-term, long-term) for displaying top artists.
+   - Updates the displayed artists dynamically based on the selected timeframe.
+
+### Favorite Songs
+1. **Top Songs Display:**
+   - Fetches and displays the user's top songs from Spotify for three different timeframes: short-term, medium-term, and long-term.
+   - Allows users to toggle between these timeframes to view their top songs for different periods.
+
+2. **Dynamic Data Fetching:**
+   - Uses `axios` to make API requests to the backend to fetch top songs data based on the selected timeframe.
+   - Fetches data for all timeframes upon component mount if a valid token is available.
+
+3. **Timeframe Selection:**
+   - Utilizes a `TimeButton` component to allow users to select the timeframe (short-term, medium-term, long-term) for displaying top songs.
+   - Updates the displayed songs dynamically based on the selected timeframe.
+
+### Discover Page
+
+1. **Discover Page:**
+   - Displays a list of user profiles for discovery.
+   - Fetches all user profiles from the backend.
+
+2. **Profile Links:**
+   - Each user profile is a clickable link that navigates to the respective user's profile page.
+   - Uses `Link` component from Chakra UI for navigation.
+
+3. **Responsive Design:**
+   - Profiles are displayed in a responsive grid layout.
+   - Uses Chakra UI's `Box` component with flex properties for a flexible and responsive design.
 
 ### Forum
 1. **Forum Creation and Listing:**
@@ -150,10 +193,18 @@ List the main features of your project. Highlight any unique or noteworthy funct
    - Efficient data fetching with `axios` to interact with your Express backend.
    - Management of loading states to provide feedback to users.
 
-
 ## How to Extend the Project
 
-Provide code snippets and relevant documentation on how to build more features.
+### Backend
+- Create a file in the backend/api folder using `template.js`.
+- Import a the new route in `app.js` and use the pre-established format to add the route.
+- Implement the API endpoint for this route. Depending on the purpose of the endpoint you may need to verify that the Spotify token which the user has provided is still valid using appropriate error handling on the frontend. In order to make the API as flexible as possible try to send raw data to the frontend unless the data processing is compute intensive.
+
+### Frontend:
+- In `Sidebar.jsx` add the link and an appropriate icon to the `LinkItems` array.
+- Create a new route in the router in `main.jsx` under the children of `App.jsx`. This will allow `react-router-dom` to recognize the page.
+- Add a component file in `Routes.jsx`. This will be the component you define in `Main.jsx`. 
+- Import/create necessary components and subscribe to the AuthContext if you need to make any calls to API endpoints that interface with the Spotify API.
 
 ## API Documentation
 
@@ -332,3 +383,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Contact
 
 - [Abhishek Satpathy](mailto:asatpathy314@gmail.com)
+- [Carson Colyer](mailto:carsoncolyer@gmail.com)
+- [Harun Ahmed](mailto:hahmed3173@gmail.com)
+- [Kening Zhao](mailto:keningz@umich.edu)

@@ -28,7 +28,7 @@ export const LikedSongs = () => {
             fetchSongs();
         } else {
             setForbidden(true); // Make sure that only logged in users can access this page
-            window.location.href('/profile/nosessiontoken');
+            window.location.href = '/profile/nosessiontoken';
         }
     }, [token]);
     //console.log(songs);

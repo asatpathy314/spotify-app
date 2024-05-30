@@ -4,8 +4,6 @@ import * as ReactDOM from 'react-dom/client'
 import { App } from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Forum from './components/Forum.jsx'
-
-
 import Login from './routes/Login.jsx'
 import LogOut from './routes/Logout.jsx'
 import Profile from './routes/Profile.jsx'
@@ -14,6 +12,7 @@ import AuthProvider from './components/AuthProvider.jsx'
 import Discover from './routes/Discover.jsx'
 import TopSongs from './routes/TopSongs.jsx'
 import TopArtists from './routes/TopArtists.jsx'
+import Inbox from './routes/Inbox.jsx'
 
 // Routes
 const router = createBrowserRouter([
@@ -35,7 +34,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/messages',
-        element: <h1>Messages</h1>
+        element: <Inbox />
       },
       {
         path: '/forum',
