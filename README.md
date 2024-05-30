@@ -384,5 +384,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 - [Abhishek Satpathy](mailto:asatpathy314@gmail.com)
 - [Carson Colyer](mailto:carsoncolyer@gmail.com)
+- [Fridah Ntika](mailto:fn101@wellesley.edu)
 - [Harun Ahmed](mailto:hahmed3173@gmail.com)
 - [Kening Zhao](mailto:keningz@umich.edu)
+- [Riley Washington](mailto:)
