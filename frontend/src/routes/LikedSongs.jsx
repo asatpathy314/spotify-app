@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSearchParams } from "react-router-dom";
 import { AuthContext } from "../components/AuthProvider";
-import { Container, Card, CardHeader, CardBody, CardFooter, Img, Heading, Grid, Stack, Box, Text, GridItem } from "@chakra-ui/react";
+import { Card, CardBody, Img, Heading, Grid, Stack, GridItem } from "@chakra-ui/react";
 
 export const LikedSongs = () => {
     const [songs, setSongs] = useState([]);
@@ -31,7 +31,7 @@ export const LikedSongs = () => {
             window.location.href = '/profile/nosessiontoken';
         }
     }, [token]);
-    console.log(songs);
+    //console.log(songs);
 
     if (!forbidden && songs && songs.length > 0) {
         return (
