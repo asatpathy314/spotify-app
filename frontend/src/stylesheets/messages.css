@@ -8,3 +8,18 @@ body {
 .whiteText{
     color:white;
 }
+
+.buddies{
+    font-size: 50px;
+    color: white;
+    font-weight: bold;
+    color: black;
+}
+
+.MyConversations{
+
+}
+
+.friendImage{
+    width: 100px;
+}

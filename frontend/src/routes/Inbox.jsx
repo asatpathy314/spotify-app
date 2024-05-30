@@ -1,7 +1,7 @@
 //render the last message in each conversation
 //along with the user that you are speaking to and their profile picture
 import { useState, useEffect } from "react";
-import { Grid, GridItem, Box, Text, Avatar, Stack } from "@chakra-ui/react";
+import { Grid, GridItem, Box, Text, Avatar, Stack, Card, CardHeader, CardBody, Heading, Button, Img} from "@chakra-ui/react";
 import axios from 'axios';
 import '../stylesheets/messages.css';
 
@@ -54,8 +54,24 @@ const Inbox = () => {
             templateColumns='repeat(4, 1fr)'
             gap={4}
             >
-                <GridItem colSpan={4} rowSpan={1} bg='papayawhip' />
-                <GridItem colSpan={4} rowSpan={2} bg='tomato' />
+
+                <GridItem colSpan={4} rowSpan={1} bg='papayawhip'>
+                    <div className = "buddies">Send a Message</div>
+                    <Card flex="1" display="flex" flexDirection="column">
+
+                    </Card>
+                </GridItem>
+
+
+                <GridItem colSpan={4} rowSpan={2} bg='tomato'>
+                    <div className="MyConversations">My conversations</div>
+                    <Stack mt='6' spacing='3' flex="1">
+                        <Img className = "friendImage"
+                            src="https://pics.craiyon.com/2023-05-31/220e4c73f6674d46a84840ebde9f9bc8.webp"
+                            alt='FriendPic'
+                        />
+                    </Stack>
+                </GridItem>
             </Grid>
         </>
     );
