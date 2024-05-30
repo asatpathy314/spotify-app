@@ -9,37 +9,26 @@ const Inbox = () => {
     const [conversations, setConversations] = useState([]);
     const [loading, setLoading] = useState(true);
     const currentUserId = "31ow3dazrrvyk7fvsnacgnel4lyu"; // Replace with actual current user ID with sign in info
-    const convoId = "wFrhjiWzQ2dttx3h28vJ";
 
     useEffect(() => {
         const fetchInbox = async () => {
             try {
-                axios.get("http://localhost:8000/messages", {
-                    params: { userId: currentUserId },
-                })  .then(async (res) => {
-
-                    console.log("Fetched conversation references:", res.data);
-                    const conversationReferences = res.data;
-                    console.log('here', conversationReferences.conversations)
-        
-                    //Fetch conversations using conversation references
-                    await (conversationReferences.conversations).map(async (item, index) => {
-                        const conversationResponse = await axios.get(`http://localhost:8000/messages/conversation`, {
-                            params: { conversationId: convoId},
-                        });
-                        return conversationResponse.data;
-                    })
-                    setConversations(conversationReferences.conversations);
-
-                })
-
+                axios.get("http://localhost:8000/user?id="+currentUserId)  
+                    .then(async (res) => {
+                        console.log("Fetched conversation references:", res.data);
+                        const userData = res.data;
+            
+                        //Fetch conversations using conversation references
+                        await userData.conversations.map(async (item, index) => {
+                                console.log('2', item)
+                            });
+                        })
             } catch (error) {
                 console.error("Error fetching Inbox:", error);
             } finally {
                 setLoading(false);
             }
         };
-    
         fetchInbox();
     }, []);
 

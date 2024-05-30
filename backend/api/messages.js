@@ -36,7 +36,7 @@ const db = require('./firebase');  // Correct path to firebase.js
 // });
 
 // Fetch the specific conversation
-router.get('/conversation', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const conversationId = req.query.conversationId; // Access conversationId from URL params
     console.log("I am here", conversationId);
@@ -58,31 +58,6 @@ router.get('/conversation', async (req, res) => {
   } catch (error) {
     console.error("Error fetching conversation:", error);
     res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-//fetch a conversation array of a specific user
-router.get("/", async (req, res) => {
-  try {
-    // Assuming you get the userId from the request (e.g., req.userId)
-    const userId = req.query.userId;
-
-    if (!userId) {
-      return res.status(400).json({ error: "User ID is required" });
-    }
-    const userDoc = await db.collection("user").doc(userId).get();
-
-    if (!userDoc.exists) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    const userData = userDoc.data();
-    const conversations = userData.conversations || [];
-
-    console.log(conversations);
-    res.status(200).json({ conversations });
-  } catch (e) {
-    res.status(400).json({ error: e.message });
   }
 });
  
