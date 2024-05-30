@@ -143,6 +143,30 @@ npm start
    - Checks for Spotify access token and user ID from URL parameters or redirects to login if not found.
    - If the user is not authorized, displays a message prompting the user to login.
 
+### Favorite Artists
+1. **Top Artists Display:**
+   - Fetches and displays the user's top artists from Spotify for three different timeframes: short-term, medium-term, and long-term.
+   - Allows users to toggle between these timeframes to view their top artists for different periods.
+2. **Dynamic Data Fetching:**
+   - Uses `axios` to make API requests to the backend to fetch top artists data based on the selected timeframe.
+   - Fetches data for all timeframes upon component mount if a valid token is available.
+3. **Timeframe Selection:**
+   - Utilizes a `TimeButton` component to allow users to select the timeframe (short-term, medium-term, long-term) for displaying top artists.
+   - Updates the displayed artists dynamically based on the selected timeframe.
+
+### Favorite Songs
+1. **Top Songs Display:**
+   - Fetches and displays the user's top songs from Spotify for three different timeframes: short-term, medium-term, and long-term.
+   - Allows users to toggle between these timeframes to view their top songs for different periods.
+
+2. **Dynamic Data Fetching:**
+   - Uses `axios` to make API requests to the backend to fetch top songs data based on the selected timeframe.
+   - Fetches data for all timeframes upon component mount if a valid token is available.
+
+3. **Timeframe Selection:**
+   - Utilizes a `TimeButton` component to allow users to select the timeframe (short-term, medium-term, long-term) for displaying top songs.
+   - Updates the displayed songs dynamically based on the selected timeframe.
+
 ### Discover Page
 
 1. **Discover Page:**
@@ -177,7 +201,6 @@ npm start
 5. **Data Fetching and State Management:**
    - Efficient data fetching with `axios` to interact with your Express backend.
    - Management of loading states to provide feedback to users.
-
 
 ## How to Extend the Project
 
