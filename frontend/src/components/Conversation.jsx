@@ -39,14 +39,29 @@ const Conversation = () => {
     return (
       <Stack gap={3}>
         {conversationData.messages.map((message, index) => {
-        const userMessageID = message.user._path.segments[1].trim();
-        const isUser = userMessageID === userID;
+          const userMessageID = message.user._path.segments[1].trim();
+          const isUser = userMessageID === userID;
 
           return (
-            <Box key={index} width="100%" display='flex' >
-                <Box bg={isUser ? '#f25f4c' : '#a7a9be'} ml={isUser ? 'auto' : 0} maxWidth = "40%" p={3}>
-                    <Text color="#FFFFFE" fontSize={['lg', 'xl', '2xl', '3xl']} textAlign={isUser ? 'right' : 'left'}>{"message.textmessage.text"}</Text>
-                </Box>
+            <Box key={index} width="100%" display="flex">
+              <Box
+                bg={isUser ? '#f25f4c' : '#a7a9be'}
+                ml={isUser ? 'auto' : 0}
+                display="inline-block"
+                p={4}
+                borderRadius={50}
+                whiteSpace="pre-wrap"
+                flex="auto auto auto"
+                maxWidth="40%"
+              >
+                <Text
+                  color="#FFFFFE"
+                  fontSize={['md', 'lg', 'xl', '2xl']}
+                  textAlign={isUser ? 'right' : 'left'}
+                >
+                  {message.text.trim()}
+                </Text>
+              </Box>
             </Box>
           );
         })}
@@ -55,9 +70,7 @@ const Conversation = () => {
   } else if (error) {
     return <h1>Error fetching conversation</h1>;
   }
-  return (
-    <h1>Loading</h1>
-  ); // Return null or a loading indicator while data is being fetched
+  return <h1>Loading</h1>; // Return null or a loading indicator while data is being fetched
 };
 
 export default Conversation;
