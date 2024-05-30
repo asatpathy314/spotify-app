@@ -53,6 +53,10 @@ const router = createBrowserRouter([
         path: '/liked',
         element: <LikedSongs />
       },
+      {
+        path: 'messaging',
+        element: <h1>testing</h1>
+      }
     ]
   },
   {
