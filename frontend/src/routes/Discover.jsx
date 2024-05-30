@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-
-import {Box, Link} from '@chakra-ui/react';
+import { Box, Link, SimpleGrid } from '@chakra-ui/react';
 import User from '../components/User';
 import '../stylesheets/discover.css';
 
 function Discover() {
     const [profiles, setProfiles] = useState([]);
+
     useEffect(() => {
         const getProfiles = async () => {
             try {
@@ -26,25 +26,25 @@ function Discover() {
 
     return (
         <>
-        <div style={{ padding: '20px'}}>
-            <div>
-                <p style={{ fontSize: '50px',  color: 'white', fontWeight: 'bold' }}>Discover</p>
-            </div>
+            <div style={{ padding: '20px' }}>
+                <div>
+                    <p style={{ fontSize: '50px', color: 'white', fontWeight: 'bold' }}>Discover</p>
+                </div>
 
-            <div >
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 10}}>
-                {profiles.map((profile, index) => (
-                    <Link key={index} href={`/profile/${profile.id}`}>
-                        <div >
-                            <User userName={profile.name} profilePictureUrl={profile.profile} />
-                        </div>
-                    </Link>
-                ))}
-                </Box>
+                <div>
+                    <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing={3} textAlign={'center'}>
+                        {profiles.map((profile, index) => (
+                            <Link key={index} href={`/profile/${profile.id}`}>
+                                <Box>
+                                    <User userName={profile.name} profilePictureUrl={profile.profile} />
+                                </Box>
+                            </Link>
+                        ))}
+                    </SimpleGrid>
+                </div>
             </div>
-        </div>
         </>
-    )
+    );
 }
 
 export default Discover;

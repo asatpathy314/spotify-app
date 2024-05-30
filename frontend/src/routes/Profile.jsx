@@ -24,6 +24,7 @@ import {
   ModalCloseButton,
   useDisclosure,
   Input,
+  Box,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 import { IoIosSend } from "react-icons/io";
