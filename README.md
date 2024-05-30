@@ -20,32 +20,45 @@ Provide examples and instructions on how to use your project. Include any releva
 ## Features
 
 List the main features of your project. Highlight any unique or noteworthy functionalities.
+
+### Profile
+1. **User Profile Display:**
+   - Displays the user's profile information including avatar, name, bio, favorite song, and favorite artist.
+   - Fetches profile data from the backend using the user ID.
+
+2. **Editable Bio:**
+   - Users can edit their bio if they are viewing their own profile.
+   - Editable bio textarea is shown with a save button when in edit mode.
+
+3. **Favorite Song and Artist:**
+   - Displays the user's favorite song with album cover and song name.
+   - Displays the user's favorite artist with artist image and name.
+
+4. **Authentication Check:**
+   - Checks for Spotify access token and user ID from URL parameters or redirects to login if not found.
+   - If the user is not authorized, displays a message prompting the user to login.
+
 ### Forum
+1. **Forum Creation and Listing:**
+   - Users can create new forums with a name.
+   - Display a list of available forums for users to choose from.
 
-#### Forum Creation and Listing:
+2. **Post Creation and Listing:**
+   - Users can create new posts within a selected forum with a title and description.
+   - Display a list of posts for a selected forum.
 
-- Users can create new forums with a name.
-- Display a list of available forums for users to choose from.
+3. **Commenting System:**
+   - Users can add comments to a selected post.
+   - Display comments associated with a post.
 
-#### Post Creation and Listing:
+4. **Like Functionality:**
+   - Users can like posts and comments, which updates the like count in real-time.
+   - The likes are persisted in the database and updated optimistically on the client side.
 
-- Users can create new posts within a selected forum with a title and description.
-- Display a list of posts for a selected forum.
+5. **Data Fetching and State Management:**
+   - Efficient data fetching with `axios` to interact with your Express backend.
+   - Management of loading states to provide feedback to users.
 
-#### Commenting System:
-
-- Users can add comments to a selected post.
-- Display comments associated with a post.
-
-#### Like Functionality:
-
-- Users can like posts and comments, which updates the like count in real-time.
--The likes are persisted in the database and updated optimistically on the client side.
-
-#### Data Fetching and State Management:
-
-- We use the useContext to hook to store the user's Spotify API token in local storage.
-- In all other cases we use useEffect() hooks to fetch and cache data from the API.
 
 ## How to Extend the Project
 
