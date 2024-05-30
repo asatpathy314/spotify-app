@@ -32,7 +32,7 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
 
 ### Back-End Installation
 
-1. **Clone the Repository**
+1. **Go to Back-End Folder**
    ```sh
    cd spotify-app/backend
    ```
