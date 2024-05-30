@@ -9,7 +9,7 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
 - [Features](#features)
 - [License](#license)
 
-## Installation/Usage
+## Installation
 
 ### Clone the Repository
    ```sh
