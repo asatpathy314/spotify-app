@@ -11,7 +11,98 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
 
 ## Installation
 
-Instructions on how to install and set up your project. Include any dependencies that need to be installed.
+### Front-End Installation
+
+1. **Clone the Repository**
+   ```sh
+   git clone https://github.com/asatpathy314/spotify-app.git
+   cd spotify-forum/frontend
+
+2. **Install Dependencies**
+   ```sh
+   npm install
+
+3. **Run Front-End Server**
+   ```sh
+   npm run dev
+
+### Back-End Installation
+
+1. **Clone the Repository**
+   ```sh
+   git clone https://github.com/asatpathy314/spotify-app.git
+   cd spotify-forum/backend
+
+2. **Install Dependencies**
+   ```sh
+   npm install
+
+3. **Set Up Environment Variables**
+    Create a .env file in the backend directory with the following content, replacing the placeholders with your actual Spotify API credentials:
+   ```sh
+    CLIENT_ID=your_spotify_client_id
+    CLIENT_SECRET=your_spotify_client_secret
+
+4. **Run Back-End Server**
+   ```sh
+   npm start
+
+### Go on http://localhost:5173/ to access the APP
+
+### How to Create an App in Spotify and Get Client ID and Secret
+
+1. **Log in to the Spotify Developer Dashboard**
+   - Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/login).
+   - Log in with your Spotify account. If you don't have an account, you'll need to create one.
+
+2. **Create a New App**
+   - Once logged in, click on the "Create an App" button.
+   - Fill in the details for your new app:
+     - **App Name**: Choose a name for your app.
+     - **App Description**: Provide a brief description of your app.
+     - **Redirect URI**: Add the URI where users will be redirected after authorization ( `http://localhost:8000/auth/callback` for local development).
+   - Accept the Spotify Developer Terms of Service.
+   - Click on the "Create" button.
+
+3. **Retrieve Client ID and Client Secret**
+   - After creating the app, you will be redirected to the app's dashboard.
+   - Here you will find your **Client ID** and **Client Secret**. Copy these values as you will need them for authorization.
+
+### Linking Your Project to Firebase with `serviceAccount.js`
+
+#### 1. Set Up Firebase Project
+
+1. **Create a Firebase Project**
+   - Go to the [Firebase Console](https://console.firebase.google.com/).
+   - Click on "Add project" and follow the prompts to create a new Firebase project.
+
+2. **Generate a Service Account Key**
+   - In the Firebase Console, navigate to your project.
+   - Click on the gear icon next to "Project Overview" and select "Project settings".
+   - Go to the "Service accounts" tab.
+   - Click on "Generate new private key" and confirm by clicking "Generate key". This will download a JSON file containing your service account credentials.
+
+#### 2. Create `serviceAccount.js`
+
+1. **Create a New File**
+   - In your project directory, create a new file named `serviceAccount.js`.
+
+2. **Add the Service Account Credentials**
+   - Copy the content of the downloaded JSON file and paste it into `serviceAccount.js`.
+   - Export the credentials as a module. Your `serviceAccount.js` should look like this:
+
+   ```javascript
+   const serviceAccount = {
+     "type": "service_account",
+     "project_id": "your-project-id",
+     "private_key_id": "your-private-key-id",
+     "private_key": "-----BEGIN PRIVATE KEY-----\nYOUR-PRIVATE-KEY\n-----END PRIVATE KEY-----\n",
+     "client_email": "your-client-email@your-project-id.iam.gserviceaccount.com",
+     "client_id": "your-client-id",
+     "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+     "token_uri": "https://oauth2.googleapis.com/token",
+   }
+
 
 ## Usage
 
