@@ -2,13 +2,14 @@ import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSearchParams } from "react-router-dom";
 import { AuthContext } from "../components/AuthProvider";
-import { Card, CardBody, Img, Heading, Grid, Stack, GridItem } from "@chakra-ui/react";
+import { Card, CardBody, Img, Heading, Stack, SimpleGrid } from "@chakra-ui/react";
 
 export const LikedSongs = () => {
     const [songs, setSongs] = useState([]);
-    const { token, setToken, userID, setUserID } = useContext(AuthContext);
+    const { token } = useContext(AuthContext);
     const [searchParams, setSearchParams] = useSearchParams();
     const [forbidden, setForbidden] = useState(null);
+
     // Fetch the liked songs from the local API
     useEffect(() => {
         const fetchSongs = async () => {
@@ -31,35 +32,31 @@ export const LikedSongs = () => {
             window.location.href = '/profile/nosessiontoken';
         }
     }, [token]);
-    //console.log(songs);
 
     if (!forbidden && songs && songs.length > 0) {
         return (
             <>
-                <Heading mb={5} >Liked Songs</Heading>
-                <Grid
-                    h="90%"
-                    templateRows="repeat(2, 1fr)"
-                    templateColumns="repeat(4, 1fr)"
-                    gap={4}>
+                <Heading mb={5}>Liked Songs</Heading>
+                <SimpleGrid
+                    columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
+                    spacing={4}
+                >
                     {songs.map((song, index) => (
-                        <GridItem rowSpan={1} colSpan={1} key={index} display="flex">
-                            <Card maxW='sm' bg="#0f0e17" color="#FFFFFE" display="flex" flexDirection="column" height="100%">
-                                <CardBody flex="1" display="flex" flexDirection="column">
-                                    <Stack mt='6' spacing='3' flex="1">
-                                        <Img
-                                            src={song.track.album.images[0].url}
-                                            alt='Album Cover'
-                                            borderRadius='lg'
-                                            flex="1"
-                                        />
-                                        <Heading size='md' textAlign="center">{song.track.name}</Heading>
-                                    </Stack>
-                                </CardBody>
-                            </Card>
-                        </GridItem>
+                        <Card key={index} maxW='sm' bg="#0f0e17" color="#FFFFFE" display="flex" flexDirection="column" height="100%">
+                            <CardBody flex="1" display="flex" flexDirection="column">
+                                <Stack mt='6' spacing='3' flex="1">
+                                    <Img
+                                        src={song.track.album.images[0].url}
+                                        alt='Album Cover'
+                                        borderRadius='lg'
+                                        flex="1"
+                                    />
+                                    <Heading size='md' textAlign="center">{song.track.name}</Heading>
+                                </Stack>
+                            </CardBody>
+                        </Card>
                     ))}
-                </Grid>
+                </SimpleGrid>
             </>
         );
     } else {
