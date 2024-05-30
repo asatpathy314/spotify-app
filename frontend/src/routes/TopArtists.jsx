@@ -4,7 +4,7 @@ import { AuthContext } from "../components/AuthProvider";
 import axios from "axios";
 import DataGrid from "../components/Datagrid";
 import TimeButton from "../components/TimeButton";
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading, Stack } from "@chakra-ui/react";
 
 const TopArtists = () => {
     const { token, setToken, userID, setUserID, refreshToken } = useContext(AuthContext);
@@ -107,11 +107,13 @@ const TopArtists = () => {
 
     if (!forbidden) {
         return (
-            <div>
-                <h1>Top Songs</h1>
-                <TimeButton currentTimeframe={timeframe} setTimeframe={setTimeframe} />
-                <DataGrid data={returnTopArtists(timeframe)} type="artists" />
-            </div>
+                <Stack direction="column" gap={5}>
+                    <Stack direction = "row" display='flex'>
+                        <Heading>Top Artists</Heading>
+                        <TimeButton currentTimeframe={timeframe} setTimeframe={setTimeframe} />
+                    </Stack>
+                    <DataGrid data={returnTopArtists(timeframe)} type="artists" />
+                </Stack>
         );
     } else {
         return null;

@@ -3,7 +3,7 @@
 import { useState, useEffect, useContext } from "react";
 import { Grid, GridItem, Box, Text, Avatar, Stack, Heading, Link } from "@chakra-ui/react";
 import { AuthContext } from "../components/AuthProvider";
-import Conversation from "../components/Conversation"; // Individual conversation display component.
+import ConversationDisplay from "../components/ConversationDisplay"; // Individual conversation display component.
 import axios from 'axios';
 
 const Inbox = () => {
@@ -45,7 +45,7 @@ const Inbox = () => {
                 <Stack direction="column">
                     {conversations.map((conversation, index) => {
                         const correctUserId = getCorrectUserId(conversation.user1._path.segments[1].trim(), conversation.user2._path.segments[1].trim());
-                        return <Conversation userID={correctUserId} key={index} keyValue={index} conversation={conversation}/>;
+                        return <ConversationDisplay userID={correctUserId} key={index} keyValue={index} conversation={conversation}/>;
                     })}
                 </Stack>
             </>

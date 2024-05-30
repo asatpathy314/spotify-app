@@ -13,7 +13,7 @@ import Discover from './routes/Discover.jsx'
 import TopSongs from './routes/TopSongs.jsx'
 import TopArtists from './routes/TopArtists.jsx'
 import Inbox from './routes/Inbox.jsx'
-import SimpleSidebar from "./components/Sidebar";
+import Conversation from './components/Conversation.jsx'
 
 // Routes
 const router = createBrowserRouter([
@@ -38,6 +38,10 @@ const router = createBrowserRouter([
         element: <Inbox />
       },
       {
+        path: '/messages/:id',
+        element: <Conversation />
+      },
+      {
         path: '/forum',
         element: <Forum />
       },
@@ -53,6 +57,10 @@ const router = createBrowserRouter([
         path: '/liked',
         element: <LikedSongs />
       },
+      {
+        path: '/testing',
+        element: <h1>testing</h1>
+      }
     ]
   },
   {
