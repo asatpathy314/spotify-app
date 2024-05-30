@@ -109,14 +109,29 @@ router.post("/forums/:forumId/posts/:postId/comments", async (req, res) => {
 router.post("/forums/:forumId/posts/:postId/like", async (req, res) => {
   try {
     const { forumId, postId } = req.params;
+    const { userId } = req.body;
+
     const postRef = db.collection("forum").doc(forumId).collection("posts").doc(postId);
     const postDoc = await postRef.get();
     if (!postDoc.exists) {
       res.status(404).json({ message: 'Post not found' });
       return;
     }
-    await postRef.update({ likes: postDoc.data().likes + 1 });
-    res.status(200).json({ message: 'Post liked successfully' });
+    const postData = postDoc.data();
+    const userLikes = postData.userLikes || [];
+    let newLikesCount;
+    if (userLikes.includes(userId)) {
+      // Unlike the post
+      userLikes.splice(userLikes.indexOf(userId), 1);
+      newLikesCount = postData.likes - 1;
+    } else {
+      // Like the post
+      userLikes.push(userId);
+      newLikesCount = postData.likes + 1;
+    }
+
+    await postRef.update({ likes: newLikesCount, userLikes });
+    res.status(200).json({ likes: newLikesCount, userLikes });
   } catch (e) {
     res.status(400).json({ error: e.message });
   }

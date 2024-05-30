@@ -14,7 +14,8 @@ import {
   FormLabel,
   Input,
   HStack,
-  IconButton
+  IconButton,
+  useToast
 } from '@chakra-ui/react';
 import { FaSpotify, FaThumbsUp } from 'react-icons/fa';
 import axios from 'axios';
@@ -35,7 +36,9 @@ const Forum = () => {
   const [newForumName, setNewForumName] = useState('');
   const [newComment, setNewComment] = useState('');
   const [commentLikedStatus, setCommentLikedStatus] = useState(false);
+  const [postLikedStatus, setPostLikedStatus] = useState(false);
   const navigate = useNavigate();
+  const toast = useToast()
 
 
   useEffect(() => {
@@ -147,6 +150,32 @@ const handleLikeComment = async (forumId, postId, commentId) => {
     }
   };
 
+  const handleLikePost = async (forumId, postId) => {
+    try {
+      const response = await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/like`, {
+        userId: userID
+      }, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      setSelectedPost(prevPost => ({
+        ...prevPost,
+        likes: response.data.likes, userLikes: response.data.userLikes
+      }));
+      setPosts(prevPosts => prevPosts.map(post =>
+        post.id === postId ? { ...post, likes: response.data.likes, userLikes: response.data.userLikes  } : post
+      ));
+
+      if(response.data.userLikes.includes(userID)){
+        setPostLikedStatus(true);
+      }
+      else {
+        setPostLikedStatus(false)
+      }
+    } catch (error) {
+      console.error('Error liking post:', error);
+    }
+};
+
 //   const handleLikePost = async (forumId, postId) => {
 //     try {
 //       await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/like`);
@@ -164,37 +193,29 @@ const handleLikeComment = async (forumId, postId, commentId) => {
 //     }
 // };
 
-const handleLikePost = async (forumId, postId) => {
-    try {
-      await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/like`, {
-        userId: userID
-      }, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      setSelectedPost(prevPost => ({
-        ...prevPost,
-        likes: prevPost.likes + 1
-      }));
-      setPosts(prevPosts => prevPosts.map(post =>
-        post.id === postId ? { ...post, likes: post.likes + 1 } : post
-      ));
-    } catch (error) {
-      console.error('Error liking post:', error);
-    }
-};
+
 
 
   const handleCreateForum = async (e) => {
     e.preventDefault();
+    const createForumPromise = axios.post('http://localhost:8000/forum/forum', { name: newForumName }, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      toast.promise(createForumPromise, {
+        success: { title: 'Forum created', description: 'The forum has been created successfully' },
+        error: { title: 'Failed to create forum', description: 'An error occurred' },
+        loading: { title: 'Creating forum', description: 'Please wait' },
+      });  
     try {
-      await axios.post('http://localhost:8000/forum/forum', { name: newForumName });
+      //await axios.post('http://localhost:8000/forum/forum', { name: newForumName });
+      await createForumPromise;
       setNewForumName('');
-      alert('Forum created successfully!');
+      //alert('Forum created successfully!');
       const response = await axios.get('http://localhost:8000/forum/forums');
       setForums(response.data.forums);
     } catch (error) {
       console.error('Error creating forum:', error);
-      alert('Failed to create forum.');
+      //alert('Failed to create forum.');
     }
   };
 
@@ -203,19 +224,31 @@ const handleLikePost = async (forumId, postId) => {
 
   const handleSubmitPost = async (e) => {
     e.preventDefault();
-    try {
-      await axios.post(`http://localhost:8000/forum/forums/${selectedForum.id}/posts`, {
+    const createPostPromise = axios.post(`http://localhost:8000/forum/forums/${selectedForum.id}/posts`, {
         title,
         description,
         userId: userID,
+      }, { headers: { 'Authorization': `Bearer ${token}` }
       });
+      toast.promise(createPostPromise, {
+        success: { title: 'Post created', description: 'The post has been created successfully' },
+        error: { title: 'Failed to upload post', description: 'An error occurred' },
+        loading: { title: 'Uploading post', description: 'Please wait' },
+      });  
+    try {
+    //   await axios.post(`http://localhost:8000/forum/forums/${selectedForum.id}/posts`, {
+    //     title,
+    //     description,
+    //     userId: userID,
+    //   });
+      await createPostPromise;
       setTitle('');
       setDescription('');
-      alert('Post created successfully!');
+      //alert('Post created successfully!');
       fetchPosts(selectedForum.id);
     } catch (error) {
       console.error('Error submitting post:', error);
-      alert('Failed to submit post.');
+      //alert('Failed to submit post.');
     }
   };
 
@@ -224,17 +257,29 @@ const handleLikePost = async (forumId, postId) => {
 
   const handleSubmitComment = async (e) => {
     e.preventDefault();
-    try {
-      await axios.post(`http://localhost:8000/forum/forums/${selectedForum.id}/posts/${selectedPost.id}/comments`, {
+    const createCommentPromise = axios.post(`http://localhost:8000/forum/forums/${selectedForum.id}/posts/${selectedPost.id}/comments`, {
         text: newComment,
         userId: userID,
+      }, {headers: { 'Authorization': `Bearer ${token}` }
       });
+      toast.promise(createCommentPromise, {
+        success: { title: 'Comment posted', description: 'The forum has been created successfully' },
+        error: { title: 'Failed to post comment', description: 'An error occurred' },
+        loading: { title: 'Posting comment', description: 'Please wait...' },
+      });  
+    try {
+    //   await axios.post(`http://localhost:8000/forum/forums/${selectedForum.id}/posts/${selectedPost.id}/comments`, {
+    //     text: newComment,
+    //     userId: userID,
+    //   });
+      await createCommentPromise;
+
       setNewComment('');
-      alert('Comment created successfully!');
+      //alert('Comment created successfully!');
       fetchComments(selectedForum.id, selectedPost.id);
     } catch (error) {
       console.error('Error submitting comment:', error);
-      alert('Failed to submit comment.');
+      //alert('Failed to submit comment.');
     }
   };
 
@@ -285,7 +330,7 @@ const handleLikePost = async (forumId, postId) => {
               icon={<FaThumbsUp />}
               onClick={() => handleLikePost(selectedForum.id, selectedPost.id)}
             //   colorScheme="teal"
-              bg="#a7a9be"
+            bg={selectedPost.userLikes?.includes(userID) ? "#ff8906" : "#a7a9be"}
               _hover={{ bg: "#ff8906" }}
             />
           </HStack>
@@ -401,7 +446,7 @@ const handleLikePost = async (forumId, postId) => {
               </Card>
             ))
           ) : (
-            <Text color="white">No posts available</Text>
+            <Text color="gray.300" align="center"  mt={4}>No posts yet!</Text>
           )}
         </VStack>
         </Box>
