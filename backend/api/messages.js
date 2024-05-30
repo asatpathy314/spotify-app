@@ -57,7 +57,7 @@ router.get('/conversation', async(req, res) => {
 })
 
 
-router.post('/conversation', async (req, res) => {
+router.post('/updateConversation', async (req, res) => {
   try {
     const conversationId = req.query.id;
     const userID = req.query.userID;
@@ -85,6 +85,52 @@ router.post('/conversation', async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).send("Internal Server Error");
+  }
+});
+
+// Create a new conversation and add a message
+router.post('/createConversation', async (req, res) => {
+  try {
+    const { content, user1Id, user2Id } = req.body;
+
+    if (!content || !user1Id || !user2Id) {
+      return res.status(400).send("Missing required fields: content, user1Id, user2Id");
+    }
+
+    // Create a new conversation document
+    const conversationRef = db.collection('conversation').doc();
+    const conversationId = conversationRef.id;
+    
+    const user1Ref = db.collection('user').doc(user1Id);
+    const user2Ref = db.collection('user').doc(user2Id);
+    // Add the initial message to the conversation
+    
+    const message = {
+      text: content,
+      user: user1Ref,
+      timestamp: Timestamp.now()
+    };
+
+
+    await conversationRef.set({
+      user1: user1Ref,
+      user2: user2Ref,
+      messages: [message],
+    });
+
+
+    await user1Ref.update({
+      conversations: FieldValue.arrayUnion(conversationRef)
+    });
+
+    await user2Ref.update({
+      conversations: FieldValue.arrayUnion(conversationRef)
+    });
+
+    res.status(201).send({ message: "Conversation created successfully", conversationId: conversationId });
+  } catch (error) {
+    console.error("Error creating conversation:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 

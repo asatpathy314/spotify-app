@@ -15,15 +15,27 @@ import {
   Textarea,
   Container,
   Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Input,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
+import { IoIosSend } from "react-icons/io";
 import axios from "axios";
 
 // Profile page and useContext setup. Users are redirected here after the login.
 const Profile = () => {
   const { token, setToken, userID, setUserID } = useContext(AuthContext);
   const [searchParams, setSearchParams] = useSearchParams(); 
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const [bio, setBio] = useState("");
+  const [message, setMessage] = useState("");
   const [profileData, setProfileData] = useState(null); // Retrieved user Data.
   const [editMode, setEditMode] = useState(false); // Determines whether to display the edit box or not.
   const [isEditable, setIsEditable] = useState(false); // Determines if the user has permission to edit the bio/Whether to display edit icon.
@@ -77,6 +89,20 @@ const Profile = () => {
     }
   };
 
+  const handleMessageSubmit = async () => {
+    console.log(message)
+    axios.post(
+      "http://localhost:8000/messages/createConversation",
+      {
+        user1Id: userID,
+        user2Id: id,
+        content: message
+      }
+    )
+    setMessage("")
+    onClose()
+  }
+
   if (id !== "nosessiontoken") {
     return (
       <Grid
@@ -90,9 +116,11 @@ const Profile = () => {
             <IconButton
               icon={<EditIcon />}
               position="absolute"
+              bg="transparent"
               top="10px"
               right="10px"
-              bg="#FFFFFE"
+              color="#FFFFFE"
+              _hover={{ color: "#ff8906" }}
               aria-label="Edit Profile"
               onClick={() => {
                 setEditMode(true);
@@ -100,6 +128,44 @@ const Profile = () => {
               }}
             />
           )}
+          {!isEditable && (
+            <>
+            <IconButton
+              position="absolute"
+              bg="transparent"
+              top="10px"
+              right="10px"
+              fontSize={'2em'}
+              color="#FFFFFE"
+              onClick={onOpen}
+              _hover={{ color: "#ff8906" }}
+              icon={<IoIosSend />}
+            />
+            <Modal isOpen={isOpen} onClose={onClose}>
+              <ModalOverlay />
+              <ModalContent color="#FFFFFE" bg="#0f0e17">
+                <ModalHeader>Start a conversation!</ModalHeader>
+                <ModalBody>
+                <Input 
+                placeholder='Type a message...' 
+                onChange={(e) => setMessage(e.target.value)}
+                _hover={{ borderColor: '#ff8906' }}
+                focusBorderColor="#ff8906"/>
+                </ModalBody>
+                <ModalCloseButton />
+                <ModalFooter>
+                  <Button bg='#e53170' mr={3} onClick={onClose}>
+                    Close
+                  </Button>
+                  <Button bg="#ff8906" onClick={handleMessageSubmit}>Submit</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+            </>
+            
+          )
+
+          }
           <Stack direction={["column", "row", "row", "row"]} spacing={4}>
             <Avatar
               src={profileData?.profile}

@@ -70,7 +70,7 @@ const Conversation = () => {
 
         // Send the new message to the backend
         await axios.post(
-          `http://localhost:8000/messages/conversation?id=${id}&userID=${userID}`,
+          `http://localhost:8000/messages/updateConversation?id=${id}&userID=${userID}`,
           { messages: [newMessage] }
         );
         console.log("Message submitted:", newMessage);
@@ -126,15 +126,17 @@ const Conversation = () => {
             <InputGroup size="md">
               <Input
                 value={message}
-                placeholder="Enter password"
+                placeholder="Type a message..."
                 onChange={(e) => setMessage(e.target.value)}
                 onFocus="red"
                 focusBorderColor="#e53170"
+                maxLength={200}
               />
               <InputRightElement bg="transparent">
                 <IconButton
                   bg="transparent"
                   color="#FFFFFE"
+                  _hover={{ color: "#ff8906" }}
                   borderRadius={50}
                   mt={1}
                   mb={1}
