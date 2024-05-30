@@ -21,24 +21,31 @@ Provide examples and instructions on how to use your project. Include any releva
 
 List the main features of your project. Highlight any unique or noteworthy functionalities.
 ### Forum
+
 #### Forum Creation and Listing:
+
 -Users can create new forums with a name.
 -Display a list of available forums for users to choose from.
 
 #### Post Creation and Listing:
+
 -Users can create new posts within a selected forum with a title and description.
 -Display a list of posts for a selected forum.
+
 #### Commenting System:
+
 -Users can add comments to a selected post.
 -Display comments associated with a post.
 
 #### Like Functionality:
--Users can like posts and comments, which updates the like count in real-time.
+
+- Users can like posts and comments, which updates the like count in real-time.
 -The likes are persisted in the database and updated optimistically on the client side.
 
 #### Data Fetching and State Management:
--Efficient data fetching with axios to interact with your Express backend.
--Management of loading states to provide feedback to users.
+
+- We use the useContext to hook to store the user's Spotify API token in local storage.
+- In all other cases we use useEffect() hooks to fetch and cache data from the API.
 
 ## How to Extend the Project
 
