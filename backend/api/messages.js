@@ -18,9 +18,8 @@ router.get('/', async (req, res) => {
       console.log(conversations)
       if (conversations.length > 0) {
         for (const conversation of conversations) {
-          console.log(conversation)
           const conversationData = await conversation.get() // Assuming fetchData is defined elsewhere
-          returnData.push(conversationData.data());
+          returnData.push({...conversationData.data(), id: conversationData.id});
         }
         res.status(200).send(returnData);
       } else {

@@ -13,6 +13,7 @@ import Discover from './routes/Discover.jsx'
 import TopSongs from './routes/TopSongs.jsx'
 import TopArtists from './routes/TopArtists.jsx'
 import Inbox from './routes/Inbox.jsx'
+import SimpleSidebar from "./components/Sidebar";
 
 // Routes
 const router = createBrowserRouter([
