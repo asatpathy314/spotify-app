@@ -1,43 +1,52 @@
-//component to render horizontal list of users to message
+import { useContext, useEffect, useState } from "react";
+import { useSearchParams, useParams } from "react-router-dom";
+import { AuthContext } from "../components/AuthProvider";
+import {
+    Text,
+} from "@chakra-ui/react";
+import axios from "axios";
 
-import { Card, Image, Stack, CardBody, Heading, CardFooter, Text, Button, Avatar, Link } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+// Profile page and useContext setup. Users are redirected here after the login.
+const Conversation = () => {
+  const { token, setToken, userID, setUserID } = useContext(AuthContext);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [conversationData, setConversationData] = useState(null); // Data for the conversation
+  const [forbidden, setForbidden] = useState(null); // Determines if the user has permission to view the page
+  const [error, setError] = useState(null); // Error handling
+  const { id } = useParams();
 
-const Conversation = ( { userID, keyValue, conversation } ) => {
-    const [userData, setUserData] = useState([]);
-    const [latestMessage, setLatestMessage] = useState("");
-    
-    useEffect(() => {
-        axios.get('http://localhost:8000/user?id='+userID)
-            .then((res) => setUserData(res.data))
-            .catch((err) => console.error(err))
-        setLatestMessage(conversation.messages[conversation.messages.length-1])
-    }, [userID, conversation]);
+  useEffect(() => {
+    // Check if the user is coming from the login page
+    if (!token || !userID) {
+      setForbidden(true);
+      window.location.href = "/profile/nosessiontoken";
+    } else if (id) {
+      axios
+        .get("http://localhost:8000/messages/conversation?id=" + id)
+        .then((res) => {
+          if (res.status > 200) {
+            setError(true);
+          } else {
+            setConversationData(res.data);
+          }
+        })
+        .catch((err) => {console.error("Error fetching conversation:", err); setError(true);});
+    }
+  }, [token, userID, id]);
 
-
-return (
-    <Link key={1000-keyValue} href={`/messages/${conversation.id}`}>
-        <Card
-            direction='row'
-            overflow='hidden'
-            bg='#0f0e17'
-            borderRadius={100}
-            >   
-                <Avatar src={userData.profile} size={'2xl'} margin='5'/>
-                <CardBody color = "white">
-                    <Stack>
-                        <Heading>
-                            {userData.name}
-                        </Heading>
-                        <Text>
-                            {latestMessage && latestMessage.user._path.segments[1].trim() !== userID ? "You: " : ""}{latestMessage.text} 
-                        </Text>
-                    </Stack>
-                </CardBody>
-        </Card>
-    </Link>
-    )
+  if(conversationData) {
+        return (
+            <div>
+            {conversationData.messages.map((message, index) => {
+                return (
+                    <div key={index}>
+                        <Text fontSize='2xl'>{message.text}</Text>
+                    </div>
+                );
+            })}
+            </div>
+        );
+    }
 }
 
 export default Conversation;
