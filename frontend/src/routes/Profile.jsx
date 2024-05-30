@@ -19,17 +19,18 @@ import {
 import { EditIcon } from "@chakra-ui/icons";
 import axios from "axios";
 
+// Profile page and useContext setup. Users are redirected here after the login.
 const Profile = () => {
   const { token, setToken, userID, setUserID } = useContext(AuthContext);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [bio, setBio] = useState("Fill in your bio here!");
-  const [profileData, setProfileData] = useState(null);
-  const [editMode, setEditMode] = useState(false);
-  const [isEditable, setIsEditable] = useState(false);
-  const [forbidden, setForbidden] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams(); 
+  const [bio, setBio] = useState("");
+  const [profileData, setProfileData] = useState(null); // Retrieved user Data.
+  const [editMode, setEditMode] = useState(false); // Determines whether to display the edit box or not.
+  const [isEditable, setIsEditable] = useState(false); // Determines if the user has permission to edit the bio/Whether to display edit icon.
+  const [forbidden, setForbidden] = useState(null); // Determines if the user has permission to view the page
   const { id } = useParams();
 
-  useEffect(() => {
+  useEffect(() => { // Check if the user is coming from the login page
     if (!token || !userID) {
       const accessToken = searchParams.get("access_token");
       const userId = searchParams.get("user_id");
@@ -37,10 +38,10 @@ const Profile = () => {
         setToken(accessToken);
         setUserID(userId);
       } else {
-        console.log("Error retrieving token and user ID");
+        console.error("Error retrieving token and user ID");
       }
     }
-    if (id) {
+    if (id) { // Fetch the user data from the local API
       axios
         .get("http://localhost:8000/user?id=" + id)
         .then((res) => {
@@ -57,14 +58,14 @@ const Profile = () => {
     }
   }, [id, searchParams, setToken, setUserID, token, userID]);
 
-  useEffect(() => {
+  useEffect(() => { // Check if the user has permission to edit the data.
     if (id === userID) {
       setIsEditable(true);
     }
-  }, [id, userID]);
+  }, [id, userID, setIsEditable]);
 
   const handleSubmit = async () => {
-    // Update the bio and reset the edit mode
+    // Update the bio and reset the edit mode. Bio is already updated locally by onChange for TextArea
     setEditMode(false);
     setIsEditable(true);
     try {
@@ -76,7 +77,7 @@ const Profile = () => {
     }
   };
 
-  if (!forbidden && id !== "nosessiontoken") {
+  if (id !== "nosessiontoken") {
     return (
       <Grid
         h="90%"
@@ -185,7 +186,9 @@ const Profile = () => {
         </GridItem>
       </Grid>
     );
+
   } else if (id === "nosessiontoken") {
+    // If the user is not logged in, redirect them to the login page.
     return (
       <Flex height="100%" alignItems="center" justifyContent="center">
         <Heading>

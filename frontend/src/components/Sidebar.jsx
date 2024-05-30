@@ -61,7 +61,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
     { name: 'Forum', icon: MdForum, link: '/forum' },
     { name: 'Discover', icon: FaMagnifyingGlass, link: '/discover' },
     { name: 'Profile', icon: BsFilePerson, link: `/profile/${userID || 'nosessiontoken'}` },
-    { name: 'Inbox', icon: GoPaperAirplane, link: '/profile' },
+    { name: 'Messages', icon: GoPaperAirplane, link: '/messages' },
     { name: 'Logout', icon: GoPaperAirplane, link: '/logout' }
   ];
   return (

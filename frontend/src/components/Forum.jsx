@@ -227,10 +227,14 @@ const handleLikeComment = async (forumId, postId, commentId) => {
   if (selectedPost) {
     return (
       <Container minHeight="100vh" display="flex" flexDirection="column" gap={4}>
-        <Button onClick={() => setSelectedPost(null)} colorScheme="teal" mb={0}>
+        <Button 
+        bg="#a7a9be"
+        _hover={{ bg: "#ff8906" }}
+        onClick={() => setSelectedPost(null)}
+        >
           Back to Posts
         </Button>
-        <Card mb={1} bg="gray.700" padding={"3"}>
+        <Card mb={1} bg="gray.700" padding={"3"}  p={6}>
           <Text color="gray.500" fontSize="sm">
             Posted by {selectedPost.userId} on {formatDate(selectedPost.date)}
           </Text>
@@ -246,7 +250,9 @@ const handleLikeComment = async (forumId, postId, commentId) => {
               aria-label="Like post"
               icon={<FaThumbsUp />}
               onClick={() => handleLikePost(selectedForum.id, selectedPost.id)}
-              colorScheme="teal"
+            //   colorScheme="teal"
+              bg="#a7a9be"
+              _hover={{ bg: "#ff8906" }}
             />
           </HStack>
         </Card>
@@ -257,18 +263,20 @@ const handleLikeComment = async (forumId, postId, commentId) => {
               color="white"
               type="text"
               value={newComment}
+              focusBorderColor="#ff8906"
               onChange={(e) => setNewComment(e.target.value)}
               required
             />
           </FormControl>
-          <Button type="submit" mb={0} colorScheme="teal" leftIcon={<FaSpotify />}>
+          <Button type="submit" mb={0} textColor="black" bg="#a7a9be"
+        _hover={{ bg: "#ff8906" }} leftIcon={<FaSpotify />}>
             Post Comment
           </Button>
         </form>
         <VStack spacing={4} align="stretch">
           {comments.length > 0 ? (
             comments.map((comment) => (
-              <Card key={comment.id} p={4} bg="gray.700" borderRadius="md" width="100%">
+              <Card key={comment.id} p={6} bg="gray.700" borderRadius="md" width="100%">
                 <Text color="gray.500" fontSize="sm">
                 Posted by {comment.userId} on {formatDate(comment.date)}
                 </Text>
@@ -281,14 +289,15 @@ const handleLikeComment = async (forumId, postId, commentId) => {
                     aria-label="Like comment"
                     icon={<FaThumbsUp />}
                     onClick={() => handleLikeComment(selectedForum.id, selectedPost.id, comment.id)}
-                    colorScheme="teal"
+                    bg="#a7a9be"
+                    _hover={{ bg: "#ff8906" }}
                   />
                 </HStack>
 
               </Card>
             ))
           ) : (
-            <Text color="gray.300">No comments available</Text>
+            <Text color="gray.300" align="center"  mt={4}>No comments yet!</Text>
           )}
         </VStack>
       </Container>
@@ -301,7 +310,10 @@ const handleLikeComment = async (forumId, postId, commentId) => {
   if (selectedForum) {
     return (
       <Container minHeight="100vh" display="flex" flexDirection="column" gap={4}>
-        <Button onClick={() => setSelectedForum(null)} colorScheme="teal" mb={2}>
+        <Button bg="#a7a9be"
+                _hover={{ bg: "#ff8906" }}
+                onClick={() => setSelectedForum(null)} 
+                >
           Back to Forums
         </Button>
         <Box mb={1}>
@@ -311,9 +323,9 @@ const handleLikeComment = async (forumId, postId, commentId) => {
         </Box>
         <Box mb={4}>
             <form onSubmit={handleSubmitPost}>
-            <FormControl id="title" mb={1}>
+            <FormControl id="title" mb={1} focusB>
                 <FormLabel color="white">Title</FormLabel>
-                <Input color="white" type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
+                <Input color="white" type="text" value={title} focusBorderColor="#ff8906" onChange={(e) => setTitle(e.target.value)} required />
             </FormControl>
             <FormControl id="description" mb={4}>
                 <FormLabel color="white">Description</FormLabel>
@@ -321,11 +333,13 @@ const handleLikeComment = async (forumId, postId, commentId) => {
                 color="white"
                 type="text"
                 value={description}
+                focusBorderColor="#ff8906"
                 onChange={(e) => setDescription(e.target.value)}
                 required
                 />
             </FormControl>
-            <Button type="submit" colorScheme="teal" mb={1} leftIcon={<FaSpotify />}>
+            <Button type="submit" textColor="black" bg="#a7a9be"
+        _hover={{ bg: "#ff8906" }} mb={1} leftIcon={<FaSpotify />}>
                 Create Post
             </Button>
             </form>
@@ -336,7 +350,7 @@ const handleLikeComment = async (forumId, postId, commentId) => {
             posts.map((post) => (
               <Card
                 key={post.id}
-                p={4}
+                p={6}
                 bg="gray.700"
                 borderRadius="md"
                 width="100%"
@@ -374,11 +388,13 @@ const handleLikeComment = async (forumId, postId, commentId) => {
             type="text"
             color="white"
             value={newForumName}
+            focusBorderColor="#ff8906"
             onChange={(e) => setNewForumName(e.target.value)}
             required
         />
         </FormControl>
-        <Button type="submit" colorScheme="teal" mb={2} leftIcon={<FaSpotify />}>
+        <Button type="submit" textColor="black" bg="#a7a9be"
+        _hover={{ bg: "#ff8906" }} mb={2} color="black" leftIcon={<FaSpotify />}>
         Create Forum
         </Button>
     </form>
@@ -388,7 +404,7 @@ const handleLikeComment = async (forumId, postId, commentId) => {
             forums.map((forum) => (
             <Card
                 key={forum.id}
-                p={4}
+                p={6}
                 bg="gray.700"
                 borderRadius="md"
                 width="100%"

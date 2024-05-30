@@ -1,0 +1,25 @@
+body {
+    background-color: #191827;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+.whiteText{
+    color:white;
+}
+
+.buddies{
+    font-size: 50px;
+    color: white;
+    font-weight: bold;
+    color: black;
+}
+
+.MyConversations{
+
+}
+
+.friendImage{
+    width: 100px;
+}

@@ -30,9 +30,9 @@ const TopArtists = () => {
             if (searchParams.get('access_token') && searchParams.get('user_id')) {
                 setToken(searchParams.get('access_token'));
                 setUserID(searchParams.get('user_id'));
-            } else {
-                setForbidden(true);
-                window.location.replace("/forbidden");
+            }  else {
+                setForbidden(true); // Make sure that only logged in users can access this page
+                window.location.href = '/profile/nosessiontoken';
             }
         }
 
