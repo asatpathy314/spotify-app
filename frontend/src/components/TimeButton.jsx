@@ -1,9 +1,17 @@
 import React from "react";
-import { ButtonGroup, Button } from "@chakra-ui/react";
+import { ButtonGroup, Button, useBreakpointValue } from "@chakra-ui/react";
 
 const TimeButton = ({ currentTimeframe, setTimeframe }) => {
+  // Determine the direction of the ButtonGroup based on screen size
+  const buttonGroupDirection = useBreakpointValue({ base: 'column', md: 'row' });
+
   return (
-    <ButtonGroup isAttached variant="outline" ml='auto'>
+    <ButtonGroup
+      isAttached
+      variant="outline"
+      ml='auto'
+      flexDirection={buttonGroupDirection}
+    >
       <Button
         colorScheme={currentTimeframe === 'short_term' ? 'orange' : 'gray'}
         backgroundColor={currentTimeframe === 'short_term' ? 'orange' : 'transparent'}
