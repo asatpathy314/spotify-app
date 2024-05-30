@@ -16,26 +16,26 @@ const DataGrid = ({ data, type }) => {
       borderWidth="1px"
       borderRadius="lg"
       overflow="hidden"
-      bg='#191827'
-      color="white"
+      bg='#0f0e17'
+      color="#FFFFFE"
       p={4}
     >
       <Table variant="simple">
         <Thead>
           <Tr>
-            <Th color="white">#</Th>
-            {type === "songs" && <Th color="white">Song Title</Th>}
-            <Th color="white">Artist Name</Th>
-            {type === "songs" && <Th color="white">Album</Th>}
-            {type === "songs" && <Th color="white"><TimeIcon /></Th>}
+            <Th color="#FFFFFE">#</Th>
+            {type === "songs" && <Th color="#FFFFFE">Song Title</Th>}
+            <Th color="#FFFFFE">Artist Name</Th>
+            {type === "songs" && <Th color="#FFFFFE">Album</Th>}
+            {type === "songs" && <Th color="#FFFFFE"><TimeIcon /></Th>}
           </Tr>
         </Thead>
         <Tbody>
           {data.map((item, index) => (
-            <Tr key={index} borderBottom="1px" borderColor="black">
+            <Tr key={index} borderBottom="1px" borderColor="#0f0e17">
               <Td>
                 <Box
-                  bg="black"
+                  bg="#0f0e17"
                   p={2}
                   borderRadius="md"
                   textAlign="center"
@@ -46,7 +46,7 @@ const DataGrid = ({ data, type }) => {
               {type === "songs" && (
                 <Td>
                   <Box
-                    bg="black"
+                    bg="#0f0e17"
                     p={2}
                     borderRadius="md"
                     textAlign="center"
@@ -57,7 +57,7 @@ const DataGrid = ({ data, type }) => {
               )}
               <Td>
                 <Box
-                  bg="black"
+                  bg="#0f0e17"
                   p={2}
                   borderRadius="md"
                   textAlign="center"
@@ -68,7 +68,7 @@ const DataGrid = ({ data, type }) => {
               {type === "songs" && (
                 <Td>
                   <Box
-                    bg="black"
+                    bg="#0f0e17"
                     p={2}
                     borderRadius="md"
                     textAlign="center"
@@ -80,7 +80,7 @@ const DataGrid = ({ data, type }) => {
               {type === "songs" && (
                 <Td>
                   <Box
-                    bg="black"
+                    bg="#0f0e17"
                     p={2}
                     borderRadius="md"
                     textAlign="center"
