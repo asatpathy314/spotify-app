@@ -13,21 +13,14 @@ const Inbox = () => {
     useEffect(() => {
         const fetchInbox = async () => {
             try {
-                axios.get("http://localhost:8000/user?id="+currentUserId)  
-                    .then(async (res) => {
-                        console.log("Fetched conversation references:", res.data);
-                        const userData = res.data;
-            
-                        //Fetch conversations using conversation references
-                        await userData.conversations.map(async (item, index) => {
-                                console.log('2', item)
-                            });
-                        })
+                const conversationData = await axios.get("http://localhost:8000/messages?id="+currentUserId) 
+                setConversations(conversationData.data);
             } catch (error) {
                 console.error("Error fetching Inbox:", error);
             } finally {
                 setLoading(false);
             }
+            console.log(conversations)
         };
         fetchInbox();
     }, []);
