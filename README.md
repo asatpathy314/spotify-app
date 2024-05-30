@@ -43,7 +43,6 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
     CLIENT_ID=your_spotify_client_id
     CLIENT_SECRET=your_spotify_client_secret
 
-
 ### How to Create an App in Spotify and Get Client ID and Secret
 
 1. **Log in to the Spotify Developer Dashboard**
