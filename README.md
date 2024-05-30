@@ -51,7 +51,7 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
    ```sh
    npm start
 
-### Go on http://localhost:5173/ to access the APP
+Go to http://localhost:5173/ to access the app.
 
 ### How to Create an App in Spotify and Get Client ID and Secret
 
