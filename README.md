@@ -9,7 +9,7 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
 - [Features](#features)
 - [License](#license)
 
-## Installation/Usage
+## Installation
 
 ### Clone the Repository
    ```sh
@@ -42,7 +42,6 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
    ```sh
     CLIENT_ID=your_spotify_client_id
     CLIENT_SECRET=your_spotify_client_secret
-
 
 ### How to Create an App in Spotify and Get Client ID and Secret
 
