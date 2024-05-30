@@ -25,6 +25,10 @@ List the main features of your project. Highlight any unique or noteworthy funct
 
 Provide code snippets and relevant documentation on how to build more features.
 
+## API Documentation
+
+API documentation.
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
