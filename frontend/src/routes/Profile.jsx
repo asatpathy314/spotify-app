@@ -193,7 +193,7 @@ const Profile = () => {
       <Flex height="100%" alignItems="center" justifyContent="center">
         <Heading>
           Please{" "}
-          <Link color="#ff8906" href="/">
+          <Link color="#ff8906" href="/" textDecoration={"underline"}>
             login
           </Link>{" "}
           to view this page.

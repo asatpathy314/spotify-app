@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { AuthContext } from "../components/AuthProvider";
+import { useNavigate } from 'react-router-dom';
+
 import {
   Container,
   Card,
@@ -20,6 +23,7 @@ import axios from 'axios';
 
 
 const Forum = () => {
+  const { token, userID } = useContext(AuthContext);
   const [forums, setForums] = useState([]);
   const [posts, setPosts] = useState([]);
   const [comments, setComments] = useState([]);
@@ -30,14 +34,22 @@ const Forum = () => {
   const [description, setDescription] = useState('');
   const [newForumName, setNewForumName] = useState('');
   const [newComment, setNewComment] = useState('');
-
-
+  const [commentLikedStatus, setCommentLikedStatus] = useState(false);
+  const navigate = useNavigate();
 
 
   useEffect(() => {
+
+    if (!token || !userID) {
+      navigate('/login');
+      return;
+    }
+
     const fetchForums = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/forum/forums');
+        const response = await axios.get('http://localhost:8000/forum/forums', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
         setForums(response.data.forums);
       } catch (error) {
         console.error('Error fetching forums:', error);
@@ -46,11 +58,8 @@ const Forum = () => {
       }
     };
 
-
-
-
     fetchForums();
-  }, []);
+  }, [token, userID, navigate]);
 
 
 
@@ -99,48 +108,73 @@ const Forum = () => {
     fetchComments(forum.id, post.id);
   };
 
-//   const handleLikePost = async (forumId, postId) => {
-//     try {
-//       await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/like`);
-//     } catch (error) {
-//       console.error('Error liking post:', error);
-//     }
-//     fetchPosts(forumId);
-//   };
 
 
-
-//   const handleLikeComment = async (forumId, postId, commentId) => {
+// const handleLikeComment = async (forumId, postId, commentId) => {
 //     try {
 //       await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/comments/${commentId}/like`);
+//       // Update the likes count for the selected comment directly
+//       setComments(prevComments => prevComments.map(comment =>
+//         comment.id === commentId ? { ...comment, likes: comment.likes + 1 } : comment
+//       ));
 //     } catch (error) {
 //       console.error('Error liking comment:', error);
 //     }
-//     fetchComments(forumId, postId);
 //   };
 
 const handleLikeComment = async (forumId, postId, commentId) => {
     try {
-      await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/comments/${commentId}/like`);
-      // Update the likes count for the selected comment directly
+      const response = await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/comments/${commentId}/like`, {
+        userId: userID
+      }, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      console.log(response.data.likes)
       setComments(prevComments => prevComments.map(comment =>
-        comment.id === commentId ? { ...comment, likes: comment.likes + 1 } : comment
+        comment.id === commentId ? { ...comment, likes: response.data.likes, userLikes: response.data.userLikes } : comment
       ));
+      if(response.data.userLikes.includes(userID)){
+        setCommentLikedStatus(true);
+      }
+      else {
+        setCommentLikedStatus(false)
+      }
     } catch (error) {
+      if (error.response && error.response.status === 400) {
+        alert('You have already liked this comment.');
+      }
       console.error('Error liking comment:', error);
     }
   };
 
+//   const handleLikePost = async (forumId, postId) => {
+//     try {
+//       await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/like`);
+//       // Update the likes count for the selected post directly
+//        setSelectedPost(prevPost => ({
+//          ...prevPost,
+//          likes: prevPost.likes + 1
+//        }));
+//       // Update the likes count in the posts array
+//       setPosts(prevPosts => prevPosts.map(post =>
+//         post.id === postId ? { ...post, likes: post.likes + 1 } : post
+//       ));
+//     } catch (error) {
+//       console.error('Error liking post:', error);
+//     }
+// };
 
-  const handleLikePost = async (forumId, postId) => {
+const handleLikePost = async (forumId, postId) => {
     try {
-      await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/like`);
-      // Update the likes count for the selected post directly
-       setSelectedPost(prevPost => ({
-         ...prevPost,
-         likes: prevPost.likes + 1
-       }));
-      // Update the likes count in the posts array
+      await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/like`, {
+        userId: userID
+      }, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      setSelectedPost(prevPost => ({
+        ...prevPost,
+        likes: prevPost.likes + 1
+      }));
       setPosts(prevPosts => prevPosts.map(post =>
         post.id === postId ? { ...post, likes: post.likes + 1 } : post
       ));
@@ -173,7 +207,7 @@ const handleLikeComment = async (forumId, postId, commentId) => {
       await axios.post(`http://localhost:8000/forum/forums/${selectedForum.id}/posts`, {
         title,
         description,
-        userId: 'spotify_user_id',
+        userId: userID,
       });
       setTitle('');
       setDescription('');
@@ -193,7 +227,7 @@ const handleLikeComment = async (forumId, postId, commentId) => {
     try {
       await axios.post(`http://localhost:8000/forum/forums/${selectedForum.id}/posts/${selectedPost.id}/comments`, {
         text: newComment,
-        userId: 'spotify_user_id',
+        userId: userID,
       });
       setNewComment('');
       alert('Comment created successfully!');
@@ -289,7 +323,7 @@ const handleLikeComment = async (forumId, postId, commentId) => {
                     aria-label="Like comment"
                     icon={<FaThumbsUp />}
                     onClick={() => handleLikeComment(selectedForum.id, selectedPost.id, comment.id)}
-                    bg="#a7a9be"
+                    bg={comment.userLikes?.includes(userID) ? "#ff8906" : "#a7a9be"}
                     _hover={{ bg: "#ff8906" }}
                   />
                 </HStack>
