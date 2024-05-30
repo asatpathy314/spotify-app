@@ -1,5 +1,5 @@
-// src/components/Datagrid.jsx
 import React from "react";
+import { TimeIcon } from '@chakra-ui/icons';
 import {
   Box,
   Table,
@@ -24,9 +24,10 @@ const DataGrid = ({ data, type }) => {
         <Thead>
           <Tr>
             <Th color="white">#</Th>
-            <Th color="white">{type === "songs" ? "Song Title" : "Artist Name"}</Th>
+            {type === "songs" && <Th color="white">Song Title</Th>}
+            <Th color="white">Artist Name</Th>
             {type === "songs" && <Th color="white">Album</Th>}
-            {type === "songs" && <Th color="white">Length</Th>}
+            {type === "songs" && <Th color="white"><TimeIcon /></Th>}
           </Tr>
         </Thead>
         <Tbody>
@@ -42,6 +43,18 @@ const DataGrid = ({ data, type }) => {
                   {index + 1}
                 </Box>
               </Td>
+              {type === "songs" && (
+                <Td>
+                  <Box
+                    bg="black"
+                    p={2}
+                    borderRadius="md"
+                    textAlign="center"
+                  >
+                    {item.song}
+                  </Box>
+                </Td>
+              )}
               <Td>
                 <Box
                   bg="black"
@@ -49,7 +62,7 @@ const DataGrid = ({ data, type }) => {
                   borderRadius="md"
                   textAlign="center"
                 >
-                  {type === "songs" ? item.song : item.artist}
+                  {item.artist}
                 </Box>
               </Td>
               {type === "songs" && (

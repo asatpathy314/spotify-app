@@ -26,4 +26,38 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.get("/all", async(req, res) => {
+    try {
+        // Reference to the user document
+        const usersSnapshot = await db.collection("user").get()
+        const users = [];
+        usersSnapshot.forEach(doc => {
+            users.push({...doc.data(), id: doc.id});
+        });
+        res.status(200).json(users);
+        
+    } catch (error) {
+        console.error("Error retrieving user:", error);
+        res.status(500).send("Internal Server Error");
+    }
+})
+
+router.post("/", async(req, res) => {
+    try {
+        const newBio = req.query.bio;
+        const userId = req.query.id;
+        if (!userId) {
+            return res.status(400).send("Missing query parameter: id");
+        }
+        const userDocRef = db.collection("user").doc(userId);
+        await userDocRef.update({
+            bio: newBio
+        });
+        res.status(200).send("User updated successfully");
+    } catch (error) {
+        console.error("Error updating user:", error);
+        res.status(500).send("Internal Server Error");
+    }
+})
+
 module.exports = router;

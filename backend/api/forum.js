@@ -25,8 +25,8 @@ router.post("/forums/:forumId/posts", async (req, res) => {
       title,
       description,
       userId,
-      upvotes: 0,
-      date: new Date()
+      likes: 0,
+      date: new Date().toDateString()
     };
     await db.collection("forum").doc(forumId).collection("posts").add(post);
     res.status(201).json({ message: 'Successfully created post' });
@@ -75,10 +75,11 @@ router.get("/forums/:forumId/posts", async (req, res) => {
 });
 
 
-router.get("/posts/:postId/comments", async (req, res) => {
+// Fetch comments for a specific post
+router.get("/forums/:forumId/posts/:postId/comments", async (req, res) => {
   try {
-    const { postId } = req.params;
-    const commentsSnapshot = await db.collection("posts").doc(postId).collection("comments").get();
+    const { forumId, postId } = req.params;
+    const commentsSnapshot = await db.collection("forum").doc(forumId).collection("posts").doc(postId).collection("comments").get();
     const comments = commentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     res.status(200).json({ comments });
   } catch (e) {
@@ -86,22 +87,56 @@ router.get("/posts/:postId/comments", async (req, res) => {
   }
 });
 
-
-router.post("/posts/:postId/comments", async (req, res) => {
+// Add a new comment to a post
+router.post("/forums/:forumId/posts/:postId/comments", async (req, res) => {
   try {
-    const { postId } = req.params;
+    const { forumId, postId } = req.params;
     const { text, userId } = req.body;
     const comment = {
       text,
       userId,
-      date: new Date()
+      likes: 0,
+      date: new Date().toISOString()  // Store date in ISO format
     };
-    await db.collection("posts").doc(postId).collection("comments").add(comment);
+    await db.collection("forum").doc(forumId).collection("posts").doc(postId).collection("comments").add(comment);
     res.status(201).json({ message: 'Successfully created comment' });
   } catch (e) {
     res.status(400).json({ error: e.message });
   }
 });
 
+// Endpoint to like a post
+router.post("/forums/:forumId/posts/:postId/like", async (req, res) => {
+  try {
+    const { forumId, postId } = req.params;
+    const postRef = db.collection("forum").doc(forumId).collection("posts").doc(postId);
+    const postDoc = await postRef.get();
+    if (!postDoc.exists) {
+      res.status(404).json({ message: 'Post not found' });
+      return;
+    }
+    await postRef.update({ likes: postDoc.data().likes + 1 });
+    res.status(200).json({ message: 'Post liked successfully' });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+// Endpoint to like a comment
+router.post("/forums/:forumId/posts/:postId/comments/:commentId/like", async (req, res) => {
+  try {
+    const { forumId, postId, commentId } = req.params;
+    const commentRef = db.collection("forum").doc(forumId).collection("posts").doc(postId).collection("comments").doc(commentId);
+    const commentDoc = await commentRef.get();
+    if (!commentDoc.exists) {
+      res.status(404).json({ message: 'Comment not found' });
+      return;
+    }
+    await commentRef.update({ likes: commentDoc.data().likes + 1 });
+    res.status(200).json({ message: 'Comment liked successfully' });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
 
 module.exports = router;

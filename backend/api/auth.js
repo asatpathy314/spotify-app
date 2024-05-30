@@ -5,6 +5,7 @@ const db = require('./firebase');
 require('dotenv').config();
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
+const { profile } = require('console');
 
 var client_id = process.env.CLIENT_ID; // your clientId
 var client_secret = process.env.SECRET_ID; // Your secret
@@ -25,7 +26,7 @@ app.get('/login', function(req, res) {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
   // your application requests authorization
-  var scope = 'user-read-private user-read-email user-top-read user-read-recently-played';
+  var scope = 'user-read-private user-read-email user-top-read user-read-recently-played user-library-read';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -96,8 +97,9 @@ app.get('/callback', function(req, res) {
             userRef.get().then(doc => {
               if (!doc.exists) {
                 // User does not exist, create a new user
+                const profilePicture = body.images.length > 0 ? body.images[1].url : null;
                 userRef.set({
-                  profile: body.images[1].url,
+                  profile: profilePicture,
                   email: body.email,
                   name: body.display_name,
                   bio: "",

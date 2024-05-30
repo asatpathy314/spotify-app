@@ -10,9 +10,13 @@ import {
   FormControl,
   FormLabel,
   Input,
+  HStack,
+  IconButton
 } from '@chakra-ui/react';
-import { FaSpotify } from 'react-icons/fa';
+import { FaSpotify, FaThumbsUp } from 'react-icons/fa';
 import axios from 'axios';
+
+
 
 
 const Forum = () => {
@@ -28,6 +32,8 @@ const Forum = () => {
   const [newComment, setNewComment] = useState('');
 
 
+
+
   useEffect(() => {
     const fetchForums = async () => {
       try {
@@ -41,8 +47,12 @@ const Forum = () => {
     };
 
 
+
+
     fetchForums();
   }, []);
+
+
 
 
   const fetchPosts = async (forumId) => {
@@ -58,10 +68,12 @@ const Forum = () => {
   };
 
 
-  const fetchComments = async (postId) => {
+
+
+  const fetchComments = async (forumId, postId) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8000/forum/posts/${postId}/comments`);
+      const response = await axios.get(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/comments`);
       setComments(response.data.comments);
     } catch (error) {
       console.error('Error fetching comments:', error);
@@ -71,6 +83,8 @@ const Forum = () => {
   };
 
 
+
+
   const handleForumClick = (forum) => {
     setSelectedForum(forum);
     setSelectedPost(null);
@@ -78,10 +92,62 @@ const Forum = () => {
   };
 
 
-  const handlePostClick = (post) => {
+
+
+  const handlePostClick = (forum, post) => {
     setSelectedPost(post);
-    fetchComments(post.id);
+    fetchComments(forum.id, post.id);
   };
+
+//   const handleLikePost = async (forumId, postId) => {
+//     try {
+//       await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/like`);
+//     } catch (error) {
+//       console.error('Error liking post:', error);
+//     }
+//     fetchPosts(forumId);
+//   };
+
+
+
+//   const handleLikeComment = async (forumId, postId, commentId) => {
+//     try {
+//       await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/comments/${commentId}/like`);
+//     } catch (error) {
+//       console.error('Error liking comment:', error);
+//     }
+//     fetchComments(forumId, postId);
+//   };
+
+const handleLikeComment = async (forumId, postId, commentId) => {
+    try {
+      await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/comments/${commentId}/like`);
+      // Update the likes count for the selected comment directly
+      setComments(prevComments => prevComments.map(comment =>
+        comment.id === commentId ? { ...comment, likes: comment.likes + 1 } : comment
+      ));
+    } catch (error) {
+      console.error('Error liking comment:', error);
+    }
+  };
+
+
+  const handleLikePost = async (forumId, postId) => {
+    try {
+      await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/like`);
+      // Update the likes count for the selected post directly
+       setSelectedPost(prevPost => ({
+         ...prevPost,
+         likes: prevPost.likes + 1
+       }));
+      // Update the likes count in the posts array
+      setPosts(prevPosts => prevPosts.map(post =>
+        post.id === postId ? { ...post, likes: post.likes + 1 } : post
+      ));
+    } catch (error) {
+      console.error('Error liking post:', error);
+    }
+};
 
 
   const handleCreateForum = async (e) => {
@@ -97,6 +163,8 @@ const Forum = () => {
       alert('Failed to create forum.');
     }
   };
+
+
 
 
   const handleSubmitPost = async (e) => {
@@ -118,21 +186,31 @@ const Forum = () => {
   };
 
 
+
+
   const handleSubmitComment = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:8000/forum/posts/${selectedPost.id}/comments`, {
+      await axios.post(`http://localhost:8000/forum/forums/${selectedForum.id}/posts/${selectedPost.id}/comments`, {
         text: newComment,
         userId: 'spotify_user_id',
       });
       setNewComment('');
       alert('Comment created successfully!');
-      fetchComments(selectedPost.id);
+      fetchComments(selectedForum.id, selectedPost.id);
     } catch (error) {
       console.error('Error submitting comment:', error);
       alert('Failed to submit comment.');
     }
   };
+
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+
+
 
 
   if (loading) {
@@ -144,48 +222,82 @@ const Forum = () => {
   }
 
 
+
+
   if (selectedPost) {
     return (
-      <Container minHeight="100vh" display="grid" gap={0}>
-        <Button onClick={() => setSelectedPost(null)} colorScheme="teal" mb={0}>
+      <Container minHeight="100vh" display="flex" flexDirection="column" gap={4}>
+        <Button 
+        bg="#a7a9be"
+        _hover={{ bg: "#ff8906" }}
+        onClick={() => setSelectedPost(null)}
+        >
           Back to Posts
         </Button>
-        <Card mb={1} bg="gray.700" padding={"3"}>
-          <Text color="white" fontSize="sm">
-            Posted by {selectedPost.userId} on {new Date(selectedPost.date).toLocaleDateString()}
+        <Card mb={1} bg="gray.700" padding={"3"}  p={6}>
+          <Text color="gray.500" fontSize="sm">
+            Posted by {selectedPost.userId} on {formatDate(selectedPost.date)}
           </Text>
           <Text fontSize="2xl" fontWeight="bold" color="white" >
             {selectedPost.title}
           </Text>
           <Text color="white">{selectedPost.description}</Text>
+          <HStack justifyContent="right">
+            <Text color="gray.500" fontSize="sm">
+              {selectedPost.likes} likes
+            </Text>
+            <IconButton
+              aria-label="Like post"
+              icon={<FaThumbsUp />}
+              onClick={() => handleLikePost(selectedForum.id, selectedPost.id)}
+            //   colorScheme="teal"
+              bg="#a7a9be"
+              _hover={{ bg: "#ff8906" }}
+            />
+          </HStack>
         </Card>
         <form onSubmit={handleSubmitComment}>
-          <FormControl id="new-comment" mb={1}>
+          <FormControl id="new-comment" mb={4}>
             <FormLabel color="white">Add a Comment</FormLabel>
             <Input
               color="white"
               type="text"
               value={newComment}
+              focusBorderColor="#ff8906"
               onChange={(e) => setNewComment(e.target.value)}
               required
             />
           </FormControl>
-          <Button type="submit" colorScheme="teal" leftIcon={<FaSpotify />}>
+          <Button type="submit" mb={0} textColor="black" bg="#a7a9be"
+        _hover={{ bg: "#ff8906" }} leftIcon={<FaSpotify />}>
             Post Comment
           </Button>
         </form>
-        <VStack spacing={1} align="start">
+        <VStack spacing={4} align="stretch">
           {comments.length > 0 ? (
             comments.map((comment) => (
-              <Card key={comment.id} p={4} bg="gray.700" borderRadius="md" width="100%">
-                <Text color="white">{comment.text}</Text>
+              <Card key={comment.id} p={6} bg="gray.700" borderRadius="md" width="100%">
                 <Text color="gray.500" fontSize="sm">
-                  Commented by {comment.userId} on {new Date(comment.date).toLocaleDateString()}
+                Posted by {comment.userId} on {formatDate(comment.date)}
                 </Text>
+                <Text color="white">{comment.text}</Text>
+                <HStack justifyContent="right">
+                  <Text color="gray.500" fontSize="sm">
+                    {comment.likes} likes
+                  </Text>
+                  <IconButton
+                    aria-label="Like comment"
+                    icon={<FaThumbsUp />}
+                    onClick={() => handleLikeComment(selectedForum.id, selectedPost.id, comment.id)}
+                    bg="#a7a9be"
+                    _hover={{ bg: "#ff8906" }}
+                  />
+                </HStack>
+
               </Card>
             ))
           ) : (
-            <Text color="gray.300">No comments available</Text>
+            <Text color="gray.300" align="center"  mt={4}>No comments yet!</Text>
           )}
         </VStack>
       </Container>
@@ -193,52 +305,62 @@ const Forum = () => {
   }
 
 
+
+
   if (selectedForum) {
     return (
-      <Container minHeight="100vh" display="grid" gap={0}>
-        <Button onClick={() => setSelectedForum(null)} colorScheme="teal" mb={2}>
+      <Container minHeight="100vh" display="flex" flexDirection="column" gap={4}>
+        <Button bg="#a7a9be"
+                _hover={{ bg: "#ff8906" }}
+                onClick={() => setSelectedForum(null)} 
+                >
           Back to Forums
         </Button>
         <Box mb={1}>
-          <Text fontSize="2xl" fontWeight="bold" color="white" align={"center"}>
+          <Text fontSize="2xl" fontWeight="bold" color="white">
             {"Posts From Forum: " + selectedForum.name}
           </Text>
         </Box>
-        <form onSubmit={handleSubmitPost}>
-          <FormControl id="title" mb={1}>
-            <FormLabel color="white">Title</FormLabel>
-            <Input color="white" type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
-          </FormControl>
-          <FormControl id="description" mb={4}>
-            <FormLabel color="white">Description</FormLabel>
-            <Input
-              color="white"
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-            />
-          </FormControl>
-          <Button type="submit" colorScheme="teal" mb={0} leftIcon={<FaSpotify />}>
-            Create Post
-          </Button>
-        </form>
-        <VStack spacing={4} align="start">
+        <Box mb={4}>
+            <form onSubmit={handleSubmitPost}>
+            <FormControl id="title" mb={1} focusB>
+                <FormLabel color="white">Title</FormLabel>
+                <Input color="white" type="text" value={title} focusBorderColor="#ff8906" onChange={(e) => setTitle(e.target.value)} required />
+            </FormControl>
+            <FormControl id="description" mb={4}>
+                <FormLabel color="white">Description</FormLabel>
+                <Input
+                color="white"
+                type="text"
+                value={description}
+                focusBorderColor="#ff8906"
+                onChange={(e) => setDescription(e.target.value)}
+                required
+                />
+            </FormControl>
+            <Button type="submit" textColor="black" bg="#a7a9be"
+        _hover={{ bg: "#ff8906" }} mb={1} leftIcon={<FaSpotify />}>
+                Create Post
+            </Button>
+            </form>
+        </Box>
+        <Box>
+        <VStack spacing={4} align="stretch">
           {posts.length > 0 ? (
             posts.map((post) => (
               <Card
                 key={post.id}
-                p={2}
+                p={6}
                 bg="gray.700"
                 borderRadius="md"
                 width="100%"
-                onClick={() => handlePostClick(post)}
+                onClick={() => handlePostClick(selectedForum, post)}
                 cursor="pointer"
               >
-                <Text color="white" fontSize="xs">
-                  Posted by {post.userId} on {new Date(post.date).toLocaleDateString()}
+                <Text color="gray.500" fontSize="sm">
+                  Posted by {post.userId} on {formatDate(post.date)}
                 </Text>
-                <Text fontSize="2xl" fontWeight="bold" color="white">
+                <Text fontSize="2xl" fontWeight="bold" color="white" mb={4}>
                   {post.title}
                 </Text>
                 <Text fontSize="sm" color="white">{post.description}</Text>
@@ -248,55 +370,68 @@ const Forum = () => {
             <Text color="white">No posts available</Text>
           )}
         </VStack>
+        </Box>
       </Container>
     );
   }
 
 
+
+
   return (
-    <Container minHeight="100vh" display="grid" gap={4}>
-      <form onSubmit={handleCreateForum}>
+    <Container minHeight="100vh" display="flex" flexDirection="column" gap={4}>
+    <form onSubmit={handleCreateForum}>
         <FormControl id="new-forum-name" mb={4}>
-          <FormLabel color="white">Create New Forum</FormLabel>
-          <Input
+        <FormLabel color="white">Create New Forum</FormLabel>
+        <Input
             maxLength={15}
             type="text"
             color="white"
             value={newForumName}
+            focusBorderColor="#ff8906"
             onChange={(e) => setNewForumName(e.target.value)}
             required
-          />
+        />
         </FormControl>
-        <Button type="submit" colorScheme="teal" mb={4} leftIcon={<FaSpotify />}>
-          Create Forum
+        <Button type="submit" textColor="black" bg="#a7a9be"
+        _hover={{ bg: "#ff8906" }} mb={2} color="black" leftIcon={<FaSpotify />}>
+        Create Forum
         </Button>
-      </form>
-      <VStack spacing={2} align="start">
+    </form>
+    <Box>
+        <VStack spacing={4} align="stretch">
         {forums.length > 0 ? (
-          forums.map((forum) => (
+            forums.map((forum) => (
             <Card
-              key={forum.id}
-              p={4}
-              bg="gray.700"
-              borderRadius="md"
-              width="100%"
-              onClick={() => handleForumClick(forum)}
-              cursor="pointer"
+                key={forum.id}
+                p={6}
+                bg="gray.700"
+                borderRadius="md"
+                width="100%"
+                onClick={() => handleForumClick(forum)}
+                cursor="pointer"
             >
-              <Text fontSize="xl" fontWeight="bold" color="white">
+                <Text fontSize="xl" fontWeight="bold" color="white">
                 {forum.name}
-              </Text>
+                </Text>
             </Card>
-          ))
+            ))
         ) : (
-          <Text color="white">No forums available</Text>
+            <Text color="white">No forums available</Text>
         )}
-      </VStack>
+        </VStack>
+    </Box>
     </Container>
+
+
   );
 };
 
 
 export default Forum;
+
+
+
+
 
 
