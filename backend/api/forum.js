@@ -136,16 +136,19 @@ router.post("/forums/:forumId/posts/:postId/comments/:commentId/like", async (re
     const commentData = commentDoc.data();
     const userLikes = commentData.userLikes || [];
 
+    let newLikesCount;
     if (userLikes.includes(userId)) {
-      userLikes.splice(userLikes.indexOf(userId), 1)
-      await commentRef.update({ likes: commentData.likes - 1, userLikes});
-      return res.status(200).json({ message: 'Comment unliked successfully' });
-      // return res.status(400).json({ message: 'User has already liked this comment' });
+      // Unlike the comment
+      userLikes.splice(userLikes.indexOf(userId), 1);
+      newLikesCount = commentData.likes - 1;
+    } else {
+      // Like the comment
+      userLikes.push(userId);
+      newLikesCount = commentData.likes + 1;
     }
 
-    userLikes.push(userId);
-    await commentRef.update({ likes: commentData.likes + 1, userLikes });
-    return res.status(200).json({ message: 'Comment liked successfully' });
+    await commentRef.update({ likes: newLikesCount, userLikes });
+    res.status(200).json({ likes: newLikesCount, userLikes });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

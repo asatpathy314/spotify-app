@@ -123,13 +123,14 @@ const Forum = () => {
 
 const handleLikeComment = async (forumId, postId, commentId) => {
     try {
-      await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/comments/${commentId}/like`, {
+      const response = await axios.post(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/comments/${commentId}/like`, {
         userId: userID
       }, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      console.log(response.data.likes)
       setComments(prevComments => prevComments.map(comment =>
-        comment.id === commentId ? { ...comment, likes: comment.likes + 1 } : comment
+        comment.id === commentId ? { ...comment, likes: response.data.likes } : comment
       ));
     } catch (error) {
       if (error.response && error.response.status === 400) {
