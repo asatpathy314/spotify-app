@@ -33,7 +33,8 @@ const Forum = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [newForumName, setNewForumName] = useState('');
-  const [newComment, setNewComment] = useState('')
+  const [newComment, setNewComment] = useState('');
+  const [commentLikedStatus, setCommentLikedStatus] = useState(false);
   const navigate = useNavigate();
 
 
@@ -130,8 +131,14 @@ const handleLikeComment = async (forumId, postId, commentId) => {
       });
       console.log(response.data.likes)
       setComments(prevComments => prevComments.map(comment =>
-        comment.id === commentId ? { ...comment, likes: response.data.likes } : comment
+        comment.id === commentId ? { ...comment, likes: response.data.likes, userLikes: response.data.userLikes } : comment
       ));
+      if(response.data.userLikes.includes(userID)){
+        setCommentLikedStatus(true);
+      }
+      else {
+        setCommentLikedStatus(false)
+      }
     } catch (error) {
       if (error.response && error.response.status === 400) {
         alert('You have already liked this comment.');
@@ -316,7 +323,7 @@ const handleLikePost = async (forumId, postId) => {
                     aria-label="Like comment"
                     icon={<FaThumbsUp />}
                     onClick={() => handleLikeComment(selectedForum.id, selectedPost.id, comment.id)}
-                    bg="#a7a9be"
+                    bg={comment.userLikes?.includes(userID) ? "#ff8906" : "#a7a9be"}
                     _hover={{ bg: "#ff8906" }}
                   />
                 </HStack>
