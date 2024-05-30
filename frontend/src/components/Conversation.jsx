@@ -1,9 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useSearchParams, useParams } from "react-router-dom";
 import { AuthContext } from "../components/AuthProvider";
-import {
-    Text,
-} from "@chakra-ui/react";
+import { Button, Text, Stack, Box } from "@chakra-ui/react";
 import axios from "axios";
 
 // Profile page and useContext setup. Users are redirected here after the login.
@@ -30,23 +28,36 @@ const Conversation = () => {
             setConversationData(res.data);
           }
         })
-        .catch((err) => {console.error("Error fetching conversation:", err); setError(true);});
+        .catch((err) => {
+          console.error("Error fetching conversation:", err);
+          setError(true);
+        });
     }
   }, [token, userID, id]);
 
-  if(conversationData) {
-        return (
-            <div>
-            {conversationData.messages.map((message, index) => {
-                return (
-                    <div key={index}>
-                        <Text fontSize='2xl'>{message.text}</Text>
-                    </div>
-                );
-            })}
-            </div>
-        );
-    }
-}
+  if (conversationData) {
+    return (
+      <Stack gap={3}>
+        {conversationData.messages.map((message, index) => {
+        const userMessageID = message.user._path.segments[1].trim();
+        const isUser = userMessageID === userID;
+
+          return (
+            <Box key={index} width="100%" display='flex' >
+                <Box bg={isUser ? '#f25f4c' : '#a7a9be'} ml={isUser ? 'auto' : 0} maxWidth = "40%" p={3}>
+                    <Text color="#FFFFFE" fontSize={['lg', 'xl', '2xl', '3xl']} textAlign={isUser ? 'right' : 'left'}>{"message.textmessage.text"}</Text>
+                </Box>
+            </Box>
+          );
+        })}
+      </Stack>
+    );
+  } else if (error) {
+    return <h1>Error fetching conversation</h1>;
+  }
+  return (
+    <h1>Loading</h1>
+  ); // Return null or a loading indicator while data is being fetched
+};
 
 export default Conversation;

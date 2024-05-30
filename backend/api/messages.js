@@ -34,4 +34,25 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Fetch the specific conversation
+router.get('/conversation', async(req, res) => {
+  try {
+    const conversationId = req.query.id;
+    if (!conversationId) {
+      return res.status(400).send("Missing query parameter: id");
+    }
+    const conversationDoc = await db.collection("conversation").doc(conversationId).get();
+    console.log(conversationDoc.data())
+    if (conversationDoc.exists) {
+      const conversationData = conversationDoc.data();
+      res.status(200).send(conversationData)
+    } else {
+      res.status(404).send("Conversation not found");
+    }
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send("Internal Server Error");
+  }
+})
+
 module.exports = router;
