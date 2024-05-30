@@ -7,7 +7,6 @@ A social media platform that uses Spotify OAuth to give users a place to discuss
 - [Installation](#installation)
 - [Usage](#usage)
 - [Features](#features)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Installation
@@ -21,6 +20,14 @@ Provide examples and instructions on how to use your project. Include any releva
 ## Features
 
 List the main features of your project. Highlight any unique or noteworthy functionalities.
+
+## How to Extend the Project
+
+Provide code snippets and relevant documentation on how to build more features.
+
+## API Documentation
+
+API documentation.
 
 ## License
 
