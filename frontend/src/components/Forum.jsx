@@ -471,7 +471,7 @@ const Forum = () => {
             Posts From "{selectedForum.name}"
           </Text>
         </Box>
-        <Box mb={4}>
+        <Box mb={0}>
           <form onSubmit={handleSubmitPost}>
             <FormControl id="title" mb={1} focusB>
               <FormLabel color="white">Title</FormLabel>
