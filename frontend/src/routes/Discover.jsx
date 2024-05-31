@@ -32,13 +32,17 @@ function Discover() {
 
                 <div>
                     <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing={3} textAlign={'center'}>
-                        {profiles.map((profile, index) => (
-                            <Link key={index} href={`/profile/${profile.id}`}>
-                                <Box>
-                                    <User userName={profile.name} profilePictureUrl={profile.profile} />
-                                </Box>
-                            </Link>
-                        ))}
+                        {profiles.map((profile, index) => {
+                            if (profile.public === true) {
+                            return (
+                                <Link key={index} href={`/profile/${profile.id}`}>
+                                    <Box>
+                                        <User userName={profile.name} profilePictureUrl={profile.profile} />
+                                    </Box>
+                                </Link>
+                            );
+                        }
+                        })}
                     </SimpleGrid>
                 </div>
             </div>

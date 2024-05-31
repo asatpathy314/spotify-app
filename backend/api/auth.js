@@ -102,7 +102,8 @@ app.get('/callback', function(req, res) {
                   email: body.email,
                   name: body.display_name,
                   bio: "",
-                  conversations: []
+                  conversations: [],
+                  public: true
                 }).then(() => {
                   // Query Spotify for favorite song and favorite artist
                   const topTracksOptions = {

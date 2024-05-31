@@ -25,6 +25,7 @@ import {
   useDisclosure,
   Input,
   Box,
+  Select,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 import { IoIosSend } from "react-icons/io";
@@ -34,6 +35,7 @@ import axios from "axios";
 const Profile = () => {
   const { token, setToken, userID, setUserID } = useContext(AuthContext);
   const [searchParams, setSearchParams] = useSearchParams(); 
+  const [profileStatus, setProfileStatus] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [bio, setBio] = useState("");
   const [message, setMessage] = useState("");
@@ -61,6 +63,13 @@ const Profile = () => {
         .then((res) => {
           setProfileData(res.data);
           setBio(res.data.bio || "Fill in your bio here!")
+          console.log('yep')
+          setProfileStatus(res.data.public)
+          if (res.data.public === false && id !== userID) {
+            setForbidden(true);
+            window.location.href = "/profile/nosessiontoken"
+            return;
+          }
         })
         .catch((error) => {
           console.error("Error retrieving user:", error);
@@ -82,9 +91,10 @@ const Profile = () => {
     // Update the bio and reset the edit mode. Bio is already updated locally by onChange for TextArea
     setEditMode(false);
     setIsEditable(true);
+    console.log(profileStatus)
     try {
       await axios.post(
-        "http://localhost:8000/user?id=" + id + "&bio=" + bio
+        "http://localhost:8000/user?id=" + id + "&bio=" + bio + "&public=" + profileStatus
       );
     } catch (error) {
       console.error("Error updating user:", error);
@@ -181,6 +191,13 @@ const Profile = () => {
                 </Heading>
                 {editMode ? (
                   <>
+                    <Select 
+                      bg="#191827"
+                      onChange={(e) => {e.target.value === "public" ? setProfileStatus(true) : setProfileStatus(false)}}
+                      defaultValue={profileStatus === true ? "public" : "private"}>
+                      <option value="public">Public</option>
+                      <option value="private">Private</option>
+                    </Select>
                     <Textarea
                       value={bio}
                       onChange={(e) => setBio(e.target.value)}
@@ -207,9 +224,14 @@ const Profile = () => {
                     </Button>
                   </>
                 ) : (
+                  <>
+                  <Text fontSize="xl">
+                    Profile Status: {profileStatus ? "Public" : "Private"}
+                  </Text>
                   <Text fontSize="xl">
                     {bio}
                   </Text>
+                  </>
                 )}
               </Stack>
             </Container>

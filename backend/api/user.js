@@ -59,13 +59,16 @@ router.get("/getDocRef", async(req, res) => {
 router.post("/", async(req, res) => {
     try {
         const newBio = req.query.bio;
+        const newProfileStatus = req.query.public;
         const userId = req.query.id;
         if (!userId) {
             return res.status(400).send("Missing query parameter: id");
         }
+        const boolProfileStatus = newProfileStatus === 'true';
         const userDocRef = db.collection("user").doc(userId);
         await userDocRef.update({
-            bio: newBio
+            bio: newBio,
+            public: boolProfileStatus
         });
         res.status(200).send("User updated successfully");
     } catch (error) {
