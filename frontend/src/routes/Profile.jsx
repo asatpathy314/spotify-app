@@ -145,7 +145,7 @@ const Profile = () => {
             <Modal isOpen={isOpen} onClose={onClose}>
               <ModalOverlay />
               <ModalContent color="#FFFFFE" bg="#0f0e17">
-                <ModalHeader>Start a conversation!</ModalHeader>
+                <ModalHeader>Send a Message!</ModalHeader>
                 <ModalBody>
                 <Input 
                 placeholder='Type a message...' 

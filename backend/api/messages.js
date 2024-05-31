@@ -93,10 +93,13 @@ router.post('/createConversation', async (req, res) => {
       return res.status(400).send("Missing required fields: content, user1Id, user2Id");
     }
 
+    const user1Ref = db.collection('user').doc(user1Id);
+    const user2Ref = db.collection('user').doc(user2Id);
+
     // Check if a conversation already exists between the two users
     const existingConversationQuery = await db.collection('conversation')
-      .where('user1', 'in', [db.collection('user').doc(user1Id), db.collection('user').doc(user2Id)])
-      .where('user2', 'in', [db.collection('user').doc(user1Id), db.collection('user').doc(user2Id)])
+      .where('user1', 'in', [user1Ref, user2Ref])
+      .where('user2', 'in', [user1Ref, user2Ref])
       .get();
 
     if (!existingConversationQuery.empty) {
@@ -105,7 +108,7 @@ router.post('/createConversation', async (req, res) => {
       const existingConversationId = existingConversation.id;
       const newMessage = {
         text: content,
-        user: db.collection('user').doc(user1Id),
+        user: user1Ref,
         timestamp: Timestamp.now()
       };
 
@@ -119,9 +122,6 @@ router.post('/createConversation', async (req, res) => {
     // No existing conversation, create a new one
     const conversationRef = db.collection('conversation').doc();
     const conversationId = conversationRef.id;
-    
-    const user1Ref = db.collection('user').doc(user1Id);
-    const user2Ref = db.collection('user').doc(user2Id);
 
     const message = {
       text: content,
