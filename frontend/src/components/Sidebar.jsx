@@ -19,6 +19,8 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import { BsFilePerson } from "react-icons/bs";
 import { GoPaperAirplane } from "react-icons/go";
 import { FiMenu } from "react-icons/fi";
+import { CiLogout } from "react-icons/ci";
+import { IoMusicalNotesSharp } from "react-icons/io5";
 
 
 
@@ -55,14 +57,14 @@ export default function SimpleSidebar({ children }) {
 const SidebarContent = ({ onClose, ...rest }) => {
   const { token, setToken, userID, setUserID } = useContext(AuthContext);
   const LinkItems= [
+    { name: 'Profile', icon: BsFilePerson, link: `/profile/${userID || 'nosessiontoken'}` },
+    { name: 'Forum', icon: MdForum, link: '/forum' },
     { name: 'Liked Songs', icon: CiHeart, link: '/liked' },
     { name: 'Favorite Artists', icon: GiMicrophone, link: '/topartists' },
-    { name: 'Favorite Songs', icon: GiMicrophone, link: '/topsongs'},
-    { name: 'Forum', icon: MdForum, link: '/forum' },
+    { name: 'Favorite Songs', icon: IoMusicalNotesSharp, link: '/topsongs'},
     { name: 'Discover', icon: FaMagnifyingGlass, link: '/discover' },
-    { name: 'Profile', icon: BsFilePerson, link: `/profile/${userID || 'nosessiontoken'}` },
     { name: 'Messages', icon: GoPaperAirplane, link: '/messages' },
-    { name: 'Logout', icon: GoPaperAirplane, link: '/logout' }
+    { name: 'Logout', icon: CiLogout, link: '/logout' },
   ];
   return (
     <Box

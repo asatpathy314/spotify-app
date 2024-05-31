@@ -35,7 +35,7 @@ router.get('/', async (req, res) => {
 });
 
 // Fetch the specific conversation
-router.get('/conversation', async(req, res) => {
+router.get('/conversation', async (req, res) => {
   try {
     const conversationId = req.query.id;
     if (!conversationId) {
@@ -44,16 +44,15 @@ router.get('/conversation', async(req, res) => {
     const conversationDoc = await db.collection("conversation").doc(conversationId).get();
     if (conversationDoc.exists) {
       const conversationData = conversationDoc.data();
-      res.status(200).send(conversationData)
+      res.status(200).send(conversationData);
     } else {
       res.status(404).send("Conversation not found");
     }
   } catch (error) {
-    console.log(error)
+    console.error(error);
     return res.status(500).send("Internal Server Error");
   }
-})
-
+});
 
 router.post('/updateConversation', async (req, res) => {
   try {
@@ -73,7 +72,7 @@ router.post('/updateConversation', async (req, res) => {
     if (!conversationDoc.exists) {
       return res.status(404).send("Conversation not found");
     }
-    // Update the conversation document with new messages
+
     await conversationDocRef.update({
       messages: FieldValue.arrayUnion(newMessage[0])
     });
@@ -85,7 +84,6 @@ router.post('/updateConversation', async (req, res) => {
   }
 });
 
-// Create a new conversation and add a message
 router.post('/createConversation', async (req, res) => {
   try {
     const { content, user1Id, user2Id } = req.body;
@@ -94,27 +92,47 @@ router.post('/createConversation', async (req, res) => {
       return res.status(400).send("Missing required fields: content, user1Id, user2Id");
     }
 
-    // Create a new conversation document
-    const conversationRef = db.collection('conversation').doc();
-    const conversationId = conversationRef.id;
-    
     const user1Ref = db.collection('user').doc(user1Id);
     const user2Ref = db.collection('user').doc(user2Id);
-    // Add the initial message to the conversation
-    
+
+    // Check if a conversation already exists between the two users
+    const existingConversationQuery = await db.collection('conversation')
+      .where('user1', 'in', [user1Ref, user2Ref])
+      .where('user2', 'in', [user1Ref, user2Ref])
+      .get();
+
+    if (!existingConversationQuery.empty) {
+      // A conversation already exists, update it
+      const existingConversation = existingConversationQuery.docs[0];
+      const existingConversationId = existingConversation.id;
+      const newMessage = {
+        text: content,
+        user: user1Ref,
+        timestamp: Timestamp.now()
+      };
+
+      await existingConversation.ref.update({
+        messages: FieldValue.arrayUnion(newMessage)
+      });
+
+      return res.status(200).send({ message: "Message added to existing conversation", conversationId: existingConversationId });
+    }
+
+    // No existing conversation, create a new one
+    const conversationRef = db.collection('conversation').doc();
+    const conversationId = conversationRef.id;
+
     const message = {
       text: content,
       user: user1Ref,
       timestamp: Timestamp.now()
     };
 
-
     await conversationRef.set({
       user1: user1Ref,
       user2: user2Ref,
       messages: [message],
     });
-
 
     await user1Ref.update({
       conversations: FieldValue.arrayUnion(conversationRef)
@@ -124,7 +142,7 @@ router.post('/createConversation', async (req, res) => {
       conversations: FieldValue.arrayUnion(conversationRef)
     });
 
-    res.status(201).send({ message: "Conversation created successfully", conversationId: conversationId });
+    res.status(200).send({ message: "Conversation created successfully", conversationId: conversationId });
   } catch (error) {
     console.error("Error creating conversation:", error);
     res.status(500).send("Internal Server Error");
