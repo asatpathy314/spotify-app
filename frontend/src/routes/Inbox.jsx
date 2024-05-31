@@ -1,7 +1,5 @@
-//render the last message in each conversation
-//along with the user that you are speaking to and their profile picture
 import { useState, useEffect, useContext } from "react";
-import { Grid, GridItem, Box, Text, Avatar, Stack, Heading, Link } from "@chakra-ui/react";
+import { Grid, GridItem, Box, Text, Avatar, Stack, Flex, Heading, Link } from "@chakra-ui/react";
 import { AuthContext } from "../components/AuthProvider";
 import ConversationDisplay from "../components/ConversationDisplay"; // Individual conversation display component.
 import axios from 'axios';
@@ -16,13 +14,14 @@ const Inbox = () => {
         if (id1 === userID) {
             return id2;
         } else {
-            return id1
+            return id1;
         }
-    }
+    };
+
     useEffect(() => {
         const fetchInbox = async () => {
             try {
-                const conversationData = await axios.get("http://localhost:8000/messages?id="+userID) 
+                const conversationData = await axios.get("http://localhost:8000/messages?id=" + userID);
                 if (conversationData.error && conversationData.error === "No conversations found") {
                     setNoConversations(true);
                 }
@@ -35,29 +34,40 @@ const Inbox = () => {
         };
         fetchInbox();
     }, [userID]);
-    console.log(conversations)
+
+    // Sort conversations by the timestamp of the last message in descending order
+    const sortedConversations = conversations.sort((a, b) => {
+        const lastMessageA = a.messages[a.messages.length - 1];
+        const lastMessageB = b.messages[b.messages.length - 1];
+        return lastMessageB.timestamp._seconds - lastMessageA.timestamp._seconds;
+    });
 
     if (loading) {
-        return <div>Loading...</div>;
+        return (
+            <Flex height="100%" alignItems="center" justifyContent="center">
+                <Heading>
+                    Loading...
+                </Heading>
+            </Flex>
+        );
     } else if (conversations && !noConversations) {
         return (
             <>
                 <Stack direction="column">
-                    {conversations.map((conversation, index) => {
+                    {sortedConversations.map((conversation, index) => {
                         const correctUserId = getCorrectUserId(conversation.user1._path.segments[1].trim(), conversation.user2._path.segments[1].trim());
-                        return <ConversationDisplay userID={correctUserId} key={index} keyValue={index} conversation={conversation}/>;
+                        return <ConversationDisplay userID={correctUserId} key={index} keyValue={index} conversation={conversation} />;
                     })}
                 </Stack>
             </>
         );
-    } else if ( noConversations ) {
+    } else if (noConversations) {
         return (
             <Heading size='xl' textAlign='center' margin='auto'>
                 Start a conversation on the <Link href='/discover' color="#ff8906" textDecoration={"underline"}>Discover</Link> page!
-            </Heading>        
-          )
+            </Heading>
+        );
     }
 };
 
 export default Inbox;
-    

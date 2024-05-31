@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import { useSearchParams, useParams } from "react-router-dom";
+import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../components/AuthProvider";
 import {
-  Button,
   Text,
   Stack,
   Box,
@@ -11,8 +10,11 @@ import {
   InputGroup,
   InputRightElement,
   IconButton,
+  Flex,
+  Heading,
 } from "@chakra-ui/react";
 import { IoIosSend } from "react-icons/io";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 import axios from "axios";
 
 // Profile page and useContext setup. Users are redirected here after the login.
@@ -20,10 +22,12 @@ const Conversation = () => {
   const { token, setToken, userID, setUserID } = useContext(AuthContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const [messageData, setMessageData] = useState(null); // Data for the conversation
+  const [userName, setUserName] = useState(null); // Name of the user
   const [forbidden, setForbidden] = useState(null); // Determines if the user has permission to view the page
   const [error, setError] = useState(null); // Error handling
   const { id } = useParams();
   const [message, setMessage] = useState(""); // Local message state
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!token || !userID) {
@@ -38,6 +42,17 @@ const Conversation = () => {
           } else {
             setMessageData(res.data.messages);
           }
+          const userID1 = res.data.user1._path.segments[1].trim();
+          const userID2 = res.data.user2._path.segments[1].trim();
+          const queryID = userID1 === userID ? userID2 : userID1;
+          axios.get(`http://localhost:8000/user?id=${queryID}`)
+          .then((res) => {
+            if (res.status === 200) {
+              setUserName(res.data.name);
+              console.log(res.data);
+            }
+          })
+          .catch((err) => {console.error(err)});
         })
         .catch((err) => {
           console.error("Error fetching conversation:", err);
@@ -50,9 +65,7 @@ const Conversation = () => {
     e.preventDefault();
     try {
       // Fetch the document reference for the user
-      const res = await axios.get(
-        `http://localhost:8000/user/getDocRef?id=${userID}`
-      );
+      const res = await axios.get(`http://localhost:8000/user/getDocRef?id=${userID}`);
       if (res.status === 200) {
         const newMessageDocRef = res.data;
         console.log(newMessageDocRef);
@@ -83,6 +96,19 @@ const Conversation = () => {
   if (messageData) {
     return (
       <Stack gap={3}>
+        <Flex alignItems="center" p={4} bg="#191827" color="#FFFFFE" textAlign={"center"}>
+          <IconButton
+            icon={<ArrowBackIcon />}
+            onClick={() => navigate("/messages")}
+            bg="transparent"
+            color="#FFFFFE"
+            _hover={{ color: "#ff8906" }}
+            aria-label="Back"
+          />
+          <Heading as="h2" size="lg" mx='auto'>
+            {userName}
+          </Heading>
+        </Flex>
         {messageData.map((message, index) => {
           const userMessageID = message.user._path.segments[1].trim();
           const isUser = userMessageID === userID;
@@ -153,7 +179,13 @@ const Conversation = () => {
   } else if (error) {
     return <h1>Error fetching conversation</h1>;
   }
-  return <h1>Loading</h1>; // Return null or a loading indicator while data is being fetched
+  return (
+    <Flex height="100%" alignItems="center" justifyContent="center">
+    <Heading>
+      Loading
+    </Heading>
+    </Flex>
+  ) // Return null or a loading indicator while data is being fetched
 };
 
 export default Conversation;
