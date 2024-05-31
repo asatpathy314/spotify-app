@@ -11,7 +11,6 @@ function Discover() {
         const getProfiles = async () => {
             try {
                 const response = await axios.get('http://localhost:8000/user/all');
-                console.log('API Response:', response.data);
                 if (Array.isArray(response.data)) {
                     setProfiles(response.data);
                 }

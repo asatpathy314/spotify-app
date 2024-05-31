@@ -44,12 +44,14 @@ const Conversation = () => {
           }
           const userID1 = res.data.user1._path.segments[1].trim();
           const userID2 = res.data.user2._path.segments[1].trim();
+          if (userID1 !== userID && userID2 !== userID) {
+            window.location.href=("/messages")
+          }
           const queryID = userID1 === userID ? userID2 : userID1;
           axios.get(`http://localhost:8000/user?id=${queryID}`)
           .then((res) => {
             if (res.status === 200) {
               setUserName(res.data.name);
-              console.log(res.data);
             }
           })
           .catch((err) => {console.error(err)});
@@ -68,8 +70,6 @@ const Conversation = () => {
       const res = await axios.get(`http://localhost:8000/user/getDocRef?id=${userID}`);
       if (res.status === 200) {
         const newMessageDocRef = res.data;
-        console.log(newMessageDocRef);
-
         // Update the local state with the new message
         const newMessage = {
           text: message,
@@ -86,7 +86,6 @@ const Conversation = () => {
           `http://localhost:8000/messages/updateConversation?id=${id}&userID=${userID}`,
           { messages: [newMessage] }
         );
-        console.log("Message submitted:", newMessage);
       }
     } catch (error) {
       console.error("Error submitting message:", error);

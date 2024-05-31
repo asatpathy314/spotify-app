@@ -49,7 +49,6 @@ router.get("/getDocRef", async(req, res) => {
             return res.status(400).send("Missing query parameter: id");
         }
         const userDocRef = await db.collection("user").doc(userId);
-        console.log('User ref sent successfully.')
         res.status(200).json(userDocRef);
     } catch (error) {
         console.error("Error retrieving userRef:", error);

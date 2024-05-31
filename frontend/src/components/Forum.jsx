@@ -42,7 +42,7 @@ const Forum = () => {
 
   useEffect(() => {
     if (!token || !userID) {
-      navigate('/login');
+      navigate('/profile/nosessiontoken');
       return;
     }
 

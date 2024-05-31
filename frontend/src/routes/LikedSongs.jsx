@@ -15,10 +15,8 @@ export const LikedSongs = () => {
         const fetchSongs = async () => {
             try {
                 const responses = await axios.get(`http://localhost:8000/song/liked?spotify_token=${token}`);
-                console.log("API: ", responses.data.items);
                 setSongs(responses.data.items);
             } catch (error) {
-                console.log("Error getting the songs: ", error);
                 setSongs([]);
                 if (error.response && error.response.status === 403) {
                     setForbidden(true);

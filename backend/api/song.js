@@ -45,7 +45,6 @@ router.get('/', (req, res) => {
             return res.status(500).json({ error: "Failed to fetch top tracks" });
         }
         const data = JSON.parse(body);
-        console.log(data);
         res.status(200).json(data);
     });
 });
@@ -70,7 +69,6 @@ router.get('/liked', (req, res) => {
             return res.status(500).json({ error: "Failed to fetch top tracks" });
         }
         const data = JSON.parse(body);
-        console.log(data);
         res.status(200).json(data);
     });
 });

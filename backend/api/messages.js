@@ -16,7 +16,6 @@ router.get('/', async (req, res) => {
     if (userDoc.exists) {
       const conversations = userDoc.data().conversations;
       const returnData = [];
-      console.log(conversations)
       if (conversations.length > 0) {
         for (const conversation of conversations) {
           const conversationData = await conversation.get() // Assuming fetchData is defined elsewhere
@@ -43,7 +42,6 @@ router.get('/conversation', async(req, res) => {
       return res.status(400).send("Missing query parameter: id");
     }
     const conversationDoc = await db.collection("conversation").doc(conversationId).get();
-    console.log(conversationDoc.data())
     if (conversationDoc.exists) {
       const conversationData = conversationDoc.data();
       res.status(200).send(conversationData)
@@ -75,7 +73,6 @@ router.post('/updateConversation', async (req, res) => {
     if (!conversationDoc.exists) {
       return res.status(404).send("Conversation not found");
     }
-    console.log(newMessage[0])
     // Update the conversation document with new messages
     await conversationDocRef.update({
       messages: FieldValue.arrayUnion(newMessage[0])

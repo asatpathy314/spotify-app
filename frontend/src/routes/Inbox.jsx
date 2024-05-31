@@ -9,6 +9,7 @@ const Inbox = () => {
     const [noConversations, setNoConversations] = useState(false);
     const { token, setToken, userID, setUserID, logout } = useContext(AuthContext);
     const [loading, setLoading] = useState(true);
+    const [forbidden, setForbidden] = useState(null);
 
     const getCorrectUserId = (id1, id2) => {
         if (id1 === userID) {
@@ -19,28 +20,37 @@ const Inbox = () => {
     };
 
     useEffect(() => {
+        if (!token || !userID) {
+            window.location.href = "/profile/nosessiontoken";
+            setForbidden(true);
+            return;
+        }
         const fetchInbox = async () => {
             try {
                 const conversationData = await axios.get("http://localhost:8000/messages?id=" + userID);
                 if (conversationData.error && conversationData.error === "No conversations found") {
                     setNoConversations(true);
                 }
-                setConversations(conversationData.data);
+                setConversations(
+                    conversationData.data.sort((a, b) => {
+                        const lastMessageA = a.messages[a.messages.length - 1];
+                        const lastMessageB = b.messages[b.messages.length - 1];
+                        return lastMessageB.timestamp._seconds - lastMessageA.timestamp._seconds;
+                    })
+                );
             } catch (error) {
                 console.error("Error fetching Inbox:", error);
             } finally {
                 setLoading(false);
             }
         };
-        fetchInbox();
-    }, [userID]);
-
+        if (!forbidden) {
+            fetchInbox();
+        }
+    }, [userID, token]);
     // Sort conversations by the timestamp of the last message in descending order
-    const sortedConversations = conversations.sort((a, b) => {
-        const lastMessageA = a.messages[a.messages.length - 1];
-        const lastMessageB = b.messages[b.messages.length - 1];
-        return lastMessageB.timestamp._seconds - lastMessageA.timestamp._seconds;
-    });
+
+    const sortedConversations = conversations
 
     if (loading) {
         return (

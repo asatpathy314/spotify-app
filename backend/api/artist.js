@@ -44,7 +44,6 @@ router.get('/', (req, res) => {
             return res.status(500).json({ error: "Failed to fetch top artists" });
         }
         const data = JSON.parse(body);
-        console.log(data);
         res.status(200).json(data);
     });
 });

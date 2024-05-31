@@ -50,8 +50,9 @@ const Profile = () => {
       if (accessToken && userId) {
         setToken(accessToken);
         setUserID(userId);
-      } else {
+      } else if ( id != "nosessiontoken") {
         console.error("Error retrieving token and user ID");
+        window.location.href = "/profile/nosessiontoken";
       }
     }
     if (id) { // Fetch the user data from the local API
@@ -91,7 +92,6 @@ const Profile = () => {
   };
 
   const handleMessageSubmit = async () => {
-    console.log(message)
     axios.post(
       "http://localhost:8000/messages/createConversation",
       {
