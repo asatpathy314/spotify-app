@@ -26,6 +26,10 @@ const ConversationDisplay = ({ userID, keyValue, conversation }) => {
                 bg='#0f0e17'
                 borderRadius={100}
                 position="relative"
+                maxWidth="100%" // Ensure the card does not exceed the viewport width
+                flexWrap="wrap" // Allow content to wrap within the card
+                p={{ base: 2, md: 4 }} // Responsive padding
+                m={{ base: 2, md: 4 }} // Responsive margin
             >
                 <Avatar src={userData.profile} size={'2xl'} margin='5' />
                 <CardBody color="white" p={6}>

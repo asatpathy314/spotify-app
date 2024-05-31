@@ -63,7 +63,7 @@ const Inbox = () => {
     } else if (conversations && !noConversations) {
         return (
             <>
-                <Stack direction="column">
+                <Stack direction="column" width="100%">
                     {sortedConversations.map((conversation, index) => {
                         const correctUserId = getCorrectUserId(conversation.user1._path.segments[1].trim(), conversation.user2._path.segments[1].trim());
                         return <ConversationDisplay userID={correctUserId} key={index} keyValue={index} conversation={conversation} />;
