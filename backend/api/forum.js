@@ -2,6 +2,29 @@ const express = require('express');
 const router = express.Router();
 const db = require('./firebase');  // Correct path to firebase.js
 
+router.delete("/forums/:forumId/posts/:postId", async (req, res) => {
+  try {
+    const { forumId, postId } = req.params;
+    const postRef = db.collection("forum").doc(forumId).collection("posts").doc(postId);
+    await postRef.delete();
+    res.status(200).json({ message: 'Post successfully deleted' });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+// Endpoint to delete a comment
+router.delete("/forums/:forumId/posts/:postId/comments/:commentId", async (req, res) => {
+  try {
+    const { forumId, postId, commentId } = req.params;
+    const commentRef = db.collection("forum").doc(forumId).collection("posts").doc(postId).collection("comments").doc(commentId);
+    await commentRef.delete();
+    res.status(200).json({ message: 'Comment successfully deleted' });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
 
 router.post("/forum", async (req, res) => {
   try {

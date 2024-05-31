@@ -13,10 +13,11 @@ import {
   FormLabel,
   Input,
   HStack,
+  Flex,
   IconButton,
   useToast
 } from '@chakra-ui/react';
-import { FaSpotify, FaThumbsUp } from 'react-icons/fa';
+import { FaSpotify, FaThumbsUp, FaTrashAlt } from 'react-icons/fa';
 import axios from 'axios';
 
 const Forum = () => {
@@ -99,6 +100,32 @@ const Forum = () => {
     }
   };
 
+  const handleDeleteComment = async (forumId, postId, commentId, e) => {
+    e.stopPropagation();
+    try {
+      await axios.delete(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}/comments/${commentId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      setComments(prevComments => prevComments.filter(comment => comment.id !== commentId));
+      toast({
+        title: 'Comment deleted',
+        description: 'The comment has been deleted successfully',
+        status: 'success',
+        position: 'bottom-right',
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      toast({
+        title: 'Failed to delete comment',
+        description: 'An error occurred',
+        status: 'error',
+        position: 'bottom-right',
+        isClosable: true,
+      });
+    }
+  };
+
   const handleForumClick = (forum) => {
     setSelectedForum(forum);
     setSelectedPost(null);
@@ -163,25 +190,102 @@ const Forum = () => {
     }
   };
 
+
+  const handleDeletePost = async (forumId, postId, e) => {
+    e.stopPropagation();
+    try {
+      await axios.delete(`http://localhost:8000/forum/forums/${forumId}/posts/${postId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
+      toast({
+        title: 'Post deleted',
+        description: 'The post has been deleted successfully',
+        status: 'success',
+        position: 'bottom-right',
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      toast({
+        title: 'Failed to delete post',
+        description: 'An error occurred',
+        status: 'error',
+        position: 'bottom-right',
+        isClosable: true,
+      });
+    }
+  };
+
   const handleCreateForum = async (e) => {
     e.preventDefault();
-    const createForumPromise = axios.post('http://localhost:8000/forum/forum', { name: newForumName }, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    toast.promise(createForumPromise, {
-      success: { title: 'Forum created', description: 'The forum has been created successfully', position: 'bottom-right', isClosable: true },
-      error: { title: 'Failed to create forum', description: 'An error occurred', position: 'bottom-right', isClosable: true },
-      loading: { title: 'Creating forum', description: 'Please wait', position: 'bottom-right', isClosable: true },
-    });
+  
     try {
-      await createForumPromise;
-      setNewForumName('');
+      // Fetch the list of existing forums
       const response = await axios.get('http://localhost:8000/forum/forums', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      setForums(response.data.forums);
+      const existingForums = response.data.forums;
+  
+      // Check if a forum with the same name already exists
+      const forumExists = existingForums.some(forum => forum.name.toLowerCase() === newForumName.toLowerCase());
+  
+      if (forumExists) {
+        // Show an error toast if the forum already exists
+        toast({
+          title: 'Forum already exists',
+          description: 'A forum with this name already exists. Please choose a different name.',
+          status: 'error',
+          position: 'bottom-right',
+          isClosable: true,
+        });
+        return;
+      }
+  
+      // Proceed with creating the new forum if it doesn't already exist
+      const createForumPromise = axios.post('http://localhost:8000/forum/forum', { name: newForumName }, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+  
+      toast.promise(createForumPromise, {
+        success: { 
+          title: 'Forum created', 
+          description: 'The forum has been created successfully', 
+          position: 'bottom-right', 
+          isClosable: true 
+        },
+        error: { 
+          title: 'Failed to create forum', 
+          description: 'An error occurred', 
+          position: 'bottom-right', 
+          isClosable: true 
+        },
+        loading: { 
+          title: 'Creating forum', 
+          description: 'Please wait', 
+          position: 'bottom-right', 
+          isClosable: true 
+        },
+      });
+  
+      await createForumPromise;
+      setNewForumName('');
+  
+      // Fetch the updated list of forums
+      const updatedResponse = await axios.get('http://localhost:8000/forum/forums', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      setForums(updatedResponse.data.forums);
+  
     } catch (error) {
       console.error('Error creating forum:', error);
+      toast({
+        title: 'Failed to create forum',
+        description: 'An error occurred',
+        status: 'error',
+        position: 'bottom-right',
+        isClosable: true,
+      });
     }
   };
 
@@ -255,9 +359,21 @@ const Forum = () => {
           Back to Posts From "{selectedForum.name}"
         </Button>
         <Card mb={1} bg="gray.700" padding={"3"} p={6}>
+        <Flex justifyContent="space-between" alignItems="center">
           <Text color="gray.500" fontSize="sm">
             Posted by {selectedPost.userId} on {formatDate(selectedPost.date)}
           </Text>
+          {selectedPost.userId === userID && (
+            <IconButton
+              aria-label="Delete post"
+              icon={<FaTrashAlt />}
+              onClick={(e) => handleDeletePost(selectedForum.id, selectedPost.id, e)}
+              bg="red.600"
+              _hover={{ bg: "red.800" }}
+            />
+          )}
+      </Flex>
+
           <Text fontSize="2xl" fontWeight="bold" color="white">
             {selectedPost.title}
           </Text>
@@ -273,6 +389,7 @@ const Forum = () => {
               bg={selectedPost.userLikes?.includes(userID) ? "#ff8906" : "#a7a9be"}
               _hover={{ bg: "#ff8906" }}
             />
+            
           </HStack>
         </Card>
         <form onSubmit={handleSubmitComment}>
@@ -293,39 +410,49 @@ const Forum = () => {
           </Button>
         </form>
         <VStack spacing={4} align="stretch">
-          {comments.length > 0 ? (
-            comments.map((comment) => (
-              <Card 
-              key={comment.id} 
-              p={6} 
-              bg="gray.700" 
-              borderRadius="md" 
-              width="100%"
-              _hover={{ boxShadow: 'dark-lg' }}
-
-              >
-                <Text color="gray.500" fontSize="sm">
-                  Posted by {comment.userId} on {formatDate(comment.date)}
-                </Text>
-                <Text color="white">{comment.text}</Text>
-                <HStack justifyContent="right">
-                  <Text color="gray.500" fontSize="sm">
-                    {comment.likes} {comment.likes !== 1 ? "likes" : "like"}
-                  </Text>
-                  <IconButton
-                    aria-label="Like comment"
-                    icon={<FaThumbsUp />}
-                    onClick={(e) => handleLikeComment(selectedForum.id, selectedPost.id, comment.id, e)}
-                    bg={comment.userLikes?.includes(userID) ? "#ff8906" : "#a7a9be"}
-                    _hover={{ bg: "#ff8906" }}
-                  />
-                </HStack>
-              </Card>
-            ))
-          ) : (
-            <Text color="gray.300" align="center" mt={4}>No comments yet!</Text>
+  {comments.length > 0 ? (
+    comments.sort((a, b) => b.likes - a.likes).map((comment) => (
+      <Card 
+        key={comment.id} 
+        p={6} 
+        bg="gray.700" 
+        borderRadius="md" 
+        width="100%"
+        _hover={{ boxShadow: 'dark-lg' }}
+      >
+        <Flex justifyContent="space-between" alignItems="center">
+          <Text color="gray.500" fontSize="sm">
+            Posted by {comment.userId} on {formatDate(comment.date)}
+          </Text>
+          {comment.userId === userID && (
+            <IconButton
+              aria-label="Delete comment"
+              icon={<FaTrashAlt />}
+              onClick={(e) => handleDeleteComment(selectedForum.id, selectedPost.id, comment.id, e)}
+              bg="red.600"
+              _hover={{ bg: "red.800" }}
+            />
           )}
-        </VStack>
+        </Flex>
+        <Text color="white">{comment.text}</Text>
+        <HStack justifyContent="right">
+          <Text color="gray.500" fontSize="sm">
+            {comment.likes} {comment.likes !== 1 ? "likes" : "like"}
+          </Text>
+          <IconButton
+            aria-label="Like comment"
+            icon={<FaThumbsUp />}
+            onClick={(e) => handleLikeComment(selectedForum.id, selectedPost.id, comment.id, e)}
+            bg={comment.userLikes?.includes(userID) ? "#ff8906" : "#a7a9be"}
+            _hover={{ bg: "#ff8906" }}
+          />
+        </HStack>
+      </Card>
+        ))
+      ) : (
+        <Text color="gray.300" align="center" mt={4}>No comments yet!</Text>
+      )}
+    </VStack>
       </Container>
     );
   }
@@ -371,7 +498,7 @@ const Forum = () => {
         <Box>
           <VStack spacing={4} align="stretch">
             {posts.length > 0 ? (
-              posts.map((post) => (
+              posts.sort((a, b) => b.likes - a.likes).map((post) => (
                 <Card
                   key={post.id}
                   p={6}
@@ -382,13 +509,24 @@ const Forum = () => {
                   cursor="pointer"
                   _hover={{ boxShadow: 'dark-lg' }}
                   >
-                  <Text color="gray.500" fontSize="sm">
-                    Posted by {post.userId} on {formatDate(post.date)}
-                  </Text>
-                  <Text fontSize="2xl" fontWeight="bold" color="white" mb={4}>
+                  <Flex justifyContent="space-between" alignItems="center">
+          <Text color="gray.500" fontSize="sm">
+            Posted by {post.userId} on {formatDate(post.date)}
+          </Text>
+          {post.userId === userID && (
+            <IconButton
+              aria-label="Delete post"
+              icon={<FaTrashAlt />}
+              onClick={(e) => handleDeletePost(selectedForum.id, post.id, e)}
+              bg="red.600"
+              _hover={{ bg: "red.800" }}
+            />
+          )}
+      </Flex>
+                  <Text fontSize="2xl" fontWeight="bold" color="white" mb={3}>
                     {post.title}
                   </Text>
-                  <Text fontSize="sm" color="white">{post.description}</Text>
+                  <Text fontSize="md" color="white">{post.description}</Text>
                   <HStack justifyContent="right">
                     <Text color="gray.500" fontSize="sm">
                       {post.likes} {post.likes !== 1 ? "likes" : "like"}
