@@ -143,7 +143,7 @@ router.post('/createConversation', async (req, res) => {
       conversations: FieldValue.arrayUnion(conversationRef)
     });
 
-    res.status(201).send({ message: "Conversation created successfully", conversationId: conversationId });
+    res.status(200).send({ message: "Conversation created successfully", conversationId: conversationId });
   } catch (error) {
     console.error("Error creating conversation:", error);
     res.status(500).send("Internal Server Error");
