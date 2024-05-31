@@ -12,6 +12,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Textarea,
   HStack,
   Flex,
   IconButton,
@@ -34,10 +35,9 @@ const Forum = () => {
   const [newComment, setNewComment] = useState('');
   const [commentLikedStatus, setCommentLikedStatus] = useState(false);
   const [postLikedStatus, setPostLikedStatus] = useState(false);
-  const [filteredForums, setFilteredForums] = useState("")
+  const [filteredForums, setFilteredForums] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
-  
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -190,7 +190,6 @@ const Forum = () => {
     }
   };
 
-
   const handleDeletePost = async (forumId, postId, e) => {
     e.stopPropagation();
     try {
@@ -205,6 +204,9 @@ const Forum = () => {
         position: 'bottom-right',
         isClosable: true,
       });
+      if(selectedPost) {
+        setSelectedPost("");
+      }
     } catch (error) {
       console.error('Error deleting post:', error);
       toast({
@@ -395,9 +397,9 @@ const Forum = () => {
         <form onSubmit={handleSubmitComment}>
           <FormControl id="new-comment" mb={4}>
             <FormLabel color="white">Add a Comment</FormLabel>
-            <Input
+            <Textarea
+              maxLength={200}
               color="white"
-              type="text"
               value={newComment}
               focusBorderColor="#ff8906"
               onChange={(e) => setNewComment(e.target.value)}
@@ -473,16 +475,15 @@ const Forum = () => {
         </Box>
         <Box mb={0}>
           <form onSubmit={handleSubmitPost}>
-            <FormControl id="title" mb={1} focusB>
+            <FormControl id="title" mb={1}>
               <FormLabel color="white">Title</FormLabel>
               <Input maxLength={100} color="white" type="text" value={title} focusBorderColor="#ff8906" onChange={(e) => setTitle(e.target.value)} required />
             </FormControl>
             <FormControl id="description" mb={4}>
               <FormLabel color="white">Description</FormLabel>
-              <Input
+              <Textarea
                 maxLength={200}
                 color="white"
-                type="text"
                 value={description}
                 focusBorderColor="#ff8906"
                 onChange={(e) => setDescription(e.target.value)}
@@ -556,7 +557,7 @@ const Forum = () => {
         <FormControl id="new-forum-name" mb={4}>
           <FormLabel color="white">Create New Forum</FormLabel>
           <Input
-            maxLength={15}
+            maxLength={20}
             type="text"
             color="white"
             value={newForumName}
